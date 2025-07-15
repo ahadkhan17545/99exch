@@ -7,7 +7,7 @@ import gsap from "gsap";
 import { useAuth } from "../AuthContext";
 import axios from "axios";
 import Appconfig from "../config/config";
-import { useNavigate } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import DiamondLobby from "../Pages/Lobby/DiamondLobby";
 
 function Home() {
@@ -627,21 +627,24 @@ function Home() {
       setShowLoginModel(true);
       return;
     }
-    navigate("/all-games-lobby", { state: { activeCasino: casinoType } });
+    navigate("/", { state: { activeCasino: casinoType } });
+    setSelectedSportType("casino")
   }
 
   return (
     <>
       <div className="flex bg-white">
         {/* Center Home page section */}
-        <div className="w-full lg:w-[55%] h-screen overflow-y-scroll scroll-hide">
+        <div className="w-full h-screen overflow-y-scroll scroll-hide">
 
           {/* Blink events */}
           <div className="overflow-x-auto scroll-hide w-full bg-black">
             <ul className="flex flex-nowrap w-full space-x-1 py-1">
               {blinkEvents?.map((item, index) => (
                 <li key={index} className="bg-[#8000ff] rounded pl-2 pr-4 py-1">
-                  <div className="flex-shrink-0 flex items-center blink">
+
+
+                  <Link to={`/matchupdates/${item.event_id}/${item.is_inplay === "True" ? "Inplay" : "Going Inplay"}`} className="flex-shrink-0 flex items-center blink">
                     <img
                       src="/Images/cricket-white-ball.png"
                       className="w-3 h-3 mr-1"
@@ -650,7 +653,7 @@ function Home() {
                     <span className="text-white font-bold text-[11px] uppercase whitespace-nowrap">
                       {item.event_name}
                     </span>
-                  </div>
+                  </Link>
                 </li>
               ))}
             </ul>
@@ -668,10 +671,12 @@ function Home() {
               <li className={`border-[2px] border-transparent ${selectedSportType == "casino" ? "border-t-white" : ""} py-3`} onClick={() => setSelectedSportType("casino")}>
                 <span className="border border-transparent border-r-white px-4">CASINO</span>
               </li>
-              <li className={`border-[2px] border-transparent ${selectedSportType == "sportbook" ? "border-t-white" : ""} py-3`} onClick={() => setSelectedSportType("sportbook")}>
+              <li className={`border-[2px] border-transparent ${selectedSportType == "sportbook" ? "border-t-white" : ""} py-3`} onClick={() => { setSelectedSportType("sportbook"); CreateAndLaunchWCOCasino("BT", "") }}>
                 <span className="border border-transparent border-r-white px-4">SPORT BOOK</span>
               </li>
-              <li className={`border-[2px] border-transparent ${selectedSportType == "other" ? "border-t-white" : ""} py-3`} onClick={() => setSelectedSportType("other")}>
+              <li className={`border-[2px] border-transparent ${selectedSportType == "other" ? "border-t-white" : ""} py-3`}
+              // onClick={() => setSelectedSportType("other")}
+              >
                 <span className=" px-4">OTHERS</span>
               </li>
             </ul>
@@ -704,7 +709,7 @@ function Home() {
               {selectedSportType != "sports" &&
                 <>
                   {/* Four Games Images */}
-                  < div className="my-1 grid grid-cols-2 gap-[2px] px-[1px]">
+                  < div className="my-1 grid grid-cols-2 lg:grid-cols-4 gap-[2px] px-[1px]">
                     {FourGames?.map((item, index) => (
                       <img
                         key={index}
@@ -724,7 +729,7 @@ function Home() {
                       <span className="animateHeading text-[#fff] font-bold mx-1">NEW LAUNCH</span>
                     </div>
                     <div className="">
-                      <ul className="grid grid-cols-4 gap-[2px] p-[2px] lg:p-0">
+                      <ul className="grid grid-cols-4 lg:grid-cols-7 gap-[2px] p-[2px] lg:p-0">
                         {" "}
                         {/* 4 columns with small gap */}
                         {casinoList?.map((item, index) => (
@@ -761,12 +766,12 @@ function Home() {
                   </div>
 
                   {/* Casino Providers */}
-                  <div className="casino-providers">
+                  <div className="casino-providers my-1">
                     <div className="flex justify-start items-center w-full bg-[#8000ff] p-1">
                       <span className="animateHeading text-[#fff] font-bold mx-1">OUR PROVIDERS</span>
                     </div>
                     <div className="">
-                      <ul className="grid grid-cols-3 gap-[2px] p-[2px] lg:p-0">
+                      <ul className="grid grid-cols-3 lg:grid-cols-4 gap-[2px] p-[2px] lg:p-0">
                         {" "}
                         {/* 4 columns with small gap */}
                         {casinoProviders?.map((item, index) => (
@@ -796,15 +801,10 @@ function Home() {
               }
             </>}
 
-          {(selectedSportType != "inplay" || selectedSportType != "sports") &&
+          {selectedSportType == "casino" &&
             <>
               <DiamondLobby />
             </>}
-        </div>
-
-        {/* Right Section */}
-        <div className="hidden lg:flex">
-          <h1 className="text-[2.5rem]">Mini Games</h1>
         </div>
       </div >
     </>

@@ -108,17 +108,17 @@ const Register = ({ setIsOpen, setIsRegisterOpen }) => {
   return (
     <>
       <div className="fixed top-0 left-0 w-full h-screen flex justify-center items-center z-[1000] bg-[#0000007d] animate-fadeIn">
-        <div className="flex justify-center items-center flex-col  bg-popup-gradient px-5 rounded-[10px] w-full lg:w-[30%] h-screen shadow-[0_5px_15px_rgb(73,72,72)] relative animate-slideIn">
+        <div className="flex justify-center items-center flex-col  bg-popup-gradient px-5 rounded-[10px] w-full h-screen shadow-[0_5px_15px_rgb(73,72,72)] relative animate-slideIn">
           <div className="flex justify-end mt-[-4rem] mb-[2rem] w-full">
-            <button
+            {/* <button
               type="button"
               className="close text-[2.125rem] text-white"
               onClick={() => setIsRegisterOpen(false)}
             >
               ×
-            </button>
+            </button> */}
           </div>
-          <div className="relative p-[15px] bg-[rgba(19,144,97,0.5)] w-[90%] h-[80%] rounded-[10px] mx-auto">
+          <div className="relative p-[15px] w-[90%] lg:w-[20%] h-[80%] rounded-[10px] mx-auto mt-[10rem]">
             <div className="flex justify-center items-center">
               <img
                 src="/Images/logo.webp"
@@ -127,18 +127,30 @@ const Register = ({ setIsOpen, setIsRegisterOpen }) => {
               />
             </div>
 
-            <div className="flex justify-center items-center mt-2">
-              <span className="text-[#fff] font-semibold text-[1.5rem] underline">
-                Register
-              </span>
-            </div>
-
             <form
-              className="pt-3 px-3 lg:px-16 mt-1"
+              className="p-4 mt-6 bg-[#fff] rounded"
               id="form_data"
               name="form_data"
               onSubmit={handleSubmit}
             >
+              <div className="flex justify-center items-center text-[1.5rem] w-full mb-2">
+                <span>
+
+                  REGISTER
+                </span>
+                <svg
+                  stroke="currentColor"
+                  fill="currentColor"
+                  strokeWidth={0}
+                  viewBox="0 0 384 512"
+                  height="1em"
+                  width="1em"
+                  xmlns="http://www.w3.org/2000/svg"
+                >
+                  <path d="M91.826 467.2V317.966c-8.248 5.841-16.558 10.57-24.918 14.153C35.098 345.752-.014 322.222 0 288c.008-18.616 10.897-32.203 29.092-40 28.286-12.122 64.329-78.648 77.323-107.534 7.956-17.857 25.479-28.453 43.845-28.464l.001-.002h171.526c11.812 0 21.897 8.596 23.703 20.269 7.25 46.837 38.483 61.76 38.315 123.731-.007 2.724.195 13.254.195 16 0 50.654-22.122 81.574-71.263 72.6-9.297 18.597-39.486 30.738-62.315 16.45-21.177 24.645-53.896 22.639-70.944 6.299V467.2c0 24.15-20.201 44.8-43.826 44.8-23.283 0-43.826-21.35-43.826-44.8zM112 72V24c0-13.255 10.745-24 24-24h192c13.255 0 24 10.745 24 24v48c0 13.255-10.745 24-24 24H136c-13.255 0-24-10.745-24-24zm212-24c0-11.046-8.954-20-20-20s-20 8.954-20 20 8.954 20 20 20 20-8.954 20-20z" />
+                </svg>
+
+              </div>
               <div id="login" className="">
                 {/* Username Field */}
                 <div className="flex items-center">
@@ -166,9 +178,9 @@ const Register = ({ setIsOpen, setIsRegisterOpen }) => {
                   />
                 </div>
 
-                <div className="flex justify-center items-center ">
+                <div className="flex justify-center items-center w-full ">
                   <button
-                    className="bg-[#000] text-[#fff] rounded-lg p-3 mt-2"
+                    className="bg-[#000] text-[#fff] rounded p-2 mt-2 w-[50%]"
                     disabled={otpBtn}
                     onClick={(e) => getOtp(e)}
                   >
@@ -205,20 +217,20 @@ const Register = ({ setIsOpen, setIsRegisterOpen }) => {
                 <div className="text-center">
                   <button
                     type="submit"
-                    className="bg-[#000] text-white px-6 py-2 mt-3 rounded-lg w-[275px] hover:bg-purple-700 transition"
+                    className="bg-[#000] text-white px-6 py-2 mt-3 rounded w-full hover:bg-purple-700 transition"
                   >
                     Register
                   </button>
                 </div>
                 <div className="text-center">
                   <span
-                    className="text-white text-center block mt-2 tracking-wider text-sm cursor-pointer"
+                    className="text-[#000] text-center block mt-4 tracking-wider text-sm"
                     onClick={() => {
                       setIsRegisterOpen(false);
                       setIsOpen(true);
                     }}
                   >
-                    Already have an account? Login
+                    Already have an account? <span className="font-bold hover:text-purple-700 transition cursor-pointer">Login</span>
                   </span>
                 </div>
               </div>

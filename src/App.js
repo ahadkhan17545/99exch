@@ -19,6 +19,8 @@ import Profile from "./Pages/Profile";
 import ReferAndEarn from "./Pages/ReferAndEarn";
 import EventDetails from "./Pages/EventDetails";
 import AllGamesLobby from "./Pages/Lobby/AllGamesLobby";
+import Deposit from "./Pages/Deposit";
+import Withdraw from "./Pages/Withdraw";
 
 function App() {
   return (
@@ -39,7 +41,7 @@ function App() {
                     }
                   />
                   <Route
-                    path="eventDetails/:event_id/:is_inplay"
+                    path="matchupdates/:event_id/:is_inplay"
                     element={
                       <PrivateRoute>
                         <EventDetails />
@@ -139,6 +141,22 @@ function App() {
                     element={
                       <PrivateRoute>
                         <Settings />
+                      </PrivateRoute>
+                    }
+                  />
+                  <Route
+                    path="deposit"
+                    element={
+                      <PrivateRoute>
+                        <Deposit />
+                      </PrivateRoute>
+                    }
+                  />
+                   <Route
+                    path="withdraw"
+                    element={
+                      <PrivateRoute>
+                        <Withdraw />
                       </PrivateRoute>
                     }
                   />

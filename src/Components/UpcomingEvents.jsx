@@ -8,7 +8,7 @@ function UpcomingEvents({ sportType, eventType, blinkedEvents }) {
   const dispatch = useDispatch();
   const userInfo = Helper();
   const location = useLocation();
-  console.log('location : ', location)
+  // console.log('location : ', location)
 
   const userInfos = useSelector((state) => state.events);
   // console.log("upcoming events userinfos : ", userInfos);
@@ -40,27 +40,24 @@ function UpcomingEvents({ sportType, eventType, blinkedEvents }) {
         .flatMap((comp) => comp.events || []);
       setIsEventLoading(false);
       setAllEvents(allNewEvents);
-      const blinkEvents = allNewEvents.slice(0, 6);
-      blinkedEvents(blinkEvents);
+
+      // Filter 2 events for each event_type: 1, 2, 4
+      const filteredEvents = [4, 1, 2]
+        .flatMap((type) => allNewEvents?.filter(e => e.event_type == type).slice(0, 2));
+
+      blinkedEvents(filteredEvents);
+
     }
   }, [userInfos]);
 
   useEffect(() => {
     console.log("usereffect trigger : ", eventType);
     if (allEvents?.length > 0) {
-      let filterEvents;
-      if (sportType == "inplay") {
-        filterEvents = allEvents?.filter(
-          (item) => item.event_type == eventType && item.is_inplay == "True"
-        );
-      } else {
-        filterEvents = allEvents?.filter(
-          (item) => item.event_type == eventType
-        );
-      }
-
+      let filterEvents = allEvents?.filter(
+        (item) => item.event_type == eventType
+      );
       setEvents(filterEvents);
-      console.log('Filter Events : ', filterEvents)
+      // console.log('Filter Events : ', filterEvents)
     }
   }, [allEvents, eventType, sportType]);
 
@@ -68,7 +65,7 @@ function UpcomingEvents({ sportType, eventType, blinkedEvents }) {
     <>
       {events?.length > 0 && (
         <div className=" px-[1px]">
-          <div className="flex justify-between items-center text-xs">
+          <div className="flex justify-between items-center text-xs pb-[2px]">
             <div className="flex gap-[2px] justify-between items-center text-xs pt-[1px] px-1">
               <span className="flex justify-center items-center py-1 px-2 border border-[#000] rounded-xl">
                 - LIVE
@@ -91,14 +88,14 @@ function UpcomingEvents({ sportType, eventType, blinkedEvents }) {
             </div>
           </div>
           {/* Events */}
-          <div className={`${sportType != 'sports' ? "max-h-[17rem]" : "h-auto"} overflow-scroll scroll-hide`}>
+          <div className={`${sportType != 'sports' ? "max-h-[16rem] lg:max-h-full" : "h-auto"} overflow-scroll scroll-hide`}>
             <ul>
               {events?.length > 0 &&
                 events?.map((item, index) => (
                   <li className="mt-1 pb-1 bg-[#f1f5f8] border-b border-[#d6d7d8]" key={index}>
-                    <div className=" p-1">
+                    <div className=" px-1 pb-1">
                       <div className="flex justify-between items-center">
-                        <Link to={`/eventDetails/${item.event_id}/${item.is_inplay}`}>
+                        <Link to={`/matchupdates/${item.event_id}/${item.is_inplay === "True" ? "Inplay" : "Going Inplay"}`}>
                           <span className="text-[13px] whitespace-nowrap text-ellipsis overflow-hidden font-semibold tracking-[0.04rem]">
                             {item.event_name}
                           </span>
@@ -135,7 +132,7 @@ function UpcomingEvents({ sportType, eventType, blinkedEvents }) {
                       <div className="flex justify-between items-center text-[12px] text-[#ff0000]">
                         <span className="">{item.open_date}</span>
                       </div>
-                      <div className="flex justify-around items-center text-sm font-bold mb-[-1px]">
+                      <div className="flex justify-around items-center text-sm font-bold leading-[0.8rem] mt-[0.5rem]">
                         <span>1</span>
                         <span>x</span>
                         <span>2</span>

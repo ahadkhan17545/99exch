@@ -103,7 +103,7 @@ body {
 }
 
 .blink {
-  animation: blink 1s infinite;
+  animation: blink 2s infinite;
 }
 
 @keyframes blink {
@@ -118,6 +118,34 @@ body {
   }
 }
 
+.loginHandAnimation {
+  animation: slide-right 2s cubic-bezier(0.785, 0.135, 0.15, 0.86) infinite
+    alternate both;
+}
+
+@keyframes slide-right {
+  0% {
+    transform: translateX(0);
+  }
+  100% {
+    transform: translateX(20px);
+  }
+}
+
+.fa-spin {
+  animation: a 2s infinite linear;
+}
+
+@keyframes a {
+  0% {
+    transform: rotate(0deg);
+  }
+
+  100% {
+    transform: rotate(1turn);
+  }
+}
+
 .market-exposure[data-value],
 .win[data-value] {
   color: green !important;
@@ -129,3 +157,4 @@ body {
   color: red !important;
   fill: red;
 }
+
