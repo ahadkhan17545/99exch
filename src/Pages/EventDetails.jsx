@@ -10,6 +10,7 @@ import { TimeContext } from "../TimeContext/TimeContext";
 import { getMatchData } from "../redux/slice/eventData/eventDataSlice";
 import { getMatchFancyData } from "../redux/slice/fancyData/fancyDataSlice";
 import { getUserBal } from "../redux/slice/user/userSlice";
+import { getLoginUser } from '../redux/slice/userData/userDataSlice';
 import axios from "axios";
 import Appconfig from "../config/config";
 import { setData } from "../redux/slice/betting/bettingSlice";
@@ -24,11 +25,13 @@ function EventDetails() {
   const userFancyData = useSelector((state) => state.fancyData);
   const userbalance = useSelector((state) => state.userbal);
   const openbets = useSelector((state) => state.bets);
-  const balance = userbalance?.userBalance?.balance;
+  const balance = userbalance?.userBalance;
   const userInfo = Helper(); // get login user details
-  const { setShowLoginModel, betPlaced, setBetPlaced, setBetPlacedLoader } = useAuth();
+  const { setShowLoginModel, betPlaced, setBetPlaced, setBetPlacedLoader, currentExposure, currentBalance } = useAuth();
   const websocket = useContext(WebSocketContext);
-  const { event_id } = useParams();
+  const { event_id, is_inplay, } = useParams();
+
+  console.log('event page user balance : ', balance)
 
   const getOpenBetsByEvent = async () => {
     dispatch(
@@ -106,23 +109,27 @@ function EventDetails() {
   const [chips, setChips] = useState([]);
   const [openFancyMinMaxStack, setOpenFancyMinMaxStack] = useState("");
 
+
   function calc(t_stake, priceVal, selection_id) {
     var isfancy = BetPlaceData.is_fancy;
     priceVal = parseFloat(priceVal);
     t_stake = parseFloat(t_stake);
-    var isback = BetPlaceData.is_back;
+    var isback = BetPlaceData.is_back
     if (!isfancy) {
-      var pl = priceVal * t_stake - t_stake;
+      var pl = ((priceVal * t_stake) - t_stake);
 
       pl = parseFloat(pl.toFixed(2));
       if (isback) {
-        setProfitValue(pl);
-        setLossValue(t_stake);
+        setProfitValue(pl)
+        setLossValue(t_stake)
+        console.log('back pl : ', pl, ' t_stake : ', t_stake);
       } else {
-        setLossValue(pl);
-        setProfitValue(t_stake);
+        setLossValue(pl)
+        setProfitValue(t_stake)
+        console.log('calc func lay pl : ', pl, ' t_stake : ', t_stake);
       }
       // SetPosition(priceVal);
+      console.log('pl = ((priceVal * t_stake) - t_stake);', pl);
     } else {
       if (document.getElementById("fancyLay_Size" + selection_id)) {
         var NoValume = parseInt(
@@ -137,112 +144,85 @@ function EventDetails() {
         var inputyes = parseFloat(
           document.getElementById(`fancyBack_Price${selection_id}`).innerHTML
         );
+
+        console.log('NoValume : ', NoValume, ' YesValume : ', YesValume, ' inputno : ', inputno, ' inputyes : ', inputyes);
       }
 
       pl = parseFloat(t_stake);
 
       if (inputno == inputyes) {
         if (isback) {
-          setLossValue(pl.toFixed(2));
-          setProfitValue(((YesValume * pl) / 100).toFixed(2));
+          setLossValue(pl.toFixed(2))
+          setProfitValue((YesValume * pl / 100).toFixed(2))
+
         } else {
-          setLossValue(((NoValume * pl) / 100).toFixed(2));
-          setProfitValue(pl.toFixed(2));
+          setLossValue((NoValume * pl / 100).toFixed(2))
+          setProfitValue(pl.toFixed(2))
+
         }
       } else {
-        setLossValue(pl.toFixed(2));
-        setProfitValue(pl.toFixed(2));
+        setLossValue(pl.toFixed(2))
+        setProfitValue(pl.toFixed(2))
       }
     }
   }
 
   function SetPosition(stake, priceVal, market_id, is_back, selection_id) {
-    priceVal = parseFloat(priceVal);
+    priceVal = parseFloat(priceVal)
     var MarketId = market_id;
-    var MId = MarketId.replace(".", "");
+    var MId = MarketId.replace('.', '');
     var selectionId = selection_id;
     var isback = is_back;
     stake = parseFloat(stake);
     let MatchMarketTypes = "";
     var runners = document.getElementsByClassName("position_" + MId);
+    console.log('runners', runners);
     var tempRunners = "";
-    console.log("setPosition funtion data : ", {
-      MarketId: MarketId,
-      MId: MId,
-      selectionId: selectionId,
-      isback: isback,
-      stake: stake,
-      MatchMarketTypes: MatchMarketTypes,
-      runners: runners,
-      tempRunners: tempRunners,
-    });
     for (var item of runners) {
-      var selecid = item.getAttribute("data-id");
+      var selecid = item.getAttribute('data-id');
       var winloss = parseFloat(item.value);
-      console.log("selecid : ", selecid);
-      console.log("winloss : ", winloss);
-      console.log("runner item : ", item);
       var curr = 0;
       if (selectionId == selecid) {
         if (isback) {
-          if (MatchMarketTypes == "M") {
-            curr = winloss + (priceVal * stake) / 100;
+          if (MatchMarketTypes == 'M') {
+            curr = winloss + ((priceVal * stake) / 100);
           } else {
-            curr = winloss + (priceVal * stake - stake);
+            curr = winloss + ((priceVal * stake) - stake);
           }
         } else {
-          if (MatchMarketTypes == "M") {
-            curr = winloss + -1 * parseFloat((priceVal * stake) / 100);
+          if (MatchMarketTypes == 'M') {
+            curr = winloss + (-1 * parseFloat((priceVal * stake) / 100));
           } else {
-            curr = winloss + -1 * parseFloat(priceVal * stake - stake);
+            curr = winloss + (-1 * parseFloat((priceVal * stake) - stake));
           }
         }
       } else {
         if (isback == 1) {
-          curr = winloss + -1 * stake;
+          curr = winloss + (-1 * (stake));
         } else {
           curr = winloss + stake;
         }
       }
       var currV = curr;
-      if (
-        document.getElementById(selecid + "_maxprofit_loss_runner_prev_" + MId)
-      ) {
-        document
-          .getElementById(selecid + "_maxprofit_loss_runner_prev_" + MId)
-          .setAttribute("data-value", winloss.toFixed(2));
-        document.getElementById(
-          selecid + "_maxprofit_loss_runner_prev_" + MId
-        ).innerHTML = Math.abs(winloss.toFixed(2));
+      if (document.getElementById(selecid + "_maxprofit_loss_runner_prev_" + MId)) {
+        document.getElementById(selecid + "_maxprofit_loss_runner_prev_" + MId).setAttribute('data-value', winloss.toFixed(2))
+        document.getElementById(selecid + "_maxprofit_loss_runner_prev_" + MId).innerHTML = Math.abs(winloss.toFixed(2));
       }
-      if (
-        document.getElementById(
-          selecid + "_maxprofit_list_loss_runner_next_" + MId
-        )
-      ) {
-        document
-          .getElementById(selecid + "_maxprofit_list_loss_runner_next_" + MId)
-          .setAttribute("data-value", currV.toFixed(2));
-        document.getElementById(
-          selecid + "_maxprofit_list_loss_runner_next_" + MId
-        ).innerHTML = Math.abs(currV.toFixed(2));
+      if (document.getElementById(selecid + "_maxprofit_list_loss_runner_next_" + MId)) {
+        document.getElementById(selecid + "_maxprofit_list_loss_runner_next_" + MId).setAttribute('data-value', currV.toFixed(2))
+        document.getElementById(selecid + "_maxprofit_list_loss_runner_next_" + MId).innerHTML = Math.abs(currV.toFixed(2));
       }
-      if (
-        document.getElementById(
-          selecid + "_maxprofit_Mlist_loss_runner_next_" + MId
-        )
-      ) {
-        document
-          .getElementById(selecid + "_maxprofit_Mlist_loss_runner_next_" + MId)
-          .setAttribute("data-value", currV.toFixed(2));
-        document.getElementById(
-          selecid + "_maxprofit_Mlist_loss_runner_next_" + MId
-        ).innerHTML = Math.abs(currV.toFixed(2));
+      if (document.getElementById(selecid + "_maxprofit_Mlist_loss_runner_next_" + MId)) {
+        document.getElementById(selecid + "_maxprofit_Mlist_loss_runner_next_" + MId).setAttribute('data-value', currV.toFixed(2))
+        document.getElementById(selecid + "_maxprofit_Mlist_loss_runner_next_" + MId).innerHTML = Math.abs(currV.toFixed(2));
       }
     }
   }
 
   const placeStakeValue = (stake) => {
+    if (String(stake).startsWith("NaN")) {
+      stake = String(stake).replace("NaN", "");
+    }
     setStakeValue(parseFloat(stake));
     calc(stake, BetPlaceData.price, BetPlaceData.selection_id);
     SetPosition(
@@ -252,6 +232,19 @@ function EventDetails() {
       BetPlaceData.is_back,
       BetPlaceData.selection_id
     );
+  };
+
+  const handlePriceValue = (priceVal) => {
+    if (String(priceVal).startsWith("NaN")) {
+      priceVal = String(priceVal).replace("NaN", "");
+    }
+    priceVal = parseFloat(priceVal).toFixed(2);
+    setBetPlaceData({
+      ...BetPlaceData,
+      price: parseFloat(priceVal).toFixed(2)
+    });
+    calc(StakeValue, priceVal, BetPlaceData.selection_id)
+    SetPosition(StakeValue, priceVal, BetPlaceData.market_id, BetPlaceData.is_back, BetPlaceData.selection_id);
   };
 
   const handleOpenBetSlip = (
@@ -320,16 +313,31 @@ function EventDetails() {
 
   function betPlace(ishow) {
     console.log("BEt place funtion triggered..");
+
     if (userInfo) {
+      let exposureLimit;
       if (userInfo.user_type == "User") {
         setBetPlacedLoader(true);
-        // if (balance > (BetPlaceData.is_fancy ? StakeValue : lossValue)) {
-        // console.log({
-        //     'balance': balance,
-        //     'StakeValue': StakeValue,
-        //     'lossValue': lossValue,
-        //     'is_fancy' : BetPlaceData.is_fancy
-        // });
+
+        if (userInfo?.exposer_limit) {
+          exposureLimit = Number(userInfo?.exposer_limit);
+          const calc = Number(lossValue) + (Number(currentExposure) * -1);
+
+          console.log({
+            'exposure limit': exposureLimit,
+            ' profitValue': ProfitValue,
+            'lossValue': lossValue,
+            'current exposure': currentExposure,
+            '+ve current exposure': (Number(currentExposure) * -1),
+            'Calc expo after place bets': calc
+          });
+
+          if (exposureLimit < calc) {
+            toast.error(`Exposure Limit Is ${exposureLimit}`, { autoClose: 3000 });
+            return;
+          }
+
+        }
 
         setPlacing(true);
         setIsLoading(true);
@@ -516,6 +524,7 @@ function EventDetails() {
       type: "",
       odds: "",
     });
+    setStakeValue(0)
   };
 
   const getFancyExposure = (selectionId) => {
@@ -559,7 +568,7 @@ function EventDetails() {
       .then(function (response) {
         try {
           // alert("Hello");
-          // console.log('response.data', response.data)
+          console.log('general setting response', response.data)
           if (response.data.result) {
             setGeneralSetting(response.data.resultData);
           }
@@ -621,9 +630,24 @@ function EventDetails() {
       axios(config)
         .then(function (response) {
           try {
+            console.log('chip response : ', response)
             if (response.status) {
-              setChips(response.data);
-              console.log('Chips : ', response.data);
+              console.log('Chips data : ', response.data);
+              if (response?.data?.length > 0) {
+                setChips(response.data);
+              } else {
+                const chipData = [
+                  { chip_value: 100 },
+                  { chip_value: 200 },
+                  { chip_value: 500 },
+                  { chip_value: 1000 },
+                  { chip_value: 5000 },
+                  { chip_value: 10000 },
+                  { chip_value: 50000 },
+                  { chip_value: 100000 },
+                ]
+                setChips(chipData)
+              }
             }
           } catch (e) {
             console.log(e);
@@ -668,8 +692,6 @@ function EventDetails() {
       navigate("/login");
     }
   }
-
-
 
   useEffect(() => {
     if (openbets?.bets?.length > 0) {
@@ -725,6 +747,17 @@ function EventDetails() {
       })
     );
   }, []);
+  // useEffect(() => {
+  //   if (userInfo) {
+  //     dispatch(getUserBal({
+  //       user_id: userInfo?._id,
+  //     }))
+
+  //     dispatch(getLoginUser({
+  //       user_id: userInfo ? userInfo._id : "",
+  //     }));
+  //   }
+  // }, [userInfo?._id])
 
   // Open Websocket state
   useEffect(() => {
@@ -1232,7 +1265,22 @@ function EventDetails() {
                 <div>
                   <div className="flex justify-between border border-[#aaa]">
                     <span className="text-xs font-semibold py-[2px] pl-1">
-                      Min:100 Max:10k
+                      {/* Min:100 Max:10k */}
+                      {
+                        generalSetting.length > 0 ?
+
+                          generalSetting?.map(gen => {
+                            if ((eventType == "Cricket" && matchOdds?.market_name == "Match Odds" && gen.event_name == "cricket") || (eventType == "Soccer" && gen.event_name == "soccer") || (eventType == "Tennis" && gen.event_name == "tennis")) {
+                              return is_inplay == "Inplay" ? (`Min:${gen.min_stake} Max:${gen.max_stake}`) : (`Min:${gen.min_stake} Max:${gen.pre_inplay_stake}`)
+                            } else if (eventType == "Cricket" && matchOdds?.market_name == "Bookmaker" && gen.event_name == "bookmaker") {
+                              return is_inplay == "Inplay" ? (`Min:${gen.min_stake} Max:${gen.max_stake}`) : (`Min:${gen.min_stake} Max:${gen.pre_inplay_stake}`)
+                            }
+
+                          })
+                          :
+                          'Min:100 Max:10k'
+
+                      }
                     </span>
                     <div className="flex justify-center">
                       <span className="flex justify-center items-center px-2 w-[79.5px] text-xs font-semibold bg-[#a7d8fd] border-r border-l border-[#aaa]">
@@ -1377,7 +1425,7 @@ function EventDetails() {
                                 // marginTop: "",
                               }}
                             >
-                              <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512" className="w-6 fa-spin">
+                              <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512" className="w-10 fa-spin">
                                 <path fill="black" d="M304 48a48 48 0 1 0 -96 0 48 48 0 1 0 96 0zm0 416a48 48 0 1 0 -96 0 48 48 0 1 0 96 0zM48 304a48 48 0 1 0 0-96 48 48 0 1 0 0 96zm464-48a48 48 0 1 0 -96 0 48 48 0 1 0 96 0zM142.9 437A48 48 0 1 0 75 369.1 48 48 0 1 0 142.9 437zm0-294.2A48 48 0 1 0 75 75a48 48 0 1 0 67.9 67.9zM369.1 437A48 48 0 1 0 437 369.1 48 48 0 1 0 369.1 437z" />
                               </svg>
                             </div>
@@ -1401,7 +1449,7 @@ function EventDetails() {
                                 type="number"
                                 className="h-[32px] w-[50%] border-none focus:outline-none focus:ring-0 text-center font-bold"
                                 value={StakeValue}
-                              // onChange={(e) => setStakeValue(e.target.value)}
+                                onChange={(e) => placeStakeValue(Number(e.target.value))}
                               />
                             </div>
                             <div className="grid grid-cols-4 gap-[2px] w-full my-1">
@@ -1420,24 +1468,29 @@ function EventDetails() {
                                   {chip.chip_value}
                                 </button>
                               ))}
-                              <button className="p-[6px] bg-[#ffbc00] font-black text-[12px] text-[#000] text-center">
+                            </div>
+                            <div className="flex gap-[2px] w-full">
+                              {/* <button className="p-[6px] bg-[#ffbc00] font-black text-[12px] text-[#000] text-center">
                                 MIN STAKE
                               </button>
                               <button className="p-[6px] bg-[#334579] font-black text-[12px] text-[#fff] text-center">
                                 MAX STAKE
+                              </button> */}
+                              <button className="p-[6px] bg-[#ffbc00] font-black text-[12px] text-[#fff] text-center w-full" onClick={() => setStakeValue(currentBalance)}>
+                                All IN
                               </button>
-                              <button className="p-[6px] bg-[#008000] font-black text-[12px] text-[#fff] text-center">
+                              <button className="p-[6px] bg-[#008000] font-black text-[12px] text-[#fff] text-center w-full" onClick={() => navigate('/settings')}>
                                 EDIT STAKE
                               </button>
                               <button
-                                className="p-[6px] bg-[#ff0000] font-black text-[12px] text-[#fff] text-center"
+                                className="p-[6px] bg-[#ff0000] font-black text-[12px] text-[#fff] text-center w-full"
                                 onClick={() => setStakeValue(0)}
                               >
                                 CLEAR
                               </button>
                             </div>
 
-                            <div className="flex justify-between items-center">
+                            <div className="flex justify-between items-center my-1">
                               <button
                                 className="w-full text-[#fff] font-bold text-[14px] bg-[#fa6a6a] p-2"
                                 onClick={() => closePlaceBet()}
@@ -1472,7 +1525,20 @@ function EventDetails() {
                 <div>
                   <div className="flex justify-between border border-[#aaa]">
                     <span className="text-xs font-semibold py-[2px] pl-1">
-                      Min:100 Max:10k
+                      {/* Min:100 Max:10k */}
+                      {
+                        generalSetting.length > 0 ?
+
+                          generalSetting?.map(gen => {
+                            if (eventType == "Cricket" && bookmaker?.market_name == "Bookmaker" && gen.event_name == "bookmaker") {
+                              return is_inplay == "Inplay" ? (`Min:${gen.min_stake} Max:${gen.max_stake}`) : (`Min:${gen.min_stake} Max:${gen.pre_inplay_stake}`)
+                            }
+
+                          })
+                          :
+                          'Min:100 Max:10k'
+
+                      }
                     </span>
                     <div className="flex justify-center">
                       <span className="flex justify-center items-center px-2 w-[79.5px] text-xs font-semibold bg-[#a7d8fd] border-r border-l border-[#aaa]">
@@ -1617,7 +1683,7 @@ function EventDetails() {
                                 // marginTop: "",
                               }}
                             >
-                              <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512" className="w-6 fa-spin">
+                              <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512" className="w-10 fa-spin">
                                 <path fill="black" d="M304 48a48 48 0 1 0 -96 0 48 48 0 1 0 96 0zm0 416a48 48 0 1 0 -96 0 48 48 0 1 0 96 0zM48 304a48 48 0 1 0 0-96 48 48 0 1 0 0 96zm464-48a48 48 0 1 0 -96 0 48 48 0 1 0 96 0zM142.9 437A48 48 0 1 0 75 369.1 48 48 0 1 0 142.9 437zm0-294.2A48 48 0 1 0 75 75a48 48 0 1 0 67.9 67.9zM369.1 437A48 48 0 1 0 437 369.1 48 48 0 1 0 369.1 437z" />
                               </svg>
                             </div>
@@ -1641,7 +1707,7 @@ function EventDetails() {
                                 type="number"
                                 className="h-[32px] w-[50%] border-none focus:outline-none focus:ring-0 text-center font-bold"
                                 value={StakeValue}
-                              // onChange={(e) => setStakeValue(e.target.value)}
+                                onChange={(e) => placeStakeValue(Number(e.target.value))}
                               />
                             </div>
                             <div className="grid grid-cols-4 gap-[2px] w-full my-1">
@@ -1660,24 +1726,28 @@ function EventDetails() {
                                   {chip.chip_value}
                                 </button>
                               ))}
-                              <button className="p-[6px] bg-[#ffbc00] font-black text-[12px] text-[#000] text-center">
+                            </div>
+                            <div className="flex gap-[2px] w-full">
+                              {/* <button className="p-[6px] bg-[#ffbc00] font-black text-[12px] text-[#000] text-center">
                                 MIN STAKE
                               </button>
                               <button className="p-[6px] bg-[#334579] font-black text-[12px] text-[#fff] text-center">
                                 MAX STAKE
+                              </button> */}
+                              <button className="p-[6px] bg-[#ffbc00] font-black text-[12px] text-[#fff] text-center w-full" onClick={() => setStakeValue(currentBalance)}>
+                                All IN
                               </button>
-                              <button className="p-[6px] bg-[#008000] font-black text-[12px] text-[#fff] text-center">
+                              <button className="p-[6px] bg-[#008000] font-black text-[12px] text-[#fff] text-center w-full" onClick={() => navigate('/settings')}>
                                 EDIT STAKE
                               </button>
                               <button
-                                className="p-[6px] bg-[#ff0000] font-black text-[12px] text-[#fff] text-center"
+                                className="p-[6px] bg-[#ff0000] font-black text-[12px] text-[#fff] text-center w-full"
                                 onClick={() => setStakeValue(0)}
                               >
                                 CLEAR
                               </button>
                             </div>
-
-                            <div className="flex justify-between items-center">
+                            <div className="flex justify-between items-center my-1">
                               <button
                                 className="w-full text-[#fff] font-bold text-[14px] bg-[#fa6a6a] p-2"
                                 onClick={() => closePlaceBet()}
@@ -1699,7 +1769,7 @@ function EventDetails() {
               </div>
             )}
             {/* Toss */}
-            {toss != "" && (
+            {toss != "" && toss?.marketRunners?.length > 0 && (
               <div>
                 <div className="flex justify-start items-center p-1 bg-[#9430ff]">
                   <span className="text-sm text-[#fff] mr-2">TOSS</span>
@@ -1857,7 +1927,7 @@ function EventDetails() {
                                 // marginTop: "",
                               }}
                             >
-                              <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512" className="w-6 fa-spin">
+                              <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512" className="w-10 fa-spin">
                                 <path fill="black" d="M304 48a48 48 0 1 0 -96 0 48 48 0 1 0 96 0zm0 416a48 48 0 1 0 -96 0 48 48 0 1 0 96 0zM48 304a48 48 0 1 0 0-96 48 48 0 1 0 0 96zm464-48a48 48 0 1 0 -96 0 48 48 0 1 0 96 0zM142.9 437A48 48 0 1 0 75 369.1 48 48 0 1 0 142.9 437zm0-294.2A48 48 0 1 0 75 75a48 48 0 1 0 67.9 67.9zM369.1 437A48 48 0 1 0 437 369.1 48 48 0 1 0 369.1 437z" />
                               </svg>
                             </div>
@@ -1881,7 +1951,7 @@ function EventDetails() {
                                 type="number"
                                 className="h-[32px] w-[50%] border-none focus:outline-none focus:ring-0 text-center font-bold"
                                 value={StakeValue}
-                              // onChange={(e) => setStakeValue(e.target.value)}
+                                onChange={(e) => placeStakeValue(Number(e.target.value))}
                               />
                             </div>
                             <div className="grid grid-cols-4 gap-[2px] w-full my-1">
@@ -1900,24 +1970,29 @@ function EventDetails() {
                                   {chip.chip_value}
                                 </button>
                               ))}
-                              <button className="p-[6px] bg-[#ffbc00] font-black text-[12px] text-[#000] text-center">
+                            </div>
+                            <div className="flex gap-[2px] w-full">
+                              {/* <button className="p-[6px] bg-[#ffbc00] font-black text-[12px] text-[#000] text-center">
                                 MIN STAKE
                               </button>
                               <button className="p-[6px] bg-[#334579] font-black text-[12px] text-[#fff] text-center">
                                 MAX STAKE
+                              </button> */}
+                              <button className="p-[6px] bg-[#ffbc00] font-black text-[12px] text-[#fff] text-center w-full" onClick={() => setStakeValue(currentBalance)}>
+                                All IN
                               </button>
-                              <button className="p-[6px] bg-[#008000] font-black text-[12px] text-[#fff] text-center">
+                              <button className="p-[6px] bg-[#008000] font-black text-[12px] text-[#fff] text-center w-full" onClick={() => navigate('/settings')}>
                                 EDIT STAKE
                               </button>
                               <button
-                                className="p-[6px] bg-[#ff0000] font-black text-[12px] text-[#fff] text-center"
+                                className="p-[6px] bg-[#ff0000] font-black text-[12px] text-[#fff] text-center w-full"
                                 onClick={() => setStakeValue(0)}
                               >
                                 CLEAR
                               </button>
                             </div>
 
-                            <div className="flex justify-between items-center">
+                            <div className="flex justify-between items-center my-1">
                               <button
                                 className="w-full text-[#fff] font-bold text-[14px] bg-[#fa6a6a] p-2"
                                 onClick={() => closePlaceBet()}
@@ -2099,7 +2174,7 @@ function EventDetails() {
                                 // marginTop: "",
                               }}
                             >
-                              <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512" className="w-6 fa-spin">
+                              <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512" className="w-10 fa-spin">
                                 <path fill="black" d="M304 48a48 48 0 1 0 -96 0 48 48 0 1 0 96 0zm0 416a48 48 0 1 0 -96 0 48 48 0 1 0 96 0zM48 304a48 48 0 1 0 0-96 48 48 0 1 0 0 96zm464-48a48 48 0 1 0 -96 0 48 48 0 1 0 96 0zM142.9 437A48 48 0 1 0 75 369.1 48 48 0 1 0 142.9 437zm0-294.2A48 48 0 1 0 75 75a48 48 0 1 0 67.9 67.9zM369.1 437A48 48 0 1 0 437 369.1 48 48 0 1 0 369.1 437z" />
                               </svg>
                             </div>
@@ -2123,7 +2198,7 @@ function EventDetails() {
                                 type="number"
                                 className="h-[32px] w-[50%] border-none focus:outline-none focus:ring-0 text-center font-bold"
                                 value={StakeValue}
-                              // onChange={(e) => setStakeValue(e.target.value)}
+                                onChange={(e) => placeStakeValue(Number(e.target.value))}
                               />
                             </div>
                             <div className="grid grid-cols-4 gap-[2px] w-full my-1">
@@ -2142,24 +2217,29 @@ function EventDetails() {
                                   {chip.chip_value}
                                 </button>
                               ))}
-                              <button className="p-[6px] bg-[#ffbc00] font-black text-[12px] text-[#000] text-center">
+                            </div>
+                            <div className="flex gap-[2px] w-full">
+                              {/* <button className="p-[6px] bg-[#ffbc00] font-black text-[12px] text-[#000] text-center">
                                 MIN STAKE
                               </button>
                               <button className="p-[6px] bg-[#334579] font-black text-[12px] text-[#fff] text-center">
                                 MAX STAKE
+                              </button> */}
+                              <button className="p-[6px] bg-[#ffbc00] font-black text-[12px] text-[#fff] text-center w-full" onClick={() => setStakeValue(currentBalance)}>
+                                All IN
                               </button>
-                              <button className="p-[6px] bg-[#008000] font-black text-[12px] text-[#fff] text-center">
+                              <button className="p-[6px] bg-[#008000] font-black text-[12px] text-[#fff] text-center w-full" onClick={() => navigate('/settings')}>
                                 EDIT STAKE
                               </button>
                               <button
-                                className="p-[6px] bg-[#ff0000] font-black text-[12px] text-[#fff] text-center"
+                                className="p-[6px] bg-[#ff0000] font-black text-[12px] text-[#fff] text-center w-full"
                                 onClick={() => setStakeValue(0)}
                               >
                                 CLEAR
                               </button>
                             </div>
 
-                            <div className="flex justify-between items-center">
+                            <div className="flex justify-between items-center my-1">
                               <button
                                 className="w-full text-[#fff] font-bold text-[14px] bg-[#fa6a6a] p-2"
                                 onClick={() => closePlaceBet()}
@@ -2258,8 +2338,8 @@ function EventDetails() {
                             ) : null}</span>
                           </div>
                           <span id={`${index}_${item.selection_id}`} className="relative" onClick={() => {
-                            if (openFancyMinMaxStack == `${index}_${item.selection_id}`) { setOpenFancyMinMaxStack("") } else {
-                              setOpenFancyMinMaxStack(`${index}_${item.selection_id}`)
+                            if (openFancyMinMaxStack == `${item.market_id}_${item.selection_id}`) { setOpenFancyMinMaxStack("") } else {
+                              setOpenFancyMinMaxStack(`${item.market_id}_${item.selection_id}`)
                             }
                           }}>
                             <svg
@@ -2272,9 +2352,24 @@ function EventDetails() {
                             >
                               <path d="M8 16A8 8 0 1 0 8 0a8 8 0 0 0 0 16m.93-9.412-1 4.705c-.07.34.029.533.304.533.194 0 .487-.07.686-.246l-.088.416c-.287.346-.92.598-1.465.598-.703 0-1.002-.422-.808-1.319l.738-3.468c.064-.293.006-.399-.287-.47l-.451-.081.082-.381 2.29-.287zM8 5.5a1 1 0 1 1 0-2 1 1 0 0 1 0 2" />
                             </svg>
-                            {openFancyMinMaxStack == `${index}_${item.selection_id}` &&
+                            {openFancyMinMaxStack == `${item.market_id}_${item.selection_id}` &&
                               <div className="absolute right-[1px] top-[18px] z-10 text-xs bg-[#fff] py-2 px-4 rounded-sm" style={{ boxShadow: "0 0 5px #999" }}>
-                                <span className="font-bold">Min:</span>100<span className="font-bold">Max:</span>100k
+
+                                {
+                                  generalSetting.length > 0 ?
+                                    generalSetting?.map(gen => {
+                                      if (gen.event_name == "fancy") {
+                                        return (
+                                          <>
+                                            <span className="font-bold">Min:</span>{gen.min_stake}<span className="font-bold">Max:</span>{gen.max_stake}
+                                          </>)
+                                      }
+                                    })
+                                    :
+                                    <>
+                                      <span className="font-bold">Min:</span>100<span className="font-bold">Max:</span>10k
+                                    </>
+                                }
                               </div>
                             }
                           </span>
@@ -2381,7 +2476,7 @@ function EventDetails() {
                               // marginTop: "",
                             }}
                           >
-                            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512" className="w-6 fa-spin">
+                            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512" className="w-10 fa-spin">
                               <path fill="black" d="M304 48a48 48 0 1 0 -96 0 48 48 0 1 0 96 0zm0 416a48 48 0 1 0 -96 0 48 48 0 1 0 96 0zM48 304a48 48 0 1 0 0-96 48 48 0 1 0 0 96zm464-48a48 48 0 1 0 -96 0 48 48 0 1 0 96 0zM142.9 437A48 48 0 1 0 75 369.1 48 48 0 1 0 142.9 437zm0-294.2A48 48 0 1 0 75 75a48 48 0 1 0 67.9 67.9zM369.1 437A48 48 0 1 0 437 369.1 48 48 0 1 0 369.1 437z" />
                             </svg>
                           </div>
@@ -2405,7 +2500,7 @@ function EventDetails() {
                               type="number"
                               className="h-[32px] w-[50%] border-none focus:outline-none focus:ring-0 text-center font-bold"
                               value={StakeValue}
-                            // onChange={(e) => setStakeValue(e.target.value)}
+                              onChange={(e) => placeStakeValue(Number(e.target.value))}
                             />
                           </div>
                           <div className="grid grid-cols-4 gap-[2px] w-full my-1">
@@ -2424,24 +2519,29 @@ function EventDetails() {
                                 {chip.chip_value}
                               </button>
                             ))}
-                            <button className="p-[6px] bg-[#ffbc00] font-black text-[12px] text-[#000] text-center">
-                              MIN STAKE
+                          </div>
+                          <div className="flex gap-[2px] w-full">
+                            {/* <button className="p-[6px] bg-[#ffbc00] font-black text-[12px] text-[#000] text-center">
+                                MIN STAKE
+                              </button>
+                              <button className="p-[6px] bg-[#334579] font-black text-[12px] text-[#fff] text-center">
+                                MAX STAKE
+                              </button> */}
+                            <button className="p-[6px] bg-[#ffbc00] font-black text-[12px] text-[#fff] text-center w-full" onClick={() => setStakeValue(currentBalance)}>
+                              All IN
                             </button>
-                            <button className="p-[6px] bg-[#334579] font-black text-[12px] text-[#fff] text-center">
-                              MAX STAKE
-                            </button>
-                            <button className="p-[6px] bg-[#008000] font-black text-[12px] text-[#fff] text-center">
+                            <button className="p-[6px] bg-[#008000] font-black text-[12px] text-[#fff] text-center w-full" onClick={() => navigate('/settings')}>
                               EDIT STAKE
                             </button>
                             <button
-                              className="p-[6px] bg-[#ff0000] font-black text-[12px] text-[#fff] text-center"
+                              className="p-[6px] bg-[#ff0000] font-black text-[12px] text-[#fff] text-center w-full"
                               onClick={() => setStakeValue(0)}
                             >
                               CLEAR
                             </button>
                           </div>
 
-                          <div className="flex justify-between items-center">
+                          <div className="flex justify-between items-center my-1">
                             <button
                               className="w-full text-[#fff] font-bold text-[14px] bg-[#fa6a6a] p-2"
                               onClick={() => closePlaceBet()}

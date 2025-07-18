@@ -6,16 +6,21 @@ import axios from "axios";
 import { useAuth } from "../AuthContext";
 import { Link, useNavigate } from "react-router-dom";
 import Register from "../Pages/Auth/Register";
-import { useSelector } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
+import { emptyUserInfo } from '../redux/slice/userInfo/userInfoSlice';
+import { emptyBalance } from '../redux/slice/user/userSlice';
+import { emptyLoingUserData } from '../redux/slice/userData/userDataSlice';
+import { getAllBets, emptyOpenBets } from '../redux/slice/openBet/openBetSlice';
 
 function Header() {
   const sidebarRef = useRef();
   const navigate = useNavigate();
   const userInfo = Helper();
-  const { logout, showLoginModel, setShowLoginModel, setBetPlaced, betPlaced } = useAuth();
+  const dispatch = useDispatch();
+  const { logout, showLoginModel, setShowLoginModel, setBetPlaced, betPlaced, setCurrentExposure, setCurrentBalance } = useAuth();
   const betData = useSelector((state) => state.data);
 
-  console.log("Header userInfo : ", userInfo?.user_name);
+  console.log("Header userInfo : ", userInfo);
   console.log("betData : ", betData)
 
   const [showSidebar, setShowSidebar] = useState(false);
@@ -26,6 +31,7 @@ function Header() {
   const [exposure, setExposure] = useState(0);
 
   let balanceWithExp = balance - Math.abs(exposure);
+  setCurrentBalance(balanceWithExp);
 
   function getBalance() {
     var data = JSON.stringify({
@@ -48,6 +54,7 @@ function Header() {
           console.log('Balance response : ', response)
           setBalance(response.data.resultData?.balance);
           setExposure(response.data.resultData?.exposure);
+          setCurrentExposure(response.data.resultData?.exposure)
         }
       })
       .catch(function (error) {
@@ -59,6 +66,60 @@ function Header() {
     setShowSidebar(false);
     logout();
   };
+
+
+  const checkNewLogin = () => {
+    var data = JSON.stringify({
+      "login_token": userInfo.login_token,
+      "user_id": userInfo._id
+    });
+
+    var config = {
+      method: 'post',
+      url: `${Appconfig.apiUrl}userToken/getToken`,
+      headers: {
+        'Content-Type': 'application/json'
+      },
+      data: data
+    };
+    axios(config)
+      .then(function (response) {
+        try {
+          if (response.data.result) {
+          }
+          else {
+            localStorage.removeItem('userdata');
+            localStorage.removeItem('login_token');
+            localStorage.removeItem('loginTime');
+            dispatch(emptyUserInfo());
+            dispatch(emptyBalance());
+            dispatch(emptyOpenBets());
+            dispatch(emptyLoingUserData());
+            // setMyAccountListOpen(false)
+            // window.location.href = "/login";
+            window.location.reload();
+          }
+        } catch (e) {
+          // postErrorToslack(e.message);
+        }
+      })
+      .catch(function (error) {
+        // postErrorToslack(error.message);
+        console.log(error);
+      });
+  }
+
+  // Check Multilogin
+  useEffect(() => {
+    const chkLog = window.setInterval(function () {
+      if (userInfo) {
+        checkNewLogin();
+      }
+    }, 5000);
+    return () => {
+      clearInterval(chkLog)
+    }
+  }, [])
 
   useEffect(() => {
     if (userInfo) {
@@ -94,13 +155,13 @@ function Header() {
     }
   }, [showLoginModel]);
 
-  useEffect(() => {
-    if (!userInfo) {
-      setLoginClicked(true);
-    } else {
-      setLoginClicked(false);
-    }
-  }, [userInfo])
+  // useEffect(() => {
+  //   if (!userInfo) {
+  //     setLoginClicked(true);
+  //   } else {
+  //     setLoginClicked(false);
+  //   }
+  // }, [userInfo])
 
   return (
     <>
@@ -136,7 +197,7 @@ function Header() {
                 <path d="M280.37 148.26L96 300.11V464a16 16 0 0 0 16 16l112.06-.29a16 16 0 0 0 15.92-16V368a16 16 0 0 1 16-16h64a16 16 0 0 1 16 16v95.64a16 16 0 0 0 16 16.05L464 480a16 16 0 0 0 16-16V300L295.67 148.26a12.19 12.19 0 0 0-15.3 0zM571.6 251.47L488 182.56V44.05a12 12 0 0 0-12-12h-56a12 12 0 0 0-12 12v72.61L318.47 43a48 48 0 0 0-61 0L4.34 251.47a12 12 0 0 0-1.6 16.9l25.5 31A12 12 0 0 0 45.15 301l235.22-193.74a12.19 12.19 0 0 1 15.3 0L530.9 301a12 12 0 0 0 16.9-1.6l25.5-31a12 12 0 0 0-1.7-16.93z"></path>
               </svg>
             </span>
-            <img src="/Images/logo.webp" alt="" className="w-28 lg:w-56 h-[1.6rem] lg:h-auto" />
+            <img src="/logo.png" alt="" className="w-28 lg:w-56 h-auto lg:h-[65px]" />
           </Link>
         </div>
 
@@ -411,8 +472,8 @@ function Header() {
                   </button>
                 </div>
                 {/* Deposit Withdraw Section */}
-                <div className="flex justify-evenly bg-black gap-2 px-1 py-2 w-full mx-auto mb-2">
-                  <Link to={`/deposit`} className="w-full p-2 h-[37px] flex justify-center items-center gap-1 uppercase text-white font-bold text-[12px] rounded border border-white bg-gradient-to-b from-[#007b15] to-[#138e00]">
+                <div className="flex justify-evenly gap-2 px-1 py-2 w-full mx-auto mb-2">
+                  <Link to={`/deposit`} className="w-full p-2 h-[37px] flex justify-center items-center gap-1 uppercase text-white font-bold text-[12px] rounded border border-black bg-gradient-to-b from-[#007b15] to-[#138e00]">
                     <img
                       src="/Images/deposit-icon.webp"
                       alt="Deposit"
@@ -420,7 +481,7 @@ function Header() {
                     />
                     <h3 className="m-0">Deposit</h3>
                   </Link>
-                  <Link to={`/withdraw`} className="w-full p-1 h-[37px] flex justify-center items-center gap-1 uppercase text-white font-bold text-[12px] rounded border border-white bg-gradient-to-b from-[#7b0000] to-[#d10000]">
+                  <Link to={`/withdraw`} className="w-full p-1 h-[37px] flex justify-center items-center gap-1 uppercase text-white font-bold text-[12px] rounded border border-black bg-gradient-to-b from-[#7b0000] to-[#d10000]">
                     <img
                       src="/Images/withdrawal-icon.webp"
                       alt="Withdraw"
@@ -526,7 +587,7 @@ function Header() {
         </>
       </div>
 
-      {/* deposit withdraw section */}
+      {/* deposit withdraw section In Header*/}
       {userInfo && (
         <div className="flex lg:hidden justify-evenly bg-black px-2 py-1 w-full text-[12.5px]">
 

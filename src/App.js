@@ -42,11 +42,7 @@ function App() {
                   />
                   <Route
                     path="matchupdates/:event_id/:is_inplay"
-                    element={
-                      <PrivateRoute>
-                        <EventDetails />
-                      </PrivateRoute>
-                    }
+                    element={<EventDetails />}
                   />
                   <Route
                     path="openbets"
@@ -152,7 +148,7 @@ function App() {
                       </PrivateRoute>
                     }
                   />
-                   <Route
+                  <Route
                     path="withdraw"
                     element={
                       <PrivateRoute>

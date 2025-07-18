@@ -23,6 +23,9 @@ const userSlice = createSlice({
         setBalance(state, action) {
             state.userBalance = action.payload;
         },
+        emptyBalance(state) {
+            state.userBalance = null;
+        },
     },
     extraReducers: (builder) => {
         builder
@@ -41,7 +44,7 @@ const userSlice = createSlice({
     },
 });
 
-export const { setBalance } = userSlice.actions;
+export const { setBalance,emptyBalance } = userSlice.actions;
 
 
 export default userSlice.reducer;

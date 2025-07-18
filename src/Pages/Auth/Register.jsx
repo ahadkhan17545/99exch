@@ -3,7 +3,7 @@ import axios from "axios";
 import apiBaseUrl from "../../config/config";
 import { toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
-import { useNavigate } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import { useAuth } from "../../AuthContext";
 
 const Register = ({ setIsOpen, setIsRegisterOpen }) => {
@@ -107,134 +107,183 @@ const Register = ({ setIsOpen, setIsRegisterOpen }) => {
 
   return (
     <>
-      <div className="fixed top-0 left-0 w-full h-screen flex justify-center items-center z-[1000] bg-[#0000007d] animate-fadeIn">
-        <div className="flex justify-center items-center flex-col  bg-popup-gradient px-5 rounded-[10px] w-full h-screen shadow-[0_5px_15px_rgb(73,72,72)] relative animate-slideIn">
-          <div className="flex justify-end mt-[-4rem] mb-[2rem] w-full">
-            {/* <button
-              type="button"
-              className="close text-[2.125rem] text-white"
-              onClick={() => setIsRegisterOpen(false)}
-            >
-              ×
-            </button> */}
-          </div>
-          <div className="relative p-[15px] w-[90%] lg:w-[20%] h-[80%] rounded-[10px] mx-auto mt-[10rem]">
-            <div className="flex justify-center items-center">
-              <img
-                src="/Images/logo.webp"
-                alt=""
-                className="w-[200px] h-[52px]"
-              />
+      <div className="fixed top-0 left-0 w-full h-screen flex justify-center items-center z-[1000] bg-[#0000006e] backdrop-blur-sm animate-fadeIn">
+        <div className="flex justify-center items-center flex-col px-5 rounded-[10px] w-full h-screen shadow-[0_5px_15px_rgb(73,72,72)] relative animate-slideIn">
+          <div className="relative w-[90%] lg:w-[20%] h-auto rounded-[10px] mx-auto mt-[4rem] bg-[#fff]">
+
+            <div className=" text-end p-2">
+              <button
+                type="button"
+                className=" text-xl w-8 h-8 text-white bg-black rounded-2xl hover:bg-purple-700 transition"
+                onClick={() => {
+                  setIsOpen(false);
+                  setIsRegisterOpen(false);
+                }}
+              >
+                ×
+              </button>
             </div>
-
-            <form
-              className="p-4 mt-6 bg-[#fff] rounded"
-              id="form_data"
-              name="form_data"
-              onSubmit={handleSubmit}
-            >
-              <div className="flex justify-center items-center text-[1.5rem] w-full mb-2">
-                <span>
-
-                  REGISTER
-                </span>
-                <svg
-                  stroke="currentColor"
-                  fill="currentColor"
-                  strokeWidth={0}
-                  viewBox="0 0 384 512"
-                  height="1em"
-                  width="1em"
-                  xmlns="http://www.w3.org/2000/svg"
-                >
-                  <path d="M91.826 467.2V317.966c-8.248 5.841-16.558 10.57-24.918 14.153C35.098 345.752-.014 322.222 0 288c.008-18.616 10.897-32.203 29.092-40 28.286-12.122 64.329-78.648 77.323-107.534 7.956-17.857 25.479-28.453 43.845-28.464l.001-.002h171.526c11.812 0 21.897 8.596 23.703 20.269 7.25 46.837 38.483 61.76 38.315 123.731-.007 2.724.195 13.254.195 16 0 50.654-22.122 81.574-71.263 72.6-9.297 18.597-39.486 30.738-62.315 16.45-21.177 24.645-53.896 22.639-70.944 6.299V467.2c0 24.15-20.201 44.8-43.826 44.8-23.283 0-43.826-21.35-43.826-44.8zM112 72V24c0-13.255 10.745-24 24-24h192c13.255 0 24 10.745 24 24v48c0 13.255-10.745 24-24 24H136c-13.255 0-24-10.745-24-24zm212-24c0-11.046-8.954-20-20-20s-20 8.954-20 20 8.954 20 20 20 20-8.954 20-20z" />
-                </svg>
-
+            <div className=" px-[15px]">
+              <div className="flex justify-center items-center">
+                <img
+                  src="/logo.png"
+                  alt=""
+                  className="w-[200px] h-auto"
+                />
               </div>
-              <div id="login" className="">
-                {/* Username Field */}
-                <div className="flex items-center">
-                  <input
-                    type="text"
-                    name="user_name"
-                    placeholder="10 Digit Phone Number"
-                    required
-                    value={formData.user_name}
-                    onChange={(e) => handleInputChange(e)}
-                    className="phnumber login-input w-full px-4 py-2 border border-gray-300 rounded user_input focus:outline-none focus:ring-2 focus:ring-purple-500"
-                  />
-                </div>
 
-                {/* Password Field */}
-                <div className="flex items-center mt-2">
-                  <input
-                    type="password"
-                    name="password"
-                    placeholder="Password"
-                    required
-                    value={formData.password}
-                    onChange={(e) => handleInputChange(e)}
-                    className="w-full px-4 py-2 border border-gray-300 rounded pass_input focus:outline-none focus:ring-2 focus:ring-purple-500"
-                  />
-                </div>
+              <form
+                className="p-4 bg-[#fff] rounded"
+                id="form_data"
+                name="form_data"
+                onSubmit={handleSubmit}
+              >
+                <div className="flex justify-center items-center text-[1.5rem] w-full mb-2">
+                  <span>
 
-                <div className="flex justify-center items-center w-full ">
-                  <button
-                    className="bg-[#000] text-[#fff] rounded p-2 mt-2 w-[50%]"
-                    disabled={otpBtn}
-                    onClick={(e) => getOtp(e)}
-                  >
-                    Send OTP
-                  </button>
-                </div>
-
-                {/* Otp Field */}
-                <div className="flex items-center mt-2">
-                  <input
-                    type="number"
-                    name="otp"
-                    placeholder="Enter OTP"
-                    required
-                    value={formData.otp}
-                    onChange={(e) => handleInputChange(e)}
-                    className="otp-input w-full px-4 py-2 border border-gray-300 rounded pass_input focus:outline-none focus:ring-2 focus:ring-purple-500"
-                  />
-                </div>
-
-                {/* Referal Field */}
-                <div className="flex items-center mt-2">
-                  <input
-                    type="text"
-                    name="refercode"
-                    placeholder="Referral Code (if any)"
-                    value={formData.refercode}
-                    onChange={(e) => handleInputChange(e)}
-                    className="otp-input w-full px-4 py-2 border border-gray-300 rounded pass_input focus:outline-none focus:ring-2 focus:ring-purple-500"
-                  />
-                </div>
-
-                {/* Login Button */}
-                <div className="text-center">
-                  <button
-                    type="submit"
-                    className="bg-[#000] text-white px-6 py-2 mt-3 rounded w-full hover:bg-purple-700 transition"
-                  >
-                    Register
-                  </button>
-                </div>
-                <div className="text-center">
-                  <span
-                    className="text-[#000] text-center block mt-4 tracking-wider text-sm"
-                    onClick={() => {
-                      setIsRegisterOpen(false);
-                      setIsOpen(true);
-                    }}
-                  >
-                    Already have an account? <span className="font-bold hover:text-purple-700 transition cursor-pointer">Login</span>
+                    REGISTER
                   </span>
+                  <svg
+                    stroke="currentColor"
+                    fill="currentColor"
+                    strokeWidth={0}
+                    viewBox="0 0 384 512"
+                    height="1em"
+                    width="1em"
+                    xmlns="http://www.w3.org/2000/svg"
+                  >
+                    <path d="M91.826 467.2V317.966c-8.248 5.841-16.558 10.57-24.918 14.153C35.098 345.752-.014 322.222 0 288c.008-18.616 10.897-32.203 29.092-40 28.286-12.122 64.329-78.648 77.323-107.534 7.956-17.857 25.479-28.453 43.845-28.464l.001-.002h171.526c11.812 0 21.897 8.596 23.703 20.269 7.25 46.837 38.483 61.76 38.315 123.731-.007 2.724.195 13.254.195 16 0 50.654-22.122 81.574-71.263 72.6-9.297 18.597-39.486 30.738-62.315 16.45-21.177 24.645-53.896 22.639-70.944 6.299V467.2c0 24.15-20.201 44.8-43.826 44.8-23.283 0-43.826-21.35-43.826-44.8zM112 72V24c0-13.255 10.745-24 24-24h192c13.255 0 24 10.745 24 24v48c0 13.255-10.745 24-24 24H136c-13.255 0-24-10.745-24-24zm212-24c0-11.046-8.954-20-20-20s-20 8.954-20 20 8.954 20 20 20 20-8.954 20-20z" />
+                  </svg>
+
                 </div>
-              </div>
-            </form>
+                <div id="login" className="">
+                  {/* Username Field */}
+                  <div className="flex items-center">
+                    <input
+                      type="text"
+                      name="user_name"
+                      placeholder="10 Digit Phone Number"
+                      required
+                      value={formData.user_name}
+                      onChange={(e) => handleInputChange(e)}
+                      className="phnumber login-input w-full px-4 py-2 border border-gray-300 rounded user_input focus:outline-none focus:ring-2 focus:ring-purple-500"
+                    />
+                  </div>
+
+                  {/* Otp Field */}
+                  <div className="flex items-center mt-2">
+                    <input
+                      type="number"
+                      name="otp"
+                      placeholder="Enter OTP"
+                      required
+                      value={formData.otp}
+                      onChange={(e) => handleInputChange(e)}
+                      className="otp-input w-full px-4 py-2 border border-gray-300 rounded pass_input focus:outline-none focus:ring-2 focus:ring-purple-500"
+                    />
+                  </div>
+
+                  <div className="flex justify-center items-center w-full ">
+                    <button
+                      className="bg-[#000] text-[#fff] rounded p-2 mt-2 w-[50%]"
+                      disabled={otpBtn}
+                      onClick={(e) => getOtp(e)}
+                    >
+                      Send OTP
+                    </button>
+                  </div>
+
+
+                  {/* Password Field */}
+                  <div className="flex items-center mt-2">
+                    <input
+                      type="password"
+                      name="password"
+                      placeholder="Password"
+                      required
+                      value={formData.password}
+                      onChange={(e) => handleInputChange(e)}
+                      className="w-full px-4 py-2 border border-gray-300 rounded pass_input focus:outline-none focus:ring-2 focus:ring-purple-500"
+                    />
+                  </div>
+
+                  {/* Referal Field */}
+                  <div className="flex items-center mt-2">
+                    <input
+                      type="text"
+                      name="refercode"
+                      placeholder="Referral Code (if any)"
+                      value={formData.refercode}
+                      onChange={(e) => handleInputChange(e)}
+                      className="otp-input w-full px-4 py-2 border border-gray-300 rounded pass_input focus:outline-none focus:ring-2 focus:ring-purple-500"
+                    />
+                  </div>
+
+                  {/* Login Button */}
+                  <div className="text-center">
+                    <button
+                      type="submit"
+                      className="bg-[#000] text-white px-6 py-2 mt-3 rounded w-full hover:bg-purple-700 transition"
+                    >
+                      Register
+                    </button>
+                  </div>
+                  <div className=" mt-4 pt-2 border-t border-black border-dashed">
+
+                    {/* Download APK */}
+                    <div className="flex justify-center items-center text-center gap-3">
+                      <img src="/Images/2201767.png" alt="" className="loginHandAnimation w-8 -ml-12" />
+                      <Link className="flex justify-center items-center gap-1 mx-4 cursor-pointer" to={'https://wa.me'}>
+                        <button
+                          type="button"
+                          className="flex justify-center item-center bg-[#008000] text-white text-base p-2  rounded-2xl hover:bg-purple-700 transition"
+                        >
+                          <img
+                            src="/Images/fair-wt-1.webp"
+                            alt=""
+                            className="w-4 h-4"
+                          />
+                        </button>
+                        <span className="text-sm font-semibold text-[#000] hover:text-purple-700 transition">WHATSAPP</span>
+                      </Link>
+                      <div>
+                        <div className="flex justify-center items-center gap-1 cursor-pointer"
+                          onClick={() => {
+                            setIsRegisterOpen(false);
+                            setIsOpen(true);
+                          }}>
+
+                          <button
+                            className="flex justify-center item-center bg-[#007bff] text-white text-base p-2  rounded-2xl hover:bg-purple-700 transition"
+                          >
+                            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 640 512" className="h-4 w-4 invert">
+                              <path d="M96 128a128 128 0 1 1 256 0A128 128 0 1 1 96 128zM0 482.3C0 383.8 79.8 304 178.3 304l91.4 0C368.2 304 448 383.8 448 482.3c0 16.4-13.3 29.7-29.7 29.7L29.7 512C13.3 512 0 498.7 0 482.3zM504 312l0-64-64 0c-13.3 0-24-10.7-24-24s10.7-24 24-24l64 0 0-64c0-13.3 10.7-24 24-24s24 10.7 24 24l0 64 64 0c13.3 0 24 10.7 24 24s-10.7 24-24 24l-64 0 0 64c0 13.3-10.7 24-24 24s-24-10.7-24-24z" />
+                            </svg>
+
+                          </button>
+                          <span
+                            className="text-sm font-semibold text-[#000] hover:text-purple-700 transition"
+                          >
+                            LOGIN
+                          </span>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                  {/* <div className="text-center">
+                    <span
+                      className="text-[#000] text-center block mt-4 tracking-wider text-sm"
+                      onClick={() => {
+                        setIsRegisterOpen(false);
+                        setIsOpen(true);
+                      }}
+                    >
+                      Already have an account? <span className="font-bold hover:text-purple-700 transition cursor-pointer">Login</span>
+                    </span>
+                  </div> */}
+                </div>
+              </form>
+            </div>
           </div>
         </div>
       </div>

@@ -51,6 +51,71 @@ function Home() {
     },
   ];
 
+  const NewLaunch = [
+    {
+      img: "/Images/Casino_providers/luckylase2.webp",
+      name: "LUCKY LASE 2",
+      alt: "LUCKY LASE 2",
+      provider: "DC",
+      code: "150043",
+    },
+    {
+      img: "/Images/Casino_providers/lankesh.webp",
+      name: "LANKESH",
+      alt: "LANKESH",
+      provider: "DC",
+      code: "151026",
+    },
+    {
+      img: "/Images/Casino_providers/pushpa.webp",
+      name: "PUSHPA",
+      alt: "PUSHPA",
+      provider: "DC",
+      code: "151067",
+      type: "",
+    },
+    {
+      img: "/Images/Casino_providers/rps.webp",
+      name: "ROCK PAPER SCISSORS",
+      alt: "ROCK PAPER SCISSORS",
+      provider: "QT",
+      code: "ADL-rockpaperscissorsdraw",
+      type: "",
+    },
+     {
+      img: "/Images/Casino_providers/duckrace.webp",
+      name: "DUCK RACING",
+      alt: "DUCK RACING",
+      provider: "DC",
+      code: "400086",
+      type: "",
+    },
+     {
+      img: "/Images/Casino_providers/xroulette.webp",
+      name: "XROULETTE",
+      alt: "XROULETTE",
+      provider: "QT",
+      code: "BTL-autoroulette",
+      type: "",
+    },
+     {
+      img: "/Images/Casino_providers/marblerace.webp",
+      name: "MARBLE RACE",
+      alt: "MARBLE RACE",
+      provider: "DC",
+      code: "400091",
+      type: "",
+    },
+     {
+      img: "/Images/Casino_providers/teenpatti-joker2020.webp",
+      name: "TEENPATTI JOKER 2020",
+      alt: "TEENPATTI JOKER 2020",
+      provider: "SN",
+      code: "VJKR",
+      type: "",
+    },
+  ];
+
   const casinoList = [
     {
       img: "https://img.jaipurapps.com/all-casino-img/dragon-tiger/dt_mac88.webp",
@@ -727,6 +792,48 @@ function Home() {
                   <div className="mac88-casino">
                     <div className="flex justify-start items-center w-full bg-[#8000ff] p-1">
                       <span className="animateHeading text-[#fff] font-bold mx-1">NEW LAUNCH</span>
+                    </div>
+                    <div className="">
+                      <ul className="grid grid-cols-4 lg:grid-cols-7 gap-[2px] p-[2px] lg:p-0">
+                        {" "}
+                        {/* 4 columns with small gap */}
+                        {NewLaunch?.map((item, index) => (
+                          <li
+                            key={index}
+                            className="casino-linkss"
+                            data-toggle="modal"
+                            data-target="#myModal"
+                            onClick={() =>
+                              CreateAndLaunchWCOCasino(item.provider, item.code)
+                            }
+                          >
+                            <div className="w-full h-[4.5rem] lg:h-[8rem]">
+                              <img
+                                src={item.img}
+                                className="w-full h-full object-fill"
+                                alt={item.alt}
+                                loading="lazy" // Optimized loading
+                              />
+                            </div>
+                            <p
+                              className="flex justify-center items-center text-[8px] lg:text-xs font-semibold text-[#fff] uppercase h-[34px]"
+                              style={{
+                                background:
+                                  "linear-gradient(0deg, rgba(128, 0, 255, 1) 0%, rgba(0, 0, 0, 1) 100%)",
+                              }}
+                            >
+                              {item.name}
+                            </p>
+                          </li>
+                        ))}
+                      </ul>
+                    </div>
+                  </div>
+
+                  {/* My favrouites images */}
+                  <div className="mac88-casino">
+                    <div className="flex justify-start items-center w-full bg-[#8000ff] p-1">
+                      <span className="animateHeading text-[#fff] font-bold mx-1">MY FAVOURITES</span>
                     </div>
                     <div className="">
                       <ul className="grid grid-cols-4 lg:grid-cols-7 gap-[2px] p-[2px] lg:p-0">

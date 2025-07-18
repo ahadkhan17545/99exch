@@ -15,7 +15,7 @@ export default {
         'super_admin': 'Super Admin', 'admin': 'Admin', 'super_master': 'Super Master', 'master': 'Master', 'agent': 'Agent', 'user': 'User'
     },
 
-    sitecodes: 'P49',
+    sitecodes: 'P51',
 
     // videoUrl: {
     //     '7ud': 'https://route53.casinovid.in/dvideo/lucky7a/',

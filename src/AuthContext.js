@@ -18,6 +18,8 @@ export const AuthProvider = ({ children }) => {
   const [showLoginModel, setShowLoginModel] = useState(false); //Open Login Modal
   const [betPlaced, setBetPlaced] = useState(false);
   const [betPlacedLoader, setBetPlacedLoader] = useState(false);
+  const [currentExposure, setCurrentExposure] = useState(0);
+  const [currentBalance, setCurrentBalance] = useState(0);
 
   const login = (userData) => {
     // Save user data and authentication status (you can also store a token here)
@@ -66,6 +68,10 @@ export const AuthProvider = ({ children }) => {
         setBetPlaced,
         betPlacedLoader,
         setBetPlacedLoader,
+        currentExposure,
+        setCurrentExposure,
+        currentBalance,
+        setCurrentBalance,
       }}
     >
       {children}
