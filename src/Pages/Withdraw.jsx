@@ -554,7 +554,7 @@ const Withdraw = () => {
     <>
       <div className=" p-[10px] bg-[#f1f5f8]">
         <div className="">
-          <p className="uppercase font-bold rounded-[5px] bg-[#343435] p-[5px] shadow-[1px_1px_4px_gray] text-white text-[15px]">
+          <p className="uppercase font-bold rounded-[5px] bg-[#343435] p-[5px] shadow-[1px_1px_4px_gray] text-[var(--secondary-color)] text-[15px]">
             <span className="p-1">Withdraw</span>
           </p>
         </div>
@@ -575,7 +575,7 @@ const Withdraw = () => {
                   setShowPreviousAccount(false);
                 }}
                 className={`flex-1 py-3 px-4 rounded-lg font-medium transition ${selectedOption === "new-account"
-                  ? "bg-[#8000ff] text-white"
+                  ? "bg-[var(--theme2-bg)] text-[var(--secondary-color)]"
                   : "bg-gray-100 hover:bg-gray-200"
                   }`}
               >
@@ -593,7 +593,7 @@ const Withdraw = () => {
                   }
                 }}
                 className={`flex-1 py-3 px-4 rounded-lg font-medium transition ${selectedOption === "previous-account"
-                  ? "bg-[#8000ff] text-white"
+                  ? "bg-[var(--theme2-bg)] text-[var(--secondary-color)]"
                   : "bg-gray-100 hover:bg-gray-200"
                   }`}
               >
@@ -611,7 +611,7 @@ const Withdraw = () => {
                     <button
                       key={type}
                       onClick={() => setShowUpiForm(type)}
-                      className={`flex flex-col items-center justify-center py-2 border rounded-xl transition hover:shadow-lg ${type === showUpiForm ? "ring-2 ring-[#8000ff]" : ""
+                      className={`flex flex-col items-center justify-center py-2 border rounded-xl transition hover:shadow-lg ${type === showUpiForm ? "ring-2 ring-[var(--theme2-bg)]" : ""
                         }`}
                     >
                       <img
@@ -644,7 +644,7 @@ const Withdraw = () => {
                       <div
                         key={method._id}
                         onClick={() => selectPaymentDetail(method)}
-                        className={`border rounded-xl p-4 cursor-pointer transition hover:shadow-lg ${showUpiForm === method?.type ? "ring-2 ring-[#8000ff]" : ""
+                        className={`border rounded-xl p-4 cursor-pointer transition hover:shadow-lg ${showUpiForm === method?.type ? "ring-2 ring-[var(--theme2-bg)]" : ""
                           }`}
                       >
                         <div className="flex items-center space-x-4">
@@ -734,7 +734,7 @@ const Withdraw = () => {
                   value={amountValue}
                   onChange={(e) => setAmountValue(e.target.value)}
                   placeholder="₹ Enter Amount"
-                  className="w-full border rounded-lg px-4 py-3 focus:outline-none focus:ring-2 focus:ring-[#8000ff]"
+                  className="w-full border rounded-lg px-4 py-3 focus:outline-none focus:ring-2 focus:ring-[var(--theme2-bg)]"
                 />
 
                 {showUpiForm === "Bank" && selectedOption === "new-account" && (
@@ -744,7 +744,7 @@ const Withdraw = () => {
                       value={ifscCode}
                       onChange={(e) => setIfscCode(e.target.value)}
                       placeholder="Enter IFSC Code"
-                      className="w-full border rounded-lg px-4 py-3 focus:outline-none focus:ring-2 focus:ring-[#8000ff]"
+                      className="w-full border rounded-lg px-4 py-3 focus:outline-none focus:ring-2 focus:ring-[var(--theme2-bg)]"
                     />
                     <span className="text-red-500 text-sm">{IfscValidationError}</span>
 
@@ -753,7 +753,7 @@ const Withdraw = () => {
                       value={accountNumber}
                       onChange={(e) => setAccountNumber(e.target.value)}
                       placeholder="Enter Account Number"
-                      className="w-full border rounded-lg px-4 py-3 focus:outline-none focus:ring-2 focus:ring-[#8000ff]"
+                      className="w-full border rounded-lg px-4 py-3 focus:outline-none focus:ring-2 focus:ring-[var(--theme2-bg)]"
                     />
                     <span className="text-red-500 text-sm">{AcNumValidationError}</span>
 
@@ -762,7 +762,7 @@ const Withdraw = () => {
                       value={bankName}
                       onChange={(e) => setBankName(e.target.value)}
                       placeholder="Enter Bank Name"
-                      className="w-full border rounded-lg px-4 py-3 focus:outline-none focus:ring-2 focus:ring-[#8000ff]"
+                      className="w-full border rounded-lg px-4 py-3 focus:outline-none focus:ring-2 focus:ring-[var(--theme2-bg)]"
                     />
                     <span className="text-red-500 text-sm">{BankValidationError}</span>
 
@@ -771,7 +771,7 @@ const Withdraw = () => {
                       value={accountHolder}
                       onChange={(e) => setAccountHolder(e.target.value)}
                       placeholder="Enter Account Name"
-                      className="w-full border rounded-lg px-4 py-3 focus:outline-none focus:ring-2 focus:ring-[#8000ff]"
+                      className="w-full border rounded-lg px-4 py-3 focus:outline-none focus:ring-2 focus:ring-[var(--theme2-bg)]"
                     />
                     <span className="text-red-500 text-sm">{AcHolderValidationError}</span>
                   </>
@@ -788,7 +788,7 @@ const Withdraw = () => {
                         value={upiId}
                         onChange={(e) => setUpiId(e.target.value)}
                         placeholder={`Enter ${showUpiForm} ID`}
-                        className="w-full border rounded-lg px-4 py-3 focus:outline-none focus:ring-2 focus:ring-[#8000ff]"
+                        className="w-full border rounded-lg px-4 py-3 focus:outline-none focus:ring-2 focus:ring-[var(--theme2-bg)]"
                       />
                       <span className="text-red-500 text-sm">{UPIValidationError}</span>
 
@@ -797,17 +797,17 @@ const Withdraw = () => {
                         value={upiHolder}
                         onChange={(e) => setUpiHolder(e.target.value)}
                         placeholder={`Enter ${showUpiForm} Holder Name`}
-                        className="w-full border rounded-lg px-4 py-3 focus:outline-none focus:ring-2 focus:ring-[#8000ff]"
+                        className="w-full border rounded-lg px-4 py-3 focus:outline-none focus:ring-2 focus:ring-[var(--theme2-bg)]"
                       />
                       <span className="text-red-500 text-sm">{HolderValidationError}</span>
                     </>
                   )}
 
                 <label className="flex items-center space-x-2 text-sm">
-                  <input type="checkbox" className="accent-[#8000ff]" />
+                  <input type="checkbox" className="accent-[var(--theme2-bg)]" />
                   <span>
                     I have read the{" "}
-                    <a href="#" className="text-[#8000ff]">
+                    <a href="#" className="text-[var(--theme1-bg)]">
                       terms of payment and withdrawal policy
                     </a>
                   </span>
@@ -816,9 +816,9 @@ const Withdraw = () => {
                 <button
                   type="submit"
                   disabled={isSubmitted}
-                  className={`w-full py-3 rounded-lg font-semibold text-white transition ${isSubmitted
-                    ? "bg-[#8000ff] cursor-not-allowed"
-                    : "bg-[#000] hover:bg-[#8000ff]"
+                  className={`w-full py-3 rounded-lg font-semibold text-[var(--secondary-color)] transition ${isSubmitted
+                    ? "bg-[var(--theme2-bg)] cursor-not-allowed"
+                    : "bg-[var(--theme1-bg)] hover:bg-[var(--theme2-bg)]"
                     }`}
                 >
                   {buttonText}
@@ -830,7 +830,7 @@ const Withdraw = () => {
           <div className="mt-8">
             <button
               onClick={() => setShowWithdrawHistory(!showWithdrawHistory)}
-              className="px-4 py-2 bg-[#8000ff] text-white rounded font-semibold"
+              className="px-4 py-2 bg-[var(--theme2-bg)] text-[var(--secondary-color)] rounded font-semibold"
             >
               {showWithdrawHistory ? "Hide Withdraw History" : "Show Withdraw History"}
             </button>

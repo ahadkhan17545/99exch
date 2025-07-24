@@ -6924,8 +6924,8 @@ function DiamondLobby() {
     <>
       {/* Mac888 images */}
       <div className="mt-1 p-[2px] lg:p-0">
-        <div className='flex justify-between items-center bg-[#000] mb-[2px]'>
-          <div className='flex justify-start items-center text-xs font-bold text-[#fff] p-2 gap-1'>
+        <div className='flex justify-between items-center bg-[var(--theme1-bg)] mb-[2px]'>
+          <div className='flex justify-start items-center text-xs font-bold text-[var(--secondary-color)] p-2 gap-1'>
             <img src="/Images/99998.png" alt="" className='w-3' />
             <span>CASINO</span></div>
           <div className='flex border border-black bg-[#fff]'>
@@ -6938,98 +6938,98 @@ function DiamondLobby() {
             </div>
           </div>
         </div>
-        <div className='overflow-x-auto scroll-hide w-full mb-[2px] bg-[#8000ff]' ref={menuBarRef}>
-          <ul className='flex flex-nowrap w-full text-xs font-bold text-[#fff] uppercase whitespace-nowrap'>
+        <div className='overflow-x-auto scroll-hide w-full mb-[2px] bg-[var(--theme2-bg)]' ref={menuBarRef}>
+          <ul className='flex flex-nowrap w-full text-xs font-bold text-[var(--secondary-color)] uppercase whitespace-nowrap'>
             <li ref={(el) => (lobbyRefs.current["all"] = el)}
-              onClick={() => setSelectedLobby("all")} className={`p-2 border-r border-[#fff] ${selectedLobby == 'all' ? 'bg-[#000]' : ''}`}>
+              onClick={() => setSelectedLobby("all")} className={`p-2 border-r border-[#fff] ${selectedLobby == 'all' ? 'bg-[var(--theme1-bg)]' : ''}`}>
               <span>
                 All
               </span>
             </li>
             <li className={`p-2 border-r border-[#fff]`}><span>Recent</span></li>
             <li ref={(el) => (lobbyRefs.current["ezugi"] = el)}
-              onClick={() => setSelectedLobby("ezugi")} className={`p-2 border-r border-[#fff] ${selectedLobby == 'ezugi' ? 'bg-[#000]' : ''}`}><span>Ezugi Gaming</span></li>
+              onClick={() => setSelectedLobby("ezugi")} className={`p-2 border-r border-[#fff] ${selectedLobby == 'ezugi' ? 'bg-[var(--theme1-bg)]' : ''}`}><span>Ezugi Gaming</span></li>
             <li ref={(el) => (lobbyRefs.current["sn"] = el)}
-              onClick={() => setSelectedLobby("sn")} className={`p-2 border-r border-[#fff] ${selectedLobby == 'sn' ? 'bg-[#000]' : ''}`}><span>Supernowa</span></li>
+              onClick={() => setSelectedLobby("sn")} className={`p-2 border-r border-[#fff] ${selectedLobby == 'sn' ? 'bg-[var(--theme1-bg)]' : ''}`}><span>Supernowa</span></li>
             <li ref={(el) => (lobbyRefs.current["spribe"] = el)}
-              onClick={() => setSelectedLobby("spribe")} className={`p-2 border-r border-[#fff] ${selectedLobby == 'spribe' ? 'bg-[#000]' : ''}`}><span>Spribe</span></li>
+              onClick={() => setSelectedLobby("spribe")} className={`p-2 border-r border-[#fff] ${selectedLobby == 'spribe' ? 'bg-[var(--theme1-bg)]' : ''}`}><span>Spribe</span></li>
             <li ref={(el) => (lobbyRefs.current["beter-live"] = el)}
-              onClick={() => setSelectedLobby("beter-live")} className={`p-2 border-r border-[#fff] ${selectedLobby == 'beter-live' ? 'bg-[#000]' : ''}`}><span>Beter Live</span></li>
+              onClick={() => setSelectedLobby("beter-live")} className={`p-2 border-r border-[#fff] ${selectedLobby == 'beter-live' ? 'bg-[var(--theme1-bg)]' : ''}`}><span>Beter Live</span></li>
             <li ref={(el) => (lobbyRefs.current["ho-gaming"] = el)}
-              onClick={() => setSelectedLobby("ho-gaming")} className={`p-2 border-r border-[#fff] ${selectedLobby == 'ho-gaming' ? 'bg-[#000]' : ''}`}><span>Ho Gaming</span></li>
+              onClick={() => setSelectedLobby("ho-gaming")} className={`p-2 border-r border-[#fff] ${selectedLobby == 'ho-gaming' ? 'bg-[var(--theme1-bg)]' : ''}`}><span>Ho Gaming</span></li>
             <li ref={(el) => (lobbyRefs.current["evolution"] = el)}
-              onClick={() => setSelectedLobby("evolution")} className={`p-2 border-r border-[#fff] ${selectedLobby == 'evolution' ? 'bg-[#000]' : ''}`}><span>Evolution</span></li>
+              onClick={() => setSelectedLobby("evolution")} className={`p-2 border-r border-[#fff] ${selectedLobby == 'evolution' ? 'bg-[var(--theme1-bg)]' : ''}`}><span>Evolution</span></li>
             <li ref={(el) => (lobbyRefs.current["royal-gaming"] = el)}
-              onClick={() => setSelectedLobby("royal-gaming")} className={`p-2 border-r border-[#fff] ${selectedLobby == 'royal-gaming' ? 'bg-[#000]' : ''}`}><span>Royal Gaming</span></li>
+              onClick={() => setSelectedLobby("royal-gaming")} className={`p-2 border-r border-[#fff] ${selectedLobby == 'royal-gaming' ? 'bg-[var(--theme1-bg)]' : ''}`}><span>Royal Gaming</span></li>
             <li ref={(el) => (lobbyRefs.current["mac888"] = el)}
-              onClick={() => setSelectedLobby("mac888")} className={`p-2 border-r border-[#fff] ${selectedLobby == 'mac888' ? 'bg-[#000]' : ''}`}><span>Mac88</span></li>
+              onClick={() => setSelectedLobby("mac888")} className={`p-2 border-r border-[#fff] ${selectedLobby == 'mac888' ? 'bg-[var(--theme1-bg)]' : ''}`}><span>Mac88</span></li>
             <li ref={(el) => (lobbyRefs.current["bet-games"] = el)}
-              onClick={() => setSelectedLobby("bet-games")} className={`p-2 border-r border-[#fff] ${selectedLobby == 'bet-games' ? 'bg-[#000]' : ''}`}><span>Bet Games</span></li>
+              onClick={() => setSelectedLobby("bet-games")} className={`p-2 border-r border-[#fff] ${selectedLobby == 'bet-games' ? 'bg-[var(--theme1-bg)]' : ''}`}><span>Bet Games</span></li>
             <li ref={(el) => (lobbyRefs.current["one-two-gaming"] = el)}
-              onClick={() => setSelectedLobby("one-two-gaming")} className={`p-2 border-r border-[#fff] ${selectedLobby == 'one-two-gaming' ? 'bg-[#000]' : ''}`}><span>1x2 Gaming</span></li>
+              onClick={() => setSelectedLobby("one-two-gaming")} className={`p-2 border-r border-[#fff] ${selectedLobby == 'one-two-gaming' ? 'bg-[var(--theme1-bg)]' : ''}`}><span>1x2 Gaming</span></li>
             <li ref={(el) => (lobbyRefs.current["turbo-gaming"] = el)}
-              onClick={() => setSelectedLobby("turbo-gaming")} className={`p-2 border-r border-[#fff] ${selectedLobby == 'turbo-gaming' ? 'bg-[#000]' : ''}`}><span>Turbo Games</span></li>
+              onClick={() => setSelectedLobby("turbo-gaming")} className={`p-2 border-r border-[#fff] ${selectedLobby == 'turbo-gaming' ? 'bg-[var(--theme1-bg)]' : ''}`}><span>Turbo Games</span></li>
             <li ref={(el) => (lobbyRefs.current["onlyplay-casino"] = el)}
-              onClick={() => setSelectedLobby("onlyplay-casino")} className={`p-2 border-r border-[#fff] ${selectedLobby == 'onlyplay-casino' ? 'bg-[#000]' : ''}`}><span>Only Play</span></li>
+              onClick={() => setSelectedLobby("onlyplay-casino")} className={`p-2 border-r border-[#fff] ${selectedLobby == 'onlyplay-casino' ? 'bg-[var(--theme1-bg)]' : ''}`}><span>Only Play</span></li>
             <li ref={(el) => (lobbyRefs.current["smartsoft-casino"] = el)}
-              onClick={() => setSelectedLobby("smartsoft-casino")} className={`p-2 border-r border-[#fff] ${selectedLobby == 'smartsoft-casino' ? 'bg-[#000]' : ''}`}><span>SmartSoft</span></li>
+              onClick={() => setSelectedLobby("smartsoft-casino")} className={`p-2 border-r border-[#fff] ${selectedLobby == 'smartsoft-casino' ? 'bg-[var(--theme1-bg)]' : ''}`}><span>SmartSoft</span></li>
             <li ref={(el) => (lobbyRefs.current["caleta-casino"] = el)}
-              onClick={() => setSelectedLobby("caleta-casino")} className={`p-2 border-r border-[#fff] ${selectedLobby == 'caleta-casino' ? 'bg-[#000]' : ''}`}><span>Caleta</span></li>
+              onClick={() => setSelectedLobby("caleta-casino")} className={`p-2 border-r border-[#fff] ${selectedLobby == 'caleta-casino' ? 'bg-[var(--theme1-bg)]' : ''}`}><span>Caleta</span></li>
             <li ref={(el) => (lobbyRefs.current["play-n-go-casino"] = el)}
-              onClick={() => setSelectedLobby("play-n-go-casino")} className={`p-2 border-r border-[#fff] ${selectedLobby == 'play-n-go-casino' ? 'bg-[#000]' : ''}`}><span>Play-n-go</span></li>
+              onClick={() => setSelectedLobby("play-n-go-casino")} className={`p-2 border-r border-[#fff] ${selectedLobby == 'play-n-go-casino' ? 'bg-[var(--theme1-bg)]' : ''}`}><span>Play-n-go</span></li>
             <li ref={(el) => (lobbyRefs.current["sa-gaming-casino"] = el)}
-              onClick={() => setSelectedLobby("sa-gaming-casino")} className={`p-2 border-r border-[#fff] ${selectedLobby == 'sa-gaming-casino' ? 'bg-[#000]' : ''}`}><span>Sa-Gaming</span></li>
+              onClick={() => setSelectedLobby("sa-gaming-casino")} className={`p-2 border-r border-[#fff] ${selectedLobby == 'sa-gaming-casino' ? 'bg-[var(--theme1-bg)]' : ''}`}><span>Sa-Gaming</span></li>
             <li ref={(el) => (lobbyRefs.current["jilli-casino"] = el)}
-              onClick={() => setSelectedLobby("jilli-casino")} className={`p-2 border-r border-[#fff] ${selectedLobby == 'jilli-casino' ? 'bg-[#000]' : ''}`}><span>Jilli</span></li>
+              onClick={() => setSelectedLobby("jilli-casino")} className={`p-2 border-r border-[#fff] ${selectedLobby == 'jilli-casino' ? 'bg-[var(--theme1-bg)]' : ''}`}><span>Jilli</span></li>
             <li ref={(el) => (lobbyRefs.current["kingmaker-casino"] = el)}
-              onClick={() => setSelectedLobby("kingmaker-casino")} className={`p-2 border-r border-[#fff] ${selectedLobby == 'kingmaker-casino' ? 'bg-[#000]' : ''}`}><span>Kingmaker</span></li>
+              onClick={() => setSelectedLobby("kingmaker-casino")} className={`p-2 border-r border-[#fff] ${selectedLobby == 'kingmaker-casino' ? 'bg-[var(--theme1-bg)]' : ''}`}><span>Kingmaker</span></li>
           </ul>
         </div>
-        <div className='overflow-x-auto scroll-hide w-full border border-[#8000ff] my-1'>
+        <div className='overflow-x-auto scroll-hide w-full border border-[var(--theme2-bg)] my-1'>
           <ul className='flex flex-nowrap w-full whitespace-nowrap'>
-            <li className='border-r border-[#8000ff] bg-[#8000ff] text-[#fff]'>
+            <li className='border-r border-[var(--theme2-bg)] bg-[var(--theme2-bg)] text-[var(--secondary-color)]'>
               <div className='w-20 flex flex-col justify-center items-center text-xs p-1'>
                 <img src="/Images/all.png" alt="" className='w-8 h-5 mb-2 invert' />
                 <span>All</span>
               </div>
             </li>
-            <li className='border-r border-[#8000ff]'>
+            <li className='border-r border-[var(--theme2-bg)]'>
               <div className='w-20 flex flex-col justify-center items-center text-xs p-1'>
                 <img src="/Images/baccarat.png" alt="" className='w-8 h-5 mb-2' />
                 <span>Baccarat</span>
               </div>
             </li>
-            <li className='border-r border-[#8000ff]'>
+            <li className='border-r border-[var(--theme2-bg)]'>
               <div className='w-20 flex flex-col justify-center items-center text-xs p-1'>
                 <img src="/Images/dragon-tiger.png" alt="" className='w-8 h-5 mb-2 ' />
                 <span>Dragon Tiger</span>
               </div>
             </li>
-            <li className='border-r border-[#8000ff]'>
+            <li className='border-r border-[var(--theme2-bg)]'>
               <div className='w-20 flex flex-col justify-center items-center text-xs p-1'>
                 <img src="/Images/sicbo.png" alt="" className='w-8 h-5 mb-2 ' />
                 <span>Sibco</span>
               </div>
             </li>
-            <li className='border-r border-[#8000ff]'>
+            <li className='border-r border-[var(--theme2-bg)]'>
               <div className='w-20 flex flex-col justify-center items-center text-xs p-1'>
                 <img src="/Images/roulette.png" alt="" className='w-8 h-5 mb-2 ' />
                 <span>Roulette</span>
               </div>
             </li>
-            <li className='border-r border-[#8000ff]'>
+            <li className='border-r border-[var(--theme2-bg)]'>
               <div className='w-20 flex flex-col justify-center items-center text-xs p-1'>
                 <img src="/Images/teenpatti.png" alt="" className='w-8 h-5 mb-2 ' />
                 <span>Teenpatti</span>
               </div>
             </li>
-            <li className='border-r border-[#8000ff]'>
+            <li className='border-r border-[var(--theme2-bg)]'>
               <div className='w-20 flex flex-col justify-center items-center text-xs p-1'>
                 <img src="/Images/andarbahar.png" alt="" className='w-8 h-5 mb-2 ' />
                 <span>Andarbahar</span>
               </div>
             </li>
-            <li className='border-r border-[#8000ff]'>
+            <li className='border-r border-[var(--theme2-bg)]'>
               <div className='w-20 flex flex-col justify-center items-center text-xs p-1'>
                 <img src="/Images/hi-low.png" alt="" className='w-8 h-5 mb-2 ' />
                 <span>Hi Low</span>
@@ -7062,7 +7062,7 @@ function DiamondLobby() {
                       />
                     </div>
                     <p
-                      className="flex justify-center items-center text-[8px] lg:text-xs font-semibold text-[#fff] uppercase h-[34px]"
+                      className="flex justify-center items-center text-[8px] lg:text-xs font-semibold text-[var(--secondary-color)] uppercase h-[34px]"
                       style={{
                         background:
                           "linear-gradient(0deg, rgba(128, 0, 255, 1) 0%, rgba(0, 0, 0, 1) 100%)",
@@ -7095,7 +7095,7 @@ function DiamondLobby() {
                   />
                 </div>
                 <p
-                  className="flex justify-center items-center text-[8px] lg:text-xs text-center font-semibold text-[#fff] uppercase h-[34px]"
+                  className="flex justify-center items-center text-[8px] lg:text-xs text-center font-semibold text-[var(--secondary-color)] uppercase h-[34px]"
                   style={{
                     background:
                       "linear-gradient(0deg, rgba(128, 0, 255, 1) 0%, rgba(0, 0, 0, 1) 100%)",
@@ -7125,7 +7125,7 @@ function DiamondLobby() {
                     />
                   </div>
                   <p
-                    className="flex justify-center items-center text-[8px] lg:text-xs text-center font-semibold text-[#fff] uppercase h-[34px]"
+                    className="flex justify-center items-center text-[8px] lg:text-xs text-center font-semibold text-[var(--secondary-color)] uppercase h-[34px]"
                     style={{
                       background:
                         "linear-gradient(0deg, rgba(128, 0, 255, 1) 0%, rgba(0, 0, 0, 1) 100%)",
@@ -7156,7 +7156,7 @@ function DiamondLobby() {
                     />
                   </div>
                   <p
-                    className="flex justify-center items-center text-[8px] lg:text-xs text-center font-semibold text-[#fff] uppercase h-[34px]"
+                    className="flex justify-center items-center text-[8px] lg:text-xs text-center font-semibold text-[var(--secondary-color)] uppercase h-[34px]"
                     style={{
                       background:
                         "linear-gradient(0deg, rgba(128, 0, 255, 1) 0%, rgba(0, 0, 0, 1) 100%)",
@@ -7187,7 +7187,7 @@ function DiamondLobby() {
                     />
                   </div>
                   <p
-                    className="flex justify-center items-center text-[8px] lg:text-xs text-center font-semibold text-[#fff] uppercase h-[34px]"
+                    className="flex justify-center items-center text-[8px] lg:text-xs text-center font-semibold text-[var(--secondary-color)] uppercase h-[34px]"
                     style={{
                       background:
                         "linear-gradient(0deg, rgba(128, 0, 255, 1) 0%, rgba(0, 0, 0, 1) 100%)",
@@ -7218,7 +7218,7 @@ function DiamondLobby() {
                     />
                   </div>
                   <p
-                    className="flex justify-center items-center text-[8px] lg:text-xs text-center font-semibold text-[#fff] uppercase h-[34px]"
+                    className="flex justify-center items-center text-[8px] lg:text-xs text-center font-semibold text-[var(--secondary-color)] uppercase h-[34px]"
                     style={{
                       background:
                         "linear-gradient(0deg, rgba(128, 0, 255, 1) 0%, rgba(0, 0, 0, 1) 100%)",
@@ -7249,7 +7249,7 @@ function DiamondLobby() {
                     />
                   </div>
                   <p
-                    className="flex justify-center items-center text-[8px] lg:text-xs text-center font-semibold text-[#fff] uppercase h-[34px]"
+                    className="flex justify-center items-center text-[8px] lg:text-xs text-center font-semibold text-[var(--secondary-color)] uppercase h-[34px]"
                     style={{
                       background:
                         "linear-gradient(0deg, rgba(128, 0, 255, 1) 0%, rgba(0, 0, 0, 1) 100%)",
@@ -7280,7 +7280,7 @@ function DiamondLobby() {
                     />
                   </div>
                   <p
-                    className="flex justify-center items-center text-[8px] lg:text-xs text-center font-semibold text-[#fff] uppercase h-[34px]"
+                    className="flex justify-center items-center text-[8px] lg:text-xs text-center font-semibold text-[var(--secondary-color)] uppercase h-[34px]"
                     style={{
                       background:
                         "linear-gradient(0deg, rgba(128, 0, 255, 1) 0%, rgba(0, 0, 0, 1) 100%)",
@@ -7311,7 +7311,7 @@ function DiamondLobby() {
                     />
                   </div>
                   <p
-                    className="flex justify-center items-center text-[8px] lg:text-xs text-center font-semibold text-[#fff] uppercase h-[34px]"
+                    className="flex justify-center items-center text-[8px] lg:text-xs text-center font-semibold text-[var(--secondary-color)] uppercase h-[34px]"
                     style={{
                       background:
                         "linear-gradient(0deg, rgba(128, 0, 255, 1) 0%, rgba(0, 0, 0, 1) 100%)",
@@ -7342,7 +7342,7 @@ function DiamondLobby() {
                     />
                   </div>
                   <p
-                    className="flex justify-center items-center text-[8px] lg:text-xs text-center font-semibold text-[#fff] uppercase h-[34px]"
+                    className="flex justify-center items-center text-[8px] lg:text-xs text-center font-semibold text-[var(--secondary-color)] uppercase h-[34px]"
                     style={{
                       background:
                         "linear-gradient(0deg, rgba(128, 0, 255, 1) 0%, rgba(0, 0, 0, 1) 100%)",
@@ -7373,7 +7373,7 @@ function DiamondLobby() {
                     />
                   </div>
                   <p
-                    className="flex justify-center items-center text-[8px] lg:text-xs text-center font-semibold text-[#fff] uppercase h-[34px]"
+                    className="flex justify-center items-center text-[8px] lg:text-xs text-center font-semibold text-[var(--secondary-color)] uppercase h-[34px]"
                     style={{
                       background:
                         "linear-gradient(0deg, rgba(128, 0, 255, 1) 0%, rgba(0, 0, 0, 1) 100%)",
@@ -7404,7 +7404,7 @@ function DiamondLobby() {
                     />
                   </div>
                   <p
-                    className="flex justify-center items-center text-[8px] lg:text-xs text-center font-semibold text-[#fff] uppercase h-[34px]"
+                    className="flex justify-center items-center text-[8px] lg:text-xs text-center font-semibold text-[var(--secondary-color)] uppercase h-[34px]"
                     style={{
                       background:
                         "linear-gradient(0deg, rgba(128, 0, 255, 1) 0%, rgba(0, 0, 0, 1) 100%)",
@@ -7435,7 +7435,7 @@ function DiamondLobby() {
                     />
                   </div>
                   <p
-                    className="flex justify-center items-center text-[8px] lg:text-xs text-center font-semibold text-[#fff] uppercase h-[34px]"
+                    className="flex justify-center items-center text-[8px] lg:text-xs text-center font-semibold text-[var(--secondary-color)] uppercase h-[34px]"
                     style={{
                       background:
                         "linear-gradient(0deg, rgba(128, 0, 255, 1) 0%, rgba(0, 0, 0, 1) 100%)",
@@ -7466,7 +7466,7 @@ function DiamondLobby() {
                     />
                   </div>
                   <p
-                    className="flex justify-center items-center text-[8px] lg:text-xs text-center font-semibold text-[#fff] uppercase h-[34px]"
+                    className="flex justify-center items-center text-[8px] lg:text-xs text-center font-semibold text-[var(--secondary-color)] uppercase h-[34px]"
                     style={{
                       background:
                         "linear-gradient(0deg, rgba(128, 0, 255, 1) 0%, rgba(0, 0, 0, 1) 100%)",
@@ -7497,7 +7497,7 @@ function DiamondLobby() {
                     />
                   </div>
                   <p
-                    className="flex justify-center items-center text-[8px] lg:text-xs text-center font-semibold text-[#fff] uppercase h-[34px]"
+                    className="flex justify-center items-center text-[8px] lg:text-xs text-center font-semibold text-[var(--secondary-color)] uppercase h-[34px]"
                     style={{
                       background:
                         "linear-gradient(0deg, rgba(128, 0, 255, 1) 0%, rgba(0, 0, 0, 1) 100%)",
@@ -7528,7 +7528,7 @@ function DiamondLobby() {
                     />
                   </div>
                   <p
-                    className="flex justify-center items-center text-[8px] lg:text-xs text-center font-semibold text-[#fff] uppercase h-[34px]"
+                    className="flex justify-center items-center text-[8px] lg:text-xs text-center font-semibold text-[var(--secondary-color)] uppercase h-[34px]"
                     style={{
                       background:
                         "linear-gradient(0deg, rgba(128, 0, 255, 1) 0%, rgba(0, 0, 0, 1) 100%)",
@@ -7559,7 +7559,7 @@ function DiamondLobby() {
                     />
                   </div>
                   <p
-                    className="flex justify-center items-center text-[8px] lg:text-xs text-center font-semibold text-[#fff] uppercase h-[34px]"
+                    className="flex justify-center items-center text-[8px] lg:text-xs text-center font-semibold text-[var(--secondary-color)] uppercase h-[34px]"
                     style={{
                       background:
                         "linear-gradient(0deg, rgba(128, 0, 255, 1) 0%, rgba(0, 0, 0, 1) 100%)",
@@ -7590,7 +7590,7 @@ function DiamondLobby() {
                     />
                   </div>
                   <p
-                    className="flex justify-center items-center text-[8px] lg:text-xs text-center font-semibold text-[#fff] uppercase h-[34px]"
+                    className="flex justify-center items-center text-[8px] lg:text-xs text-center font-semibold text-[var(--secondary-color)] uppercase h-[34px]"
                     style={{
                       background:
                         "linear-gradient(0deg, rgba(128, 0, 255, 1) 0%, rgba(0, 0, 0, 1) 100%)",
@@ -7621,7 +7621,7 @@ function DiamondLobby() {
                     />
                   </div>
                   <p
-                    className="flex justify-center items-center text-[8px] lg:text-xs text-center font-semibold text-[#fff] uppercase h-[34px]"
+                    className="flex justify-center items-center text-[8px] lg:text-xs text-center font-semibold text-[var(--secondary-color)] uppercase h-[34px]"
                     style={{
                       background:
                         "linear-gradient(0deg, rgba(128, 0, 255, 1) 0%, rgba(0, 0, 0, 1) 100%)",

@@ -4,7 +4,7 @@ const Rules = () => {
   return (
     <div>
       <div className="text-black p-3">
-        <p className="rounded bg-[#343435] p-1 shadow text-white text-[15px] font-bold uppercase">
+        <p className="rounded bg-[#343435] p-1 shadow text-[var(--secondary-color)] text-[15px] font-bold uppercase">
           <span className="px-2">Rules</span>
         </p>
         <div className="flex flex-col justify-center items-center p-5 text-center">

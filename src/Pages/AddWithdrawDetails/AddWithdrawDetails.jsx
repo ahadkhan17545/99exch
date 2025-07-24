@@ -31,7 +31,7 @@ const AddWithdrawDetails = ({ togglePopup }) => {
   };
 
   return (
-    <div className="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50 z-[999]">
+    <div className="fixed inset-0 flex items-center justify-center bg-[var(--theme1-bg)] bg-opacity-50 z-[999]">
       <div className="relative w-[300px] max-w-full bg-gradient-to-t from-[#9e802c] via-[#e7e491] to-[#e7e491] p-5 rounded-md shadow-lg z-[1000]">
         {/* Close Button */}
         <button

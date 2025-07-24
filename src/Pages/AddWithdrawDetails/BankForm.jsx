@@ -42,7 +42,7 @@ const BankForm = () => {
 
         <button
           type="submit"
-          className="w-full bg-[#343435] text-white text-sm rounded-md py-2 mt-4"
+          className="w-full bg-[#343435] text-[var(--secondary-color)] text-sm rounded-md py-2 mt-4"
         >
           Submit
         </button>

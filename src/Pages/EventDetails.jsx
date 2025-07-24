@@ -17,6 +17,7 @@ import { setData } from "../redux/slice/betting/bettingSlice";
 import { toast } from "react-toastify";
 import { getAllBets } from "../redux/slice/openBet/openBetSlice";
 import { Modal } from "antd";
+import { DesktopOutlined } from "@ant-design/icons";
 
 function EventDetails() {
   const navigate = useNavigate();
@@ -31,7 +32,7 @@ function EventDetails() {
   const websocket = useContext(WebSocketContext);
   const { event_id, is_inplay, } = useParams();
 
-  console.log('event page user balance : ', balance)
+  // console.log('event page user balance : ', balance)
 
   const getOpenBetsByEvent = async () => {
     dispatch(
@@ -69,9 +70,10 @@ function EventDetails() {
   const [matchOddsBhaw, setMatchOddsBhaw] = useState("");
   const [bookmakerBhaw, setBookmakerBhaw] = useState("");
   const [isEventLoading, setIsEventLoading] = useState(true);
-  const [tvUrl, setTvUrl] = useState();
+  const [tvUrl, setTvUrl] = useState('');
   const [isInplay, setIsInplay] = useState(false);
   const [isTvOpen, setIsTvOpen] = useState(false);
+  const [isDesktopTvOpen, setIsDesktopTvOpen] = useState(false);
   const [isScoreCardOpen, setIsScoreCardOpen] = useState(true);
   const [openPlaceBet, setOpenPlaceBet] = useState({
     selectionId: "",
@@ -110,6 +112,29 @@ function EventDetails() {
   const [openFancyMinMaxStack, setOpenFancyMinMaxStack] = useState("");
 
 
+
+  // useEffect(() => {
+  //   if (openbets?.bets?.length > 0) {
+  //     let openBetsData = [];
+  //     if (event_id) {
+  //       openBetsData = openbets?.bets?.filter(
+  //         (item) => item.match_id == event_id
+  //       );
+  //     } else {
+  //       openBetsData = openbets?.bets;
+  //     }
+  //     let fancyOpenBets = openBetsData?.filter(
+  //       (fancy) => fancy.betting_type == "Fancy"
+  //     );
+  //     let matchOpenBets = openBetsData?.filter(
+  //       (match) => match.betting_type == "Match"
+  //     );
+  //     setFancyBets(fancyOpenBets);
+  //     setMatchBets(matchOpenBets);
+  //   }
+  // }, [openbets, location]);
+
+
   function calc(t_stake, priceVal, selection_id) {
     var isfancy = BetPlaceData.is_fancy;
     priceVal = parseFloat(priceVal);
@@ -122,14 +147,14 @@ function EventDetails() {
       if (isback) {
         setProfitValue(pl)
         setLossValue(t_stake)
-        console.log('back pl : ', pl, ' t_stake : ', t_stake);
+        // console.log('back pl : ', pl, ' t_stake : ', t_stake);
       } else {
         setLossValue(pl)
         setProfitValue(t_stake)
-        console.log('calc func lay pl : ', pl, ' t_stake : ', t_stake);
+        // console.log('calc func lay pl : ', pl, ' t_stake : ', t_stake);
       }
       // SetPosition(priceVal);
-      console.log('pl = ((priceVal * t_stake) - t_stake);', pl);
+      // console.log('pl = ((priceVal * t_stake) - t_stake);', pl);
     } else {
       if (document.getElementById("fancyLay_Size" + selection_id)) {
         var NoValume = parseInt(
@@ -145,7 +170,7 @@ function EventDetails() {
           document.getElementById(`fancyBack_Price${selection_id}`).innerHTML
         );
 
-        console.log('NoValume : ', NoValume, ' YesValume : ', YesValume, ' inputno : ', inputno, ' inputyes : ', inputyes);
+        // console.log('NoValume : ', NoValume, ' YesValume : ', YesValume, ' inputno : ', inputno, ' inputyes : ', inputyes);
       }
 
       pl = parseFloat(t_stake);
@@ -176,7 +201,7 @@ function EventDetails() {
     stake = parseFloat(stake);
     let MatchMarketTypes = "";
     var runners = document.getElementsByClassName("position_" + MId);
-    console.log('runners', runners);
+    // console.log('runners', runners);
     var tempRunners = "";
     for (var item of runners) {
       var selecid = item.getAttribute('data-id');
@@ -257,7 +282,8 @@ function EventDetails() {
     runner_name,
     htmlId,
     PM_FANCY = null,
-    market_name
+    market_name,
+    is_manual = "No"
   ) => {
     if (!userInfo) {
       setShowLoginModel(true);
@@ -286,7 +312,7 @@ function EventDetails() {
       if (
         market_name == "Bookmaker" ||
         market_name == "Bookmaker 2" ||
-        market_name == "TIED_MATCH"
+        is_manual == "Yes"
       ) {
         priceNew = (priceNew / 100 + 1).toFixed(2);
       }
@@ -323,14 +349,14 @@ function EventDetails() {
           exposureLimit = Number(userInfo?.exposer_limit);
           const calc = Number(lossValue) + (Number(currentExposure) * -1);
 
-          console.log({
-            'exposure limit': exposureLimit,
-            ' profitValue': ProfitValue,
-            'lossValue': lossValue,
-            'current exposure': currentExposure,
-            '+ve current exposure': (Number(currentExposure) * -1),
-            'Calc expo after place bets': calc
-          });
+          // console.log({
+          //   'exposure limit': exposureLimit,
+          //   ' profitValue': ProfitValue,
+          //   'lossValue': lossValue,
+          //   'current exposure': currentExposure,
+          //   '+ve current exposure': (Number(currentExposure) * -1),
+          //   'Calc expo after place bets': calc
+          // });
 
           if (exposureLimit < calc) {
             toast.error(`Exposure Limit Is ${exposureLimit}`, { autoClose: 3000 });
@@ -357,7 +383,7 @@ function EventDetails() {
           pm_fancy: BetPlaceData.PM_FANCY,
         });
 
-        console.log("bet send data : ", data);
+        // console.log("bet send data : ", data);
 
         var config = {
           method: "post",
@@ -395,11 +421,11 @@ function EventDetails() {
               }
 
               if (response.data.result == 0) {
-                console.log("response bet send Error :", response);
+                // console.log("response bet send Error :", response);
                 toast.error(response.data.resultMessage);
                 setBetPlacedLoader(false);
               } else {
-                console.log("response bet send Success :", response);
+                // console.log("response bet send Success :", response);
 
                 setShowSuccessPopup(true);
                 // Close the place bet popup
@@ -418,15 +444,15 @@ function EventDetails() {
               var selectionId = BetPlaceData.selection_id;
               var runners = document.getElementsByClassName("position_" + MId);
 
-              console.log(
-                "in side bet place : MId : ",
-                MId,
-                " runners : ",
-                runners
-              );
+              // console.log(
+              //   "in side bet place : MId : ",
+              //   MId,
+              //   " runners : ",
+              //   runners
+              // );
               for (var item of runners) {
                 var selecid = item.getAttribute("data-id");
-                console.log(" selecid : ", selecid);
+                // console.log(" selecid : ", selecid);
                 if (
                   document.getElementById(
                     selecid + "_maxprofit_list_loss_runner_next_" + MId
@@ -487,10 +513,10 @@ function EventDetails() {
     var selectionId = BetPlaceData.selection_id;
     var runners = document.getElementsByClassName("position_" + MId);
 
-    console.log("in side bet place : MId : ", MId, " runners : ", runners);
+    // console.log("in side bet place : MId : ", MId, " runners : ", runners);
     for (var item of runners) {
       var selecid = item.getAttribute("data-id");
-      console.log(" selecid : ", selecid);
+      // console.log(" selecid : ", selecid);
       if (
         document.getElementById(
           selecid + "_maxprofit_list_loss_runner_next_" + MId
@@ -568,7 +594,7 @@ function EventDetails() {
       .then(function (response) {
         try {
           // alert("Hello");
-          console.log('general setting response', response.data)
+          // console.log('general setting response', response.data)
           if (response.data.result) {
             setGeneralSetting(response.data.resultData);
           }
@@ -630,9 +656,9 @@ function EventDetails() {
       axios(config)
         .then(function (response) {
           try {
-            console.log('chip response : ', response)
+            // console.log('chip response : ', response)
             if (response.status) {
-              console.log('Chips data : ', response.data);
+              // console.log('Chips data : ', response.data);
               if (response?.data?.length > 0) {
                 setChips(response.data);
               } else {
@@ -694,6 +720,7 @@ function EventDetails() {
   }
 
   useEffect(() => {
+    console.log('openBEts : ', openbets);
     if (openbets?.bets?.length > 0) {
       let openBetsData = [];
       if (event_id) {
@@ -702,7 +729,7 @@ function EventDetails() {
         );
       }
       setBetsData(openBetsData);
-      console.log('openBEts data : ', openBetsData);
+      // console.log('openBEts data : ', openBetsData);
     }
   }, [openbets, event_id]);
 
@@ -797,7 +824,7 @@ function EventDetails() {
         const data = JSON.parse(evt.data);
         if (data.action == "MARKET_UPDATE") {
           const market = data.data;
-          console.log("MARKET SOCKET RESPONDING", market);
+          // console.log("MARKET SOCKET RESPONDING", market);
           // console.log("market", market);
 
           if (market?.market_types?.length > 0) {
@@ -992,7 +1019,7 @@ function EventDetails() {
 
         if (data.action === "FANCY_UPDATE") {
           const market = data.data;
-          console.log("FANCY SOCKET RESPONDING : ", market);
+          // console.log("FANCY SOCKET RESPONDING : ", market);
           if (market?.fancy_data?.length > 0) {
             // handle FANCY_UPDATE if needed
             market?.fancy_data?.forEach((item) => {
@@ -1086,19 +1113,19 @@ function EventDetails() {
       userInfos.eventData[event_id][0]?.marketTypes?.map((type) => {
         if (type.market_name == "Bookmaker") {
           setBookmaker(type);
-          console.log("Bookmaker data : ", type);
+          // console.log("Bookmaker data : ", type);
         }
         if (type.market_name == "Match Odds") {
           setMatchOdds(type);
-          console.log("Match odds data : ", type);
+          // console.log("Match odds data : ", type);
         }
         if (type.market_name == "TIED_MATCH") {
           setTiedMatch(type);
-          console.log("TIED_MATCH data : ", type);
+          // console.log("TIED_MATCH data : ", type);
         }
         if (type.market_name == "Toss") {
           setToss(type);
-          console.log("Toss data : ", type);
+          // console.log("Toss data : ", type);
         }
       });
       setIsEventLoading(false);
@@ -1107,10 +1134,10 @@ function EventDetails() {
 
   // Render Fancy Data
   useEffect(() => {
-    console.log(
-      "userFancyData.fancyData[event_id] : ",
-      userFancyData.fancyData[event_id]
-    );
+    // console.log(
+    //   "userFancyData.fancyData[event_id] : ",
+    //   userFancyData.fancyData[event_id]
+    // );
     if (userFancyData.fancyData[event_id]?.length > 0) {
       setFancyData(userFancyData.fancyData[event_id]);
     }
@@ -1173,1422 +1200,1592 @@ function EventDetails() {
         </div>
       </Modal>
 
-      <div>
-        <div className="flex justify-between items-center font-bold bg-[#000] text-[#fff] text-xs pt-2">
-          <div className={`py-2 border-t-2 ${selectedSection == "odds" ? "border-[#fff]" : "border-transparent"} `}>
-            <span className="px-3 border-r border-white" onClick={() => setSelectedSection("odds")}>ODDS</span>
-          </div>
-          <div className={`py-2 border-t-2 ${selectedSection == "bets" ? "border-[#fff]" : "border-transparent"} `}>
-            <span className="px-3 border-r border-white" onClick={() => setSelectedSection("bets")}>MATCHES BET ({betsData?.length})</span>
-          </div>
-          <div className="flex justify-end item-center w-[50%] p-2">
-            <span
-              className="cursor-pointer"
-              onClick={() => setIsScoreCardOpen((prev) => !prev)}
-            >
-              <img
-                src="/Images/scorecard-icon.webp"
-                alt=""
-                className="invert w-[30px]"
-              />
-            </span>
-            <span
-              className="flex justify-center items-center ml-3 cursor-pointer"
-              onClick={() => setIsTvOpen((prev) => !prev)}
-            >
-              <svg
-                xmlns="http://www.w3.org/2000/svg"
-                width={25}
-                height={25}
-                style={{ transform: "scale(1.1)" }}
-                fill="white"
-                className="bi bi-tv"
-                viewBox="0 0 16 16"
+      <div className="flex p-0 lg:p-1 gap-1 w-full">
+        <div className="w-full lg:w-[70%]">
+          <div className="flex lg:hidden justify-between items-center font-bold bg-[var(--theme1-bg)] text-[var(--secondary-color)] text-xs">
+            <div className={`py-2 border-t-2 ${selectedSection == "odds" ? "border-[#fff]" : "border-transparent"} `}>
+              <span className="px-3 border-r border-white" onClick={() => setSelectedSection("odds")}>ODDS</span>
+            </div>
+            <div className={`py-2 border-t-2 ${selectedSection == "bets" ? "border-[#fff]" : "border-transparent"} `}>
+              <span className="px-3 border-r border-white" onClick={() => setSelectedSection("bets")}>MATCHES BET ({betsData?.length})</span>
+            </div>
+            <div className="flex justify-end item-center w-[50%] p-2">
+              <span
+                className="cursor-pointer"
+                onClick={() => setIsScoreCardOpen((prev) => !prev)}
               >
-                <path d="M2.5 13.5A.5.5 0 0 1 3 13h10a.5.5 0 0 1 0 1H3a.5.5 0 0 1-.5-.5M13.991 3l.024.001a1.5 1.5 0 0 1 .538.143.76.76 0 0 1 .302.254c.067.1.145.277.145.602v5.991l-.001.024a1.5 1.5 0 0 1-.143.538.76.76 0 0 1-.254.302c-.1.067-.277.145-.602.145H2.009l-.024-.001a1.5 1.5 0 0 1-.538-.143.76.76 0 0 1-.302-.254C1.078 10.502 1 10.325 1 10V4.009l.001-.024a1.5 1.5 0 0 1 .143-.538.76.76 0 0 1 .254-.302C1.498 3.078 1.675 3 2 3zM14 2H2C0 2 0 4 0 4v6c0 2 2 2 2 2h12c2 0 2-2 2-2V4c0-2-2-2-2-2" />
-              </svg>
-            </span>
+                <img
+                  src="/Images/scorecard-icon.webp"
+                  alt=""
+                  className="invert w-[30px]"
+                />
+              </span>
+              <span
+                className="flex justify-center items-center ml-3 cursor-pointer"
+                onClick={() => setIsTvOpen((prev) => !prev)}
+              >
+                <svg
+                  xmlns="http://www.w3.org/2000/svg"
+                  width={25}
+                  height={25}
+                  style={{ transform: "scale(1.1)" }}
+                  fill="white"
+                  className="bi bi-tv"
+                  viewBox="0 0 16 16"
+                >
+                  <path d="M2.5 13.5A.5.5 0 0 1 3 13h10a.5.5 0 0 1 0 1H3a.5.5 0 0 1-.5-.5M13.991 3l.024.001a1.5 1.5 0 0 1 .538.143.76.76 0 0 1 .302.254c.067.1.145.277.145.602v5.991l-.001.024a1.5 1.5 0 0 1-.143.538.76.76 0 0 1-.254.302c-.1.067-.277.145-.602.145H2.009l-.024-.001a1.5 1.5 0 0 1-.538-.143.76.76 0 0 1-.302-.254C1.078 10.502 1 10.325 1 10V4.009l.001-.024a1.5 1.5 0 0 1 .143-.538.76.76 0 0 1 .254-.302C1.498 3.078 1.675 3 2 3zM14 2H2C0 2 0 4 0 4v6c0 2 2 2 2 2h12c2 0 2-2 2-2V4c0-2-2-2-2-2" />
+                </svg>
+              </span>
+            </div>
           </div>
-        </div>
-      </div>
-      {selectedSection == "odds" &&
-        <>
-          <div className="flex justify-between items-center text-[#fff] bg-[#8000ff] p-2">
-            <span className="text-xs font-bold uppercase">
-              {eventName ? eventName : ""}
-            </span>
-            <span className="ml-1 text-xs"> {openDate ? openDate : ""}</span>
-          </div>
-          {/* Tv Panel*/}
-          <div
-            className={`overflow-hidden transition-all duration-500 ease-in-out ${isTvOpen
-              ? "max-h-[300px] opacity-100 translate-y-0 p-1"
-              : "max-h-0 opacity-0 -translate-y-2"
-              } flex justify-center items-center w-full bg-white`}
-          >
-            <iframe
-              src={tvUrl}
-              className="w-full h-[250px] border-0"
-              allowFullScreen
-            ></iframe>
-          </div>
-
-          {/* Iframe */}
-          <div
-            className={`overflow-y-auto transition-all duration-500 ease-in-out ${isScoreCardOpen
-              ? "max-h-[165px] opacity-100 translate-y-0"
-              : "max-h-0 opacity-0 -translate-y-2"
-              } w-full bg-cover bg-center bg-no-repeat p-1`}
-          // style={{ backgroundImage: `url(/Images/scoreCardBG-mobile.webp)` }}
-          >
-            <iframe
-              src={scoreUrl}
-              className="w-full border-0"
-              allowFullScreen
-              style={{ height: "220px" }}
-            />
-          </div>
-
-
-          <div>
-            {/* MatchOdds */}
-            {matchOdds != "" && (
-              <div>
-                <div className="flex justify-start items-center p-1 bg-[#9430ff]">
-                  <span className="text-sm text-[#fff] mr-2">
-                    {matchOdds?.market_name || "Match Odds"}
-                  </span>
-                  <span className="bg-[#fab418] text-[10px] font-extrabold uppercase p-1 rounded ml-3">
-                    Cashout
-                  </span>
-                </div>
-                <div>
-                  <div className="flex justify-between border border-[#aaa]">
-                    <span className="text-xs font-semibold py-[2px] pl-1">
-                      {/* Min:100 Max:10k */}
-                      {
-                        generalSetting.length > 0 ?
-
-                          generalSetting?.map(gen => {
-                            if ((eventType == "Cricket" && matchOdds?.market_name == "Match Odds" && gen.event_name == "cricket") || (eventType == "Soccer" && gen.event_name == "soccer") || (eventType == "Tennis" && gen.event_name == "tennis")) {
-                              return is_inplay == "Inplay" ? (`Min:${gen.min_stake} Max:${gen.max_stake}`) : (`Min:${gen.min_stake} Max:${gen.pre_inplay_stake}`)
-                            } else if (eventType == "Cricket" && matchOdds?.market_name == "Bookmaker" && gen.event_name == "bookmaker") {
-                              return is_inplay == "Inplay" ? (`Min:${gen.min_stake} Max:${gen.max_stake}`) : (`Min:${gen.min_stake} Max:${gen.pre_inplay_stake}`)
-                            }
-
-                          })
-                          :
-                          'Min:100 Max:10k'
-
-                      }
-                    </span>
-                    <div className="flex justify-center">
-                      <span className="flex justify-center items-center px-2 w-[79.5px] text-xs font-semibold bg-[#a7d8fd] border-r border-l border-[#aaa]">
-                        BACK
-                      </span>
-                      <span className="flex justify-center items-center px-2 w-[79.5px] text-xs font-semibold bg-[#ffd5da] border-r border-[#aaa]">
-                        LAY
-                      </span>
-                    </div>
-                  </div>
-                  {/* Runner 1 */}
-                  {matchOdds?.marketRunners?.length > 0 &&
-                    matchOdds?.marketRunners?.map((item, index) => (
-                      <>
-                        <div
-                          className="flex justify-between bg-[#f2f2f2] border-b border-[#aaa]"
-                          key={index}
-                        >
-                          <div
-                            className={`flex flex-col justify-between items-start w-full`}
-                            data-id={item.selection_id}
-                          >
-                            <input
-                              type="hidden"
-                              id="matchodds_id_preserve"
-                              value={item.market_id}
-                            />
-                            <input
-                              type="hidden"
-                              className={`position_${item.market_id.replace(
-                                ".",
-                                ""
-                              )}`}
-                              data-id={item.selection_id}
-                              value={Math.round(item.exposure.toFixed(2))}
-                            />
-                            <span className="text-[12px] font-semibold p-1">
-                              {item.runner_name}
-                            </span>
-                            <div className="flex justify-between items-center w-full">
-                              <span
-                                id={`${item.selection_id}_maxprofit_list_loss_runner_prev_${item.market_id}`}
-                                data-value={item.exposure}
-                                className={`win market-exposure text-xs font-bold ${item.exposure >= 0
-                                  ? "text-green-700"
-                                  : "text-red-700"
-                                  } p-1 leading-[0.5]`}
-                              >
-                                {Math.abs(item.exposure.toFixed(2))}
-                              </span>
-                              <span
-                                id={`${item.selection_id}_maxprofit_Mlist_loss_runner_next_${item.market_id}`}
-                                className={`to-win market-exposure text-xs font-bold p-1`}
-                              ></span>
-                            </div>
-                          </div>
-                          <div className="flex justify-center">
-                            <span
-                              className="flex flex-col justify-center items-center w-[80px] text-[1rem] font-bold leading-[1.2] bg-[#a7d8fd] ml-[1px] px-1 border-r border-l border-[#aaa]"
-                              onClick={() => {
-                                if (item.lay_1_price > 0) {
-                                  handleOpenBetSlip(
-                                    event_id,
-                                    item.market_id,
-                                    true,
-                                    `moBack_Size${item.selection_id}`,
-                                    false,
-                                    item.selection_id,
-                                    item.runner_name,
-                                    `moBack_Price${item.selection_id}`,
-                                    false,
-                                    "Match Odds"
-                                  );
-                                  setOpenPlaceBet({
-                                    selectionId: item.selection_id,
-                                    type: "back",
-                                    odds: item.back_1_price,
-                                  });
-                                }
-                              }}
-                            >
-                              <span id={`moBack_Price${item.selection_id}`}>
-                                {item.back_1_price}
-                              </span>
-                              <span
-                                id={`moBack_Size${item.selection_id}`}
-                                className="text-[12px] font-normal"
-                              >
-                                {item.back_1_size}
-                              </span>
-                            </span>
-                            <span
-                              className="flex flex-col justify-center items-center w-[80px] text-[1rem] font-bold leading-[1.2] bg-[#ffd5da] px-1 border-r border-[#aaa]"
-                              onClick={() => {
-                                if (item.lay_1_price > 0) {
-                                  setOpenPlaceBet({
-                                    selectionId: item.selection_id,
-                                    type: "lay",
-                                    odds: item.lay_1_price,
-                                  });
-                                  handleOpenBetSlip(
-                                    event_id,
-                                    item.market_id,
-                                    false,
-                                    `moLay_Size${item.selection_id}`,
-                                    false,
-                                    item.selection_id,
-                                    item.runner_name,
-                                    `moLay_Price${item.selection_id}`,
-                                    false,
-                                    "Match Odds"
-                                  );
-                                }
-                              }}
-                            >
-                              <span id={`moLay_Price${item.selection_id}`}>
-                                {item.lay_1_price}
-                              </span>
-                              <span
-                                id={`moLay_Size${item.selection_id}`}
-                                className="text-[12px] font-normal"
-                              >
-                                {item.lay_1_size}
-                              </span>
-                            </span>
-                          </div>
-                        </div>
-                        {/* Place Bet Section */}
-                        {openPlaceBet?.selectionId == item.selection_id && (
-                          <div
-                            className={`${openPlaceBet?.type == "back"
-                              ? "bg-[#a7d8fd]"
-                              : "bg-[#ffd5da]"
-                              } p-1 relative`}
-                          >
-                            <div
-                              className={`absolute top-0 left-0 w-full h-full flex justify-center items-center ${!isLoading ? "hidden" : ""
-                                }`}
-                              style={{
-                                backgroundColor: "#ffffff2b",
-                                // opacity: "0.5",
-                                // marginTop: "",
-                              }}
-                            >
-                              <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512" className="w-10 fa-spin">
-                                <path fill="black" d="M304 48a48 48 0 1 0 -96 0 48 48 0 1 0 96 0zm0 416a48 48 0 1 0 -96 0 48 48 0 1 0 96 0zM48 304a48 48 0 1 0 0-96 48 48 0 1 0 0 96zm464-48a48 48 0 1 0 -96 0 48 48 0 1 0 96 0zM142.9 437A48 48 0 1 0 75 369.1 48 48 0 1 0 142.9 437zm0-294.2A48 48 0 1 0 75 75a48 48 0 1 0 67.9 67.9zM369.1 437A48 48 0 1 0 437 369.1 48 48 0 1 0 369.1 437z" />
-                              </svg>
-                            </div>
-                            <div className="flex justify-between items-center w-full px-2 my-1">
-                              <div className="flex justify-center items-center">
-                                <span className="flex justify-center items-center h-[32px] text-[#fff] font-black text-[20px] bg-[#334579] p-2">
-                                  -
-                                </span>
-                                <input
-                                  type="text"
-                                  value={openPlaceBet?.odds}
-                                  readOnly
-                                  className="h-[32px] w-[60%] border-none focus:outline-none focus:ring-0 bg-[#e9ecef] text-center font-bold"
-                                />
-
-                                <span className="flex justify-center items-center h-[32px] text-[#fff] font-black text-[20px] bg-[#334579] p-2">
-                                  +
-                                </span>
-                              </div>
-                              <input
-                                type="number"
-                                className="h-[32px] w-[50%] border-none focus:outline-none focus:ring-0 text-center font-bold"
-                                value={StakeValue}
-                                onChange={(e) => placeStakeValue(Number(e.target.value))}
-                              />
-                            </div>
-                            <div className="grid grid-cols-4 gap-[2px] w-full my-1">
-                              {chips?.map((chip, i) => (
-                                <button
-                                  key={chip.id}
-                                  className="p-[2px] bg-white font-medium text-[14px] text-center"
-                                  onClick={(e) => {
-                                    e.preventDefault();
-                                    placeStakeValue(Number(StakeValue) + chip.chip_value);
-                                  }}
-                                >
-                                  <span className="text-lg font-black text-[#009905]">
-                                    +
-                                  </span>{" "}
-                                  {chip.chip_value}
-                                </button>
-                              ))}
-                            </div>
-                            <div className="flex gap-[2px] w-full">
-                              {/* <button className="p-[6px] bg-[#ffbc00] font-black text-[12px] text-[#000] text-center">
-                                MIN STAKE
-                              </button>
-                              <button className="p-[6px] bg-[#334579] font-black text-[12px] text-[#fff] text-center">
-                                MAX STAKE
-                              </button> */}
-                              <button className="p-[6px] bg-[#ffbc00] font-black text-[12px] text-[#fff] text-center w-full" onClick={() => setStakeValue(currentBalance)}>
-                                All IN
-                              </button>
-                              <button className="p-[6px] bg-[#008000] font-black text-[12px] text-[#fff] text-center w-full" onClick={() => navigate('/settings')}>
-                                EDIT STAKE
-                              </button>
-                              <button
-                                className="p-[6px] bg-[#ff0000] font-black text-[12px] text-[#fff] text-center w-full"
-                                onClick={() => setStakeValue(0)}
-                              >
-                                CLEAR
-                              </button>
-                            </div>
-
-                            <div className="flex justify-between items-center my-1">
-                              <button
-                                className="w-full text-[#fff] font-bold text-[14px] bg-[#fa6a6a] p-2"
-                                onClick={() => closePlaceBet()}
-                              >
-                                CANCEL
-                              </button>
-                              <button
-                                className="w-full text-[#fff] font-bold text-[14px] bg-[#00a105] p-2"
-                                onClick={() => betPlace()}
-                              >
-                                PLACE BET
-                              </button>
-                            </div>
-                          </div>
-                        )}
-                      </>
-                    ))}
-                </div>
-              </div>
-            )}
-            {/* Bookmaker */}
-            {bookmaker != "" && (
-              <div>
-                <div className="flex justify-start items-center p-1 bg-[#9430ff]">
-                  <span className="text-sm text-[#fff] mr-2">
-                    BOOKMAKER
-                  </span>
-                  <span className="bg-[#fab418] text-[10px] font-extrabold uppercase p-1 rounded ml-3">
-                    Cashout
-                  </span>
-                </div>
-                <div>
-                  <div className="flex justify-between border border-[#aaa]">
-                    <span className="text-xs font-semibold py-[2px] pl-1">
-                      {/* Min:100 Max:10k */}
-                      {
-                        generalSetting.length > 0 ?
-
-                          generalSetting?.map(gen => {
-                            if (eventType == "Cricket" && bookmaker?.market_name == "Bookmaker" && gen.event_name == "bookmaker") {
-                              return is_inplay == "Inplay" ? (`Min:${gen.min_stake} Max:${gen.max_stake}`) : (`Min:${gen.min_stake} Max:${gen.pre_inplay_stake}`)
-                            }
-
-                          })
-                          :
-                          'Min:100 Max:10k'
-
-                      }
-                    </span>
-                    <div className="flex justify-center">
-                      <span className="flex justify-center items-center px-2 w-[79.5px] text-xs font-semibold bg-[#a7d8fd] border-r border-l border-[#aaa]">
-                        Back
-                      </span>
-                      <span className="flex justify-center items-center px-2 w-[79.5px] text-xs font-semibold bg-[#ffd5da] border-r border-[#aaa]">
-                        Lay
-                      </span>
-                    </div>
-                  </div>
-                  {/* Runner 1 */}
-                  {bookmaker?.marketRunners?.length > 0 &&
-                    bookmaker?.marketRunners?.map((item, index) => (
-                      <>
-                        <div
-                          className="flex justify-between border-b border-[#aaa]"
-                          key={index}
-                        >
-                          <div
-                            className={`flex flex-col justify-between items-start w-full`}
-                            data-id={item.selection_id}
-                          >
-                            <input
-                              type="hidden"
-                              id="matchodds_id_preserve"
-                              value={item.market_id}
-                            />
-                            <input
-                              type="hidden"
-                              className={`position_${item.market_id.replace(
-                                ".",
-                                ""
-                              )}`}
-                              data-id={item.selection_id}
-                              value={Math.round(item.exposure.toFixed(2))}
-                            />
-                            <span className="text-[12px] font-semibold p-1">
-                              {item.runner_name}
-                            </span>
-                            <div className="flex justify-between items-center w-full">
-                              <span
-                                id={`${item.selection_id}_maxprofit_list_loss_runner_prev_${item.market_id}`}
-                                data-value={item.exposure}
-                                className={`win market-exposure text-xs font-bold ${item.exposure >= 0
-                                  ? "text-green-700"
-                                  : "text-red-700"
-                                  } p-1 leading-[0.5]`}
-                              >
-                                {Math.abs(item.exposure.toFixed(2))}
-                              </span>
-                              <span
-                                id={`${item.selection_id}_maxprofit_Mlist_loss_runner_next_${item.market_id}`}
-                                className={`to-win market-exposure text-xs font-bold p-1`}
-                              ></span>
-                            </div>
-                          </div>
-                          <div className="flex justify-center relative ">
-                            <span
-                              className="flex flex-col justify-center items-center w-[80px] text-[1rem] font-bold leading-[1.2] bg-[#a7d8fd] ml-[1px] px-1 border-r border-l border-[#aaa]"
-                              onClick={() => {
-                                if (item.back_1_price > 0) {
-                                  handleOpenBetSlip(
-                                    event_id,
-                                    item.market_id,
-                                    true,
-                                    `bmBack_Size${item.selection_id}`,
-                                    false,
-                                    item.selection_id,
-                                    item.runner_name,
-                                    `bmBack_Price${item.selection_id}`,
-                                    false,
-                                    "Bookmaker"
-                                  );
-                                  setOpenPlaceBet({
-                                    selectionId: item.selection_id,
-                                    type: "back",
-                                    odds: item.back_1_price,
-                                  });
-                                }
-                              }}
-                            >
-                              <span id={`bmBack_Price${item.selection_id}`}>
-                                {item.back_1_price}
-                              </span>
-                              <span
-                                id={`bmBack_Size${item.selection_id}`}
-                                className="text-[12px] font-normal"
-                              >
-                                {item.back_1_size}
-                              </span>
-                            </span>
-                            <span
-                              className="flex flex-col justify-center items-center w-[80px] text-[1rem] font-bold leading-[1.2] bg-[#ffd5da] px-1 border-r border-[#aaa]"
-                              onClick={() => {
-                                if (item.lay_1_price > 0) {
-                                  handleOpenBetSlip(
-                                    event_id,
-                                    item.market_id,
-                                    false,
-                                    `bmLay_Size${item.selection_id}`,
-                                    false,
-                                    item.selection_id,
-                                    item.runner_name,
-                                    `bmLay_Price${item.selection_id}`,
-                                    false,
-                                    "Bookmaker"
-                                  );
-                                  setOpenPlaceBet({
-                                    selectionId: item.selection_id,
-                                    type: "lay",
-                                    odds: item.lay_1_price,
-                                  });
-                                }
-                              }}
-                            >
-                              <span id={`bmLay_Price${item.selection_id}`}>
-                                {item.lay_1_price}
-                              </span>
-                              <span
-                                id={`bmLay_Size${item.selection_id}`}
-                                className="text-[12px] font-normal"
-                              >
-                                {item.lay_1_size}
-                              </span>
-                            </span>
-                          </div>
-                        </div>
-                        {/* Place Bet Section */}
-                        {openPlaceBet?.selectionId == item.selection_id && (
-                          <div
-                            className={`${openPlaceBet?.type == "back"
-                              ? "bg-[#a7d8fd]"
-                              : "bg-[#ffd5da]"
-                              } p-1 relative`}
-                          >
-                            <div
-                              className={`absolute top-0 left-0 w-full h-full flex justify-center items-center ${!isLoading ? "hidden" : ""
-                                }`}
-                              style={{
-                                backgroundColor: "#ffffff2b",
-                                // opacity: "0.5",
-                                // marginTop: "",
-                              }}
-                            >
-                              <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512" className="w-10 fa-spin">
-                                <path fill="black" d="M304 48a48 48 0 1 0 -96 0 48 48 0 1 0 96 0zm0 416a48 48 0 1 0 -96 0 48 48 0 1 0 96 0zM48 304a48 48 0 1 0 0-96 48 48 0 1 0 0 96zm464-48a48 48 0 1 0 -96 0 48 48 0 1 0 96 0zM142.9 437A48 48 0 1 0 75 369.1 48 48 0 1 0 142.9 437zm0-294.2A48 48 0 1 0 75 75a48 48 0 1 0 67.9 67.9zM369.1 437A48 48 0 1 0 437 369.1 48 48 0 1 0 369.1 437z" />
-                              </svg>
-                            </div>
-                            <div className="flex justify-between items-center w-full px-2 my-1">
-                              <div className="flex justify-center items-center">
-                                <span className="flex justify-center items-center h-[32px] text-[#fff] font-black text-[20px] bg-[#334579] p-2">
-                                  -
-                                </span>
-                                <input
-                                  type="text"
-                                  value={openPlaceBet?.odds}
-                                  readOnly
-                                  className="h-[32px] w-[60%] border-none focus:outline-none focus:ring-0 bg-[#e9ecef] text-center font-bold"
-                                />
-
-                                <span className="flex justify-center items-center h-[32px] text-[#fff] font-black text-[20px] bg-[#334579] p-2">
-                                  +
-                                </span>
-                              </div>
-                              <input
-                                type="number"
-                                className="h-[32px] w-[50%] border-none focus:outline-none focus:ring-0 text-center font-bold"
-                                value={StakeValue}
-                                onChange={(e) => placeStakeValue(Number(e.target.value))}
-                              />
-                            </div>
-                            <div className="grid grid-cols-4 gap-[2px] w-full my-1">
-                              {chips?.map((chip, i) => (
-                                <button
-                                  key={chip.id}
-                                  className="p-[2px] bg-white font-medium text-[14px] text-center"
-                                  onClick={(e) => {
-                                    e.preventDefault();
-                                    placeStakeValue(Number(StakeValue) + chip.chip_value);
-                                  }}
-                                >
-                                  <span className="text-lg font-black text-[#009905]">
-                                    +
-                                  </span>{" "}
-                                  {chip.chip_value}
-                                </button>
-                              ))}
-                            </div>
-                            <div className="flex gap-[2px] w-full">
-                              {/* <button className="p-[6px] bg-[#ffbc00] font-black text-[12px] text-[#000] text-center">
-                                MIN STAKE
-                              </button>
-                              <button className="p-[6px] bg-[#334579] font-black text-[12px] text-[#fff] text-center">
-                                MAX STAKE
-                              </button> */}
-                              <button className="p-[6px] bg-[#ffbc00] font-black text-[12px] text-[#fff] text-center w-full" onClick={() => setStakeValue(currentBalance)}>
-                                All IN
-                              </button>
-                              <button className="p-[6px] bg-[#008000] font-black text-[12px] text-[#fff] text-center w-full" onClick={() => navigate('/settings')}>
-                                EDIT STAKE
-                              </button>
-                              <button
-                                className="p-[6px] bg-[#ff0000] font-black text-[12px] text-[#fff] text-center w-full"
-                                onClick={() => setStakeValue(0)}
-                              >
-                                CLEAR
-                              </button>
-                            </div>
-                            <div className="flex justify-between items-center my-1">
-                              <button
-                                className="w-full text-[#fff] font-bold text-[14px] bg-[#fa6a6a] p-2"
-                                onClick={() => closePlaceBet()}
-                              >
-                                CANCEL
-                              </button>
-                              <button
-                                className="w-full text-[#fff] font-bold text-[14px] bg-[#00a105] p-2"
-                                onClick={() => betPlace()}
-                              >
-                                PLACE BET
-                              </button>
-                            </div>
-                          </div>
-                        )}
-                      </>
-                    ))}
-                </div>
-              </div>
-            )}
-            {/* Toss */}
-            {toss != "" && toss?.marketRunners?.length > 0 && (
-              <div>
-                <div className="flex justify-start items-center p-1 bg-[#9430ff]">
-                  <span className="text-sm text-[#fff] mr-2">TOSS</span>
-                  <span className="bg-[#fab418] text-[10px] font-extrabold uppercase p-1 rounded ml-3">
-                    {/* Cashout */}
-                  </span>
-                </div>
-                <div>
-                  <div className="flex justify-between border border-[#aaa]">
-                    <span className="text-xs font-semibold py-[2px] pl-1">
-                      Min : 100 Max : 100000
-                    </span>
-                    <div className="flex justify-center">
-                      <span className="flex justify-center items-center px-2 w-[79.5px] text-xs font-semibold bg-[#a7d8fd] border-r border-l border-[#aaa]">
-                        Back
-                      </span>
-                      <span className="flex justify-center items-center px-2 w-[79.5px] text-xs font-semibold bg-[#ffd5da] border-r border-[#aaa]">
-                        Lay
-                      </span>
-                    </div>
-                  </div>
-                  {/* Runner 1 */}
-                  {toss?.marketRunners?.length > 0 &&
-                    toss?.marketRunners?.map((item, index) => (
-                      <>
-                        <div
-                          className="flex justify-between border-b border-[#aaa]"
-                          key={index}
-                        >
-                          <div
-                            className={`flex flex-col justify-between items-start w-full`}
-                            data-id={item.selection_id}
-                          >
-                            <input
-                              type="hidden"
-                              id="matchodds_id_preserve"
-                              value={item.market_id}
-                            />
-                            <input
-                              type="hidden"
-                              className={`position_${item.market_id.replace(
-                                ".",
-                                ""
-                              )}`}
-                              data-id={item.selection_id}
-                              value={Math.round(item.exposure.toFixed(2))}
-                            />
-                            <span className="text-[12px] font-semibold p-1">
-                              {item.runner_name?.length > 15
-                                ? `${item.runner_name.slice(0, 15)}...`
-                                : item.runner_name}
-                            </span>
-                            <div className="flex justify-between items-center w-full">
-                              <span
-                                id={`${item.selection_id}_maxprofit_list_loss_runner_prev_${item.market_id}`}
-                                data-value={item.exposure}
-                                className={`win market-exposure text-xs font-bold ${item.exposure >= 0
-                                  ? "text-green-700"
-                                  : "text-red-700"
-                                  } p-1 leading-[0.5]`}
-                              >
-                                {Math.abs(item.exposure.toFixed(2))}
-                              </span>
-                              <span
-                                id={`${item.selection_id}_maxprofit_Mlist_loss_runner_next_${item.market_id}`}
-                                className={`to-win market-exposure text-xs font-bold p-1`}
-                              ></span>
-                            </div>
-                          </div>
-                          <div className="flex justify-center">
-                            <span
-                              className="flex flex-col justify-center items-center w-[80px] text-[1rem] font-bold leading-[1.2] bg-[#a7d8fd] ml-[1px] px-1 border-r border-l border-[#aaa]"
-                              onClick={() => {
-                                if (item.back_1_price > 0) {
-                                  setOpenPlaceBet({
-                                    selectionId: item.selection_id,
-                                    type: "back",
-                                    odds: item.back_1_price,
-                                  });
-                                  handleOpenBetSlip(
-                                    event_id,
-                                    item.market_id,
-                                    true,
-                                    `tossBack_Size${item.selection_id}`,
-                                    false,
-                                    item.selection_id,
-                                    item.runner_name,
-                                    `tossBack_Price${item.selection_id}`,
-                                    false,
-                                    "Toss"
-                                  );
-                                }
-                              }}
-                            >
-                              <span id={`tossBack_Price${item.selection_id}`}>
-                                {item.back_1_price}
-                              </span>
-                              <span
-                                id={`tossBack_Size${item.selection_id}`}
-                                className="text-[12px] font-normal"
-                              >
-                                {item.back_1_size}
-                              </span>
-                            </span>
-                            <span
-                              className="flex flex-col justify-center items-center w-[80px] text-[1rem] font-bold leading-[1.2] bg-[#ffd5da] px-1 border-r border-[#aaa]"
-                              onClick={() => {
-                                if (item.lay_1_price > 0) {
-                                  setOpenPlaceBet({
-                                    selectionId: item.selection_id,
-                                    type: "lay",
-                                    odds: item.lay_1_price,
-                                  });
-                                  handleOpenBetSlip(
-                                    event_id,
-                                    item.market_id,
-                                    false,
-                                    `tossLay_Size${item.selection_id}`,
-                                    false,
-                                    item.selection_id,
-                                    item.runner_name,
-                                    `tossLay_Price${item.selection_id}`,
-                                    false,
-                                    "Toss"
-                                  );
-                                }
-                              }}
-                            >
-                              <span id={`tossLay_Price${item.selection_id}`}>
-                                {item.lay_1_price}
-                              </span>
-                              <span
-                                id={`tossLay_Size${item.selection_id}`}
-                                className="text-[12px] font-normal"
-                              >
-                                {item.lay_1_size}
-                              </span>
-                            </span>
-                          </div>
-                        </div>
-                        {/* Place Bet Section */}
-                        {openPlaceBet?.selectionId == item.selection_id && (
-                          <div
-                            className={`${openPlaceBet?.type == "back"
-                              ? "bg-[#a7d8fd]"
-                              : "bg-[#ffd5da]"
-                              } p-1 relative`}
-                          >
-                            <div
-                              className={`absolute top-0 left-0 w-full h-full flex justify-center items-center ${!isLoading ? "hidden" : ""
-                                }`}
-                              style={{
-                                backgroundColor: "#ffffff2b",
-                                // opacity: "0.5",
-                                // marginTop: "",
-                              }}
-                            >
-                              <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512" className="w-10 fa-spin">
-                                <path fill="black" d="M304 48a48 48 0 1 0 -96 0 48 48 0 1 0 96 0zm0 416a48 48 0 1 0 -96 0 48 48 0 1 0 96 0zM48 304a48 48 0 1 0 0-96 48 48 0 1 0 0 96zm464-48a48 48 0 1 0 -96 0 48 48 0 1 0 96 0zM142.9 437A48 48 0 1 0 75 369.1 48 48 0 1 0 142.9 437zm0-294.2A48 48 0 1 0 75 75a48 48 0 1 0 67.9 67.9zM369.1 437A48 48 0 1 0 437 369.1 48 48 0 1 0 369.1 437z" />
-                              </svg>
-                            </div>
-                            <div className="flex justify-between items-center w-full px-2 my-1">
-                              <div className="flex justify-center items-center">
-                                <span className="flex justify-center items-center h-[32px] text-[#fff] font-black text-[20px] bg-[#334579] p-2">
-                                  -
-                                </span>
-                                <input
-                                  type="text"
-                                  value={openPlaceBet?.odds}
-                                  readOnly
-                                  className="h-[32px] w-[60%] border-none focus:outline-none focus:ring-0 bg-[#e9ecef] text-center font-bold"
-                                />
-
-                                <span className="flex justify-center items-center h-[32px] text-[#fff] font-black text-[20px] bg-[#334579] p-2">
-                                  +
-                                </span>
-                              </div>
-                              <input
-                                type="number"
-                                className="h-[32px] w-[50%] border-none focus:outline-none focus:ring-0 text-center font-bold"
-                                value={StakeValue}
-                                onChange={(e) => placeStakeValue(Number(e.target.value))}
-                              />
-                            </div>
-                            <div className="grid grid-cols-4 gap-[2px] w-full my-1">
-                              {chips?.map((chip, i) => (
-                                <button
-                                  key={chip.id}
-                                  className="p-[2px] bg-white font-medium text-[14px] text-center"
-                                  onClick={(e) => {
-                                    e.preventDefault();
-                                    placeStakeValue(Number(StakeValue) + chip.chip_value);
-                                  }}
-                                >
-                                  <span className="text-lg font-black text-[#009905]">
-                                    +
-                                  </span>{" "}
-                                  {chip.chip_value}
-                                </button>
-                              ))}
-                            </div>
-                            <div className="flex gap-[2px] w-full">
-                              {/* <button className="p-[6px] bg-[#ffbc00] font-black text-[12px] text-[#000] text-center">
-                                MIN STAKE
-                              </button>
-                              <button className="p-[6px] bg-[#334579] font-black text-[12px] text-[#fff] text-center">
-                                MAX STAKE
-                              </button> */}
-                              <button className="p-[6px] bg-[#ffbc00] font-black text-[12px] text-[#fff] text-center w-full" onClick={() => setStakeValue(currentBalance)}>
-                                All IN
-                              </button>
-                              <button className="p-[6px] bg-[#008000] font-black text-[12px] text-[#fff] text-center w-full" onClick={() => navigate('/settings')}>
-                                EDIT STAKE
-                              </button>
-                              <button
-                                className="p-[6px] bg-[#ff0000] font-black text-[12px] text-[#fff] text-center w-full"
-                                onClick={() => setStakeValue(0)}
-                              >
-                                CLEAR
-                              </button>
-                            </div>
-
-                            <div className="flex justify-between items-center my-1">
-                              <button
-                                className="w-full text-[#fff] font-bold text-[14px] bg-[#fa6a6a] p-2"
-                                onClick={() => closePlaceBet()}
-                              >
-                                CANCEL
-                              </button>
-                              <button
-                                className="w-full text-[#fff] font-bold text-[14px] bg-[#00a105] p-2"
-                                onClick={() => betPlace()}
-                              >
-                                PLACE BET
-                              </button>
-                            </div>
-                          </div>
-                        )}
-                      </>
-                    ))}
-                </div>
-              </div>
-            )}
-            {/* Tied_Match */}
-            {tiedMatch != "" && (
-              <div>
-                <div className="flex justify-start items-center p-1 bg-[#9430ff]">
-                  <span className="text-sm text-[#fff] mr-2">
-                    TIED_MATCH
-                  </span>
-                  <span className="bg-[#fab418] text-[10px] font-extrabold uppercase p-1 rounded ml-3">
-                    Cashout
-                  </span>
-                </div>
-                <div>
-                  <div className="flex justify-between border border-[#aaa]">
-                    <span className="text-xs font-semibold py-[2px] pl-1">
-                      Min : 100 Max : 100000
-                    </span>
-                    <div className="flex justify-center">
-                      <span className="flex justify-center items-center px-2 w-[79.5px] text-xs font-semibold bg-[#a7d8fd] border-r border-l border-[#aaa]">
-                        Back
-                      </span>
-                      <span className="flex justify-center items-center px-2 w-[79.5px] text-xs font-semibold bg-[#ffd5da] border-r border-[#aaa]">
-                        Lay
-                      </span>
-                    </div>
-                  </div>
-                  {/* Runner 1 */}
-                  {tiedMatch?.marketRunners?.length > 0 &&
-                    tiedMatch?.marketRunners?.map((item, index) => (
-                      <>
-                        <div
-                          className="flex justify-between border-b border-[#aaa]"
-                          key={index}
-                        >
-                          <div
-                            className={`flex flex-col justify-between items-start w-full`}
-                            data-id={item.selection_id}
-                          >
-                            <input
-                              type="hidden"
-                              id="matchodds_id_preserve"
-                              value={item.market_id}
-                            />
-                            <input
-                              type="hidden"
-                              className={`position_${item.market_id.replace(
-                                ".",
-                                ""
-                              )}`}
-                              data-id={item.selection_id}
-                              value={Math.round(item.exposure.toFixed(2))}
-                            />
-                            <span className="text-[12px] font-semibold p-1">
-                              {item.runner_name?.length > 15
-                                ? `${item.runner_name.slice(0, 15)}...`
-                                : item.runner_name}
-                            </span>
-                            <div className="flex justify-between items-center w-full">
-                              <span
-                                id={`${item.selection_id}_maxprofit_list_loss_runner_prev_${item.market_id}`}
-                                data-value={item.exposure}
-                                className={`win market-exposure text-xs font-bold ${item.exposure >= 0
-                                  ? "text-green-700"
-                                  : "text-red-700"
-                                  } p-1 leading-[0.5]`}
-                              >
-                                {Math.abs(item.exposure.toFixed(2))}
-                              </span>
-                              <span
-                                id={`${item.selection_id}_maxprofit_Mlist_loss_runner_next_${item.market_id}`}
-                                className={`to-win market-exposure text-xs font-bold p-1`}
-                              ></span>
-                            </div>
-                          </div>
-                          <div className="flex justify-center">
-                            <span
-                              className="flex flex-col justify-center items-center w-[80px] text-[1rem] font-bold leading-[1.2] bg-[#a7d8fd] ml-[1px] px-1 border-r border-l border-[#aaa]"
-                              onClick={() => {
-                                if (item.back_1_price > 0) {
-                                  handleOpenBetSlip(
-                                    event_id,
-                                    item.market_id,
-                                    true,
-                                    `tiedBack_Size${item.selection_id}`,
-                                    false,
-                                    item.selection_id,
-                                    item.runner_name,
-                                    `tiedBack_Price${item.selection_id}`,
-                                    false,
-                                    "TIED_MATCH"
-                                  );
-                                  setOpenPlaceBet({
-                                    selectionId: item.selection_id,
-                                    type: "back",
-                                    odds: item.back_1_price,
-                                  });
-                                }
-                              }}
-                            >
-                              <span id={`tiedBack_Price${item.selection_id}`}>
-                                {item.back_1_price}
-                              </span>
-                              <span
-                                id={`tiedBack_Size${item.selection_id}`}
-                                className="text-[12px] font-normal"
-                              >
-                                {item.back_1_size}
-                              </span>
-                            </span>
-                            <span
-                              className="flex flex-col justify-center items-center w-[80px] text-[1rem] font-bold leading-[1.2] bg-[#ffd5da] px-1 border-r border-[#aaa]"
-                              onClick={() => {
-                                if (item.lay_1_price > 0) {
-                                  handleOpenBetSlip(
-                                    event_id,
-                                    item.market_id,
-                                    false,
-                                    `tiedLay_Size${item.selection_id}`,
-                                    false,
-                                    item.selection_id,
-                                    item.runner_name,
-                                    `tiedLay_Price${item.selection_id}`,
-                                    false,
-                                    "TIED_MATCH"
-                                  );
-                                  setOpenPlaceBet({
-                                    selectionId: item.selection_id,
-                                    type: "lay",
-                                    odds: item.lay_1_price,
-                                  });
-                                }
-                              }}
-                            >
-                              <span id={`tiedLay_Price${item.selection_id}`}>
-                                {item.lay_1_price}
-                              </span>
-                              <span
-                                id={`tiedLay_Size${item.selection_id}`}
-                                className="text-[12px] font-normal"
-                              >
-                                {item.lay_1_size}
-                              </span>
-                            </span>
-                          </div>
-                        </div>
-                        {/* Place Bet Section */}
-                        {openPlaceBet?.selectionId == item.selection_id && (
-                          <div
-                            className={`${openPlaceBet?.type == "back"
-                              ? "bg-[#a7d8fd]"
-                              : "bg-[#ffd5da]"
-                              } p-1 relative`}
-                          >
-                            <div
-                              className={`absolute top-0 left-0 w-full h-full flex justify-center items-center ${!isLoading ? "hidden" : ""
-                                }`}
-                              style={{
-                                backgroundColor: "#ffffff2b",
-                                // opacity: "0.5",
-                                // marginTop: "",
-                              }}
-                            >
-                              <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512" className="w-10 fa-spin">
-                                <path fill="black" d="M304 48a48 48 0 1 0 -96 0 48 48 0 1 0 96 0zm0 416a48 48 0 1 0 -96 0 48 48 0 1 0 96 0zM48 304a48 48 0 1 0 0-96 48 48 0 1 0 0 96zm464-48a48 48 0 1 0 -96 0 48 48 0 1 0 96 0zM142.9 437A48 48 0 1 0 75 369.1 48 48 0 1 0 142.9 437zm0-294.2A48 48 0 1 0 75 75a48 48 0 1 0 67.9 67.9zM369.1 437A48 48 0 1 0 437 369.1 48 48 0 1 0 369.1 437z" />
-                              </svg>
-                            </div>
-                            <div className="flex justify-between items-center w-full px-2 my-1">
-                              <div className="flex justify-center items-center">
-                                <span className="flex justify-center items-center h-[32px] text-[#fff] font-black text-[20px] bg-[#334579] p-2">
-                                  -
-                                </span>
-                                <input
-                                  type="text"
-                                  value={openPlaceBet?.odds}
-                                  readOnly
-                                  className="h-[32px] w-[60%] border-none focus:outline-none focus:ring-0 bg-[#e9ecef] text-center font-bold"
-                                />
-
-                                <span className="flex justify-center items-center h-[32px] text-[#fff] font-black text-[20px] bg-[#334579] p-2">
-                                  +
-                                </span>
-                              </div>
-                              <input
-                                type="number"
-                                className="h-[32px] w-[50%] border-none focus:outline-none focus:ring-0 text-center font-bold"
-                                value={StakeValue}
-                                onChange={(e) => placeStakeValue(Number(e.target.value))}
-                              />
-                            </div>
-                            <div className="grid grid-cols-4 gap-[2px] w-full my-1">
-                              {chips?.map((chip, i) => (
-                                <button
-                                  key={chip.id}
-                                  className="p-[2px] bg-white font-medium text-[14px] text-center"
-                                  onClick={(e) => {
-                                    e.preventDefault();
-                                    placeStakeValue(Number(StakeValue) + chip.chip_value);
-                                  }}
-                                >
-                                  <span className="text-lg font-black text-[#009905]">
-                                    +
-                                  </span>{" "}
-                                  {chip.chip_value}
-                                </button>
-                              ))}
-                            </div>
-                            <div className="flex gap-[2px] w-full">
-                              {/* <button className="p-[6px] bg-[#ffbc00] font-black text-[12px] text-[#000] text-center">
-                                MIN STAKE
-                              </button>
-                              <button className="p-[6px] bg-[#334579] font-black text-[12px] text-[#fff] text-center">
-                                MAX STAKE
-                              </button> */}
-                              <button className="p-[6px] bg-[#ffbc00] font-black text-[12px] text-[#fff] text-center w-full" onClick={() => setStakeValue(currentBalance)}>
-                                All IN
-                              </button>
-                              <button className="p-[6px] bg-[#008000] font-black text-[12px] text-[#fff] text-center w-full" onClick={() => navigate('/settings')}>
-                                EDIT STAKE
-                              </button>
-                              <button
-                                className="p-[6px] bg-[#ff0000] font-black text-[12px] text-[#fff] text-center w-full"
-                                onClick={() => setStakeValue(0)}
-                              >
-                                CLEAR
-                              </button>
-                            </div>
-
-                            <div className="flex justify-between items-center my-1">
-                              <button
-                                className="w-full text-[#fff] font-bold text-[14px] bg-[#fa6a6a] p-2"
-                                onClick={() => closePlaceBet()}
-                              >
-                                CANCEL
-                              </button>
-                              <button
-                                className="w-full text-[#fff] font-bold text-[14px] bg-[#00a105] p-2"
-                                onClick={() => betPlace()}
-                              >
-                                PLACE BET
-                              </button>
-                            </div>
-                          </div>
-                        )}
-                      </>
-                    ))}
-                </div>
-              </div>
-            )}
-          </div>
-          {/* Fancy Section */}
-          {fancyData?.length > 0 && (
+          {selectedSection == "odds" &&
             <>
-              <div className="flex justify-between items-center bg-[#000] my-2">
-                <span className=" text-center text-xs font-semibold w-full bg-[linear-gradient(180deg,_#ffcc2e,_#ffbd14)] rounded-r p-2 uppercase">
-                  Fancy
+              <div className="flex justify-between items-center text-[var(--secondary-color)] bg-[var(--theme2-bg)] p-2">
+                <span className="text-xs font-bold uppercase">
+                  {eventName ? eventName : ""}
                 </span>
-                <span className="text-[#fff] font-bold text-center text-xs uppercase w-full relative">
-                  Premium{" "}
-                  <span className="text-[10px] font-bold text-center bg-[#9430ff] rounded-sm ml-1 px-1 py-[1px] absolute bottom-[4px] blink">
-                    NEW
-                  </span>
-                </span>
+                <span className="ml-1 text-xs"> {openDate ? openDate : ""}</span>
               </div>
-              <div className="flex overflow-x-auto scroll-hide whitespace-nowrap text-xs font-semibold text-white bg-black">
-                <span className="border-r border-white px-4 py-2 text-center text-[#000] bg-[linear-gradient(180deg,_#ffcc2e,_#ffbd14)]">
-                  ALL
-                </span>
-                <span className="border-r border-white px-4 py-2 text-center">
-                  SESSIONS
-                </span>
-                <span className="border-r border-white px-4 py-2 text-center">
-                  W/P MARKET
-                </span>
-                <span className="border-r border-white px-4 py-2 text-center">
-                  ODD/EVEN
-                </span>
-                <span className="border-r border-white px-4 py-2 text-center">
-                  XTRA MARKET
-                </span>
+              {/* Tv Panel*/}
+              <div
+                className={`overflow-hidden transition-all duration-500 ease-in-out ${isTvOpen
+                  ? "max-h-[300px] opacity-100 translate-y-0 p-1"
+                  : "max-h-0 opacity-0 -translate-y-2"
+                  } flex justify-center items-center w-full bg-white`}
+              >
+                {isTvOpen &&
+                  <iframe
+                    src={tvUrl}
+                    className="w-full h-[250px] border-0"
+                    allowFullScreen
+                  ></iframe>
+                }
               </div>
-              {/* Fancy */}
-              <div className="mt-[2px]">
-                <div className="flex w-full text-sm border border-[#aaa]">
-                  <div className="flex justify-between item-center w-[60%] bg-[#9430ff]">
-                    <span className="text-[#fff] pt-[2px] pl-2">
+
+              {/* Iframe */}
+              <div
+                className={`overflow-y-auto transition-all duration-500 ease-in-out ${isScoreCardOpen
+                  ? "max-h-[165px] opacity-100 translate-y-0"
+                  : "max-h-0 opacity-0 -translate-y-2"
+                  } w-full bg-cover bg-center bg-no-repeat p-1`}
+              // style={{ backgroundImage: `url(/Images/scoreCardBG-mobile.webp)` }}
+              >
+                <iframe
+                  src={scoreUrl}
+                  className="w-full border-0"
+                  allowFullScreen
+                  style={{ height: "220px" }}
+                />
+              </div>
+
+
+              <div>
+                {/* MatchOdds */}
+                {matchOdds != "" && (
+                  <div>
+                    <div className="flex justify-start items-center p-1 bg-[var(--theme2-bg85)]">
+                      <span className="text-sm text-[var(--secondary-color)] mr-2">
+                        {matchOdds?.market_name || "Match Odds"}
+                      </span>
+                      <span className="bg-[#fab418] text-[10px] font-extrabold uppercase p-1 rounded ml-3">
+                        Cashout
+                      </span>
+                    </div>
+                    <div>
+                      <div className="flex justify-between border border-[#aaa]">
+                        <span className="text-xs font-semibold py-[2px] pl-1">
+                          {/* Min:100 Max:10k */}
+                          {
+                            generalSetting.length > 0 ?
+
+                              generalSetting?.map(gen => {
+                                if ((eventType == "Cricket" && matchOdds?.market_name == "Match Odds" && gen.event_name == "cricket") || (eventType == "Soccer" && gen.event_name == "soccer") || (eventType == "Tennis" && gen.event_name == "tennis")) {
+                                  return is_inplay == "Inplay" ? (`Min:${gen.min_stake} Max:${gen.max_stake}`) : (`Min:${gen.min_stake} Max:${gen.pre_inplay_stake}`)
+                                } else if (eventType == "Cricket" && matchOdds?.market_name == "Bookmaker" && gen.event_name == "bookmaker") {
+                                  return is_inplay == "Inplay" ? (`Min:${gen.min_stake} Max:${gen.max_stake}`) : (`Min:${gen.min_stake} Max:${gen.pre_inplay_stake}`)
+                                }
+
+                              })
+                              :
+                              'Min:100 Max:10k'
+
+                          }
+                        </span>
+                        <div className="flex justify-center">
+                          <span className="flex justify-center items-center px-2 w-[79.5px] text-xs font-semibold bg-[#a7d8fd] border-r border-l border-[#aaa]">
+                            BACK
+                          </span>
+                          <span className="flex justify-center items-center px-2 w-[79.5px] text-xs font-semibold bg-[#ffd5da] border-r border-[#aaa]">
+                            LAY
+                          </span>
+                        </div>
+                      </div>
+                      {/* Runner 1 */}
+                      {matchOdds?.marketRunners?.length > 0 &&
+                        matchOdds?.marketRunners?.map((item, index) => (
+                          <>
+                            <div
+                              className="flex justify-between bg-[#f2f2f2] border-b border-[#aaa]"
+                              key={index}
+                            >
+                              <div
+                                className={`flex flex-col justify-between items-start w-full`}
+                                data-id={item.selection_id}
+                              >
+                                <input
+                                  type="hidden"
+                                  id="matchodds_id_preserve"
+                                  value={item.market_id}
+                                />
+                                <input
+                                  type="hidden"
+                                  className={`position_${item.market_id.replace(
+                                    ".",
+                                    ""
+                                  )}`}
+                                  data-id={item.selection_id}
+                                  value={Math.round(item.exposure.toFixed(2))}
+                                />
+                                <span className="text-[12px] font-semibold p-1">
+                                  {item.runner_name}
+                                </span>
+                                <div className="flex justify-between items-center w-full">
+                                  <span
+                                    id={`${item.selection_id}_maxprofit_list_loss_runner_prev_${item.market_id}`}
+                                    data-value={item.exposure}
+                                    className={`win market-exposure text-xs font-bold ${item.exposure >= 0
+                                      ? "text-green-700"
+                                      : "text-red-700"
+                                      } p-1 leading-[0.5]`}
+                                  >
+                                    {Math.abs(item.exposure.toFixed(2))}
+                                  </span>
+                                  <span
+                                    id={`${item.selection_id}_maxprofit_Mlist_loss_runner_next_${item.market_id}`}
+                                    className={`to-win market-exposure text-xs font-bold p-1`}
+                                  ></span>
+                                </div>
+                              </div>
+                              <div className="flex justify-center">
+                                <span
+                                  className="flex flex-col justify-center items-center w-[80px] text-[1rem] font-bold leading-[1.2] bg-[#a7d8fd] ml-[1px] px-1 border-r border-l border-[#aaa]"
+                                  onClick={() => {
+                                    if (item.lay_1_price > 0) {
+                                      handleOpenBetSlip(
+                                        event_id,
+                                        item.market_id,
+                                        true,
+                                        `moBack_Size${item.selection_id}`,
+                                        false,
+                                        item.selection_id,
+                                        item.runner_name,
+                                        `moBack_Price${item.selection_id}`,
+                                        false,
+                                        "Match Odds"
+                                      );
+                                      setOpenPlaceBet({
+                                        selectionId: item.selection_id,
+                                        type: "back",
+                                        odds: item.back_1_price,
+                                      });
+                                    }
+                                  }}
+                                >
+                                  <span id={`moBack_Price${item.selection_id}`}>
+                                    {item.back_1_price}
+                                  </span>
+                                  <span
+                                    id={`moBack_Size${item.selection_id}`}
+                                    className="text-[12px] font-normal"
+                                  >
+                                    {item.back_1_size}
+                                  </span>
+                                </span>
+                                <span
+                                  className="flex flex-col justify-center items-center w-[80px] text-[1rem] font-bold leading-[1.2] bg-[#ffd5da] px-1 border-r border-[#aaa]"
+                                  onClick={() => {
+                                    if (item.lay_1_price > 0) {
+                                      setOpenPlaceBet({
+                                        selectionId: item.selection_id,
+                                        type: "lay",
+                                        odds: item.lay_1_price,
+                                      });
+                                      handleOpenBetSlip(
+                                        event_id,
+                                        item.market_id,
+                                        false,
+                                        `moLay_Size${item.selection_id}`,
+                                        false,
+                                        item.selection_id,
+                                        item.runner_name,
+                                        `moLay_Price${item.selection_id}`,
+                                        false,
+                                        "Match Odds"
+                                      );
+                                    }
+                                  }}
+                                >
+                                  <span id={`moLay_Price${item.selection_id}`}>
+                                    {item.lay_1_price}
+                                  </span>
+                                  <span
+                                    id={`moLay_Size${item.selection_id}`}
+                                    className="text-[12px] font-normal"
+                                  >
+                                    {item.lay_1_size}
+                                  </span>
+                                </span>
+                              </div>
+                            </div>
+                            {/* Place Bet Section */}
+                            {openPlaceBet?.selectionId == item.selection_id && (
+                              <div
+                                className={`${openPlaceBet?.type == "back"
+                                  ? "bg-[#a7d8fd]"
+                                  : "bg-[#ffd5da]"
+                                  } p-1 relative block lg:hidden`}
+                              >
+                                <div
+                                  className={`absolute top-0 left-0 w-full h-full flex justify-center items-center ${!isLoading ? "hidden" : ""
+                                    }`}
+                                  style={{
+                                    backgroundColor: "#ffffff2b",
+                                    // opacity: "0.5",
+                                    // marginTop: "",
+                                  }}
+                                >
+                                  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512" className="w-10 fa-spin">
+                                    <path fill="black" d="M304 48a48 48 0 1 0 -96 0 48 48 0 1 0 96 0zm0 416a48 48 0 1 0 -96 0 48 48 0 1 0 96 0zM48 304a48 48 0 1 0 0-96 48 48 0 1 0 0 96zm464-48a48 48 0 1 0 -96 0 48 48 0 1 0 96 0zM142.9 437A48 48 0 1 0 75 369.1 48 48 0 1 0 142.9 437zm0-294.2A48 48 0 1 0 75 75a48 48 0 1 0 67.9 67.9zM369.1 437A48 48 0 1 0 437 369.1 48 48 0 1 0 369.1 437z" />
+                                  </svg>
+                                </div>
+                                <div className="flex justify-between items-center w-full px-2 my-1">
+                                  <div className="flex justify-center items-center">
+                                    <span className="flex justify-center items-center h-[32px] text-[var(--secondary-color)] font-black text-[20px] bg-[#334579] p-2">
+                                      -
+                                    </span>
+                                    <input
+                                      type="text"
+                                      value={openPlaceBet?.odds}
+                                      readOnly
+                                      className="h-[32px] w-[60%] border-none focus:outline-none focus:ring-0 bg-[#e9ecef] text-center font-bold"
+                                    />
+
+                                    <span className="flex justify-center items-center h-[32px] text-[var(--secondary-color)] font-black text-[20px] bg-[#334579] p-2">
+                                      +
+                                    </span>
+                                  </div>
+                                  <input
+                                    type="number"
+                                    className="h-[32px] w-[50%] border-none focus:outline-none focus:ring-0 text-center font-bold"
+                                    value={StakeValue}
+                                    onChange={(e) => placeStakeValue(Number(e.target.value))}
+                                  />
+                                </div>
+                                <div className="grid grid-cols-4 gap-[2px] w-full my-1">
+                                  {chips?.map((chip, i) => (
+                                    <button
+                                      key={chip.id}
+                                      className="p-[2px] bg-white font-medium text-[14px] text-center"
+                                      onClick={(e) => {
+                                        e.preventDefault();
+                                        placeStakeValue(Number(StakeValue) + chip.chip_value);
+                                      }}
+                                    >
+                                      <span className="text-lg font-black text-[#009905]">
+                                        +
+                                      </span>{" "}
+                                      {chip.chip_value}
+                                    </button>
+                                  ))}
+                                </div>
+                                <div className="flex gap-[2px] w-full">
+                                  {/* <button className="p-[6px] bg-[#ffbc00] font-black text-[12px] text-[#000] text-center">
+                                MIN STAKE
+                              </button>
+                              <button className="p-[6px] bg-[#334579] font-black text-[12px] text-[var(--secondary-color)] text-center">
+                                MAX STAKE
+                              </button> */}
+                                  <button className="p-[6px] bg-[#ffbc00] font-black text-[12px] text-[var(--secondary-color)] text-center w-full" onClick={() => setStakeValue(currentBalance)}>
+                                    All IN
+                                  </button>
+                                  <button className="p-[6px] bg-[#008000] font-black text-[12px] text-[var(--secondary-color)] text-center w-full" onClick={() => navigate('/settings')}>
+                                    EDIT STAKE
+                                  </button>
+                                  <button
+                                    className="p-[6px] bg-[#ff0000] font-black text-[12px] text-[var(--secondary-color)] text-center w-full"
+                                    onClick={() => setStakeValue(0)}
+                                  >
+                                    CLEAR
+                                  </button>
+                                </div>
+
+                                <div className="flex justify-between items-center my-1">
+                                  <button
+                                    className="w-full text-[var(--secondary-color)] font-bold text-[14px] bg-[#fa6a6a] p-2"
+                                    onClick={() => closePlaceBet()}
+                                  >
+                                    CANCEL
+                                  </button>
+                                  <button
+                                    className="w-full text-[var(--secondary-color)] font-bold text-[14px] bg-[#00a105] p-2"
+                                    onClick={() => betPlace()}
+                                  >
+                                    PLACE BET
+                                  </button>
+                                </div>
+                              </div>
+                            )}
+                          </>
+                        ))}
+                    </div>
+                  </div>
+                )}
+                {/* Bookmaker */}
+                {bookmaker != "" && (
+                  <div>
+                    <div className="flex justify-start items-center p-1 bg-[var(--theme2-bg85)]">
+                      <span className="text-sm text-[var(--secondary-color)] mr-2">
+                        BOOKMAKER
+                      </span>
+                      <span className="bg-[#fab418] text-[10px] font-extrabold uppercase p-1 rounded ml-3">
+                        Cashout
+                      </span>
+                    </div>
+                    <div>
+                      <div className="flex justify-between border border-[#aaa]">
+                        <span className="text-xs font-semibold py-[2px] pl-1">
+                          {/* Min:100 Max:10k */}
+                          {
+                            generalSetting.length > 0 ?
+
+                              generalSetting?.map(gen => {
+                                if (eventType == "Cricket" && bookmaker?.market_name == "Bookmaker" && gen.event_name == "bookmaker") {
+                                  return is_inplay == "Inplay" ? (`Min:${gen.min_stake} Max:${gen.max_stake}`) : (`Min:${gen.min_stake} Max:${gen.pre_inplay_stake}`)
+                                }
+
+                              })
+                              :
+                              'Min:100 Max:10k'
+
+                          }
+                        </span>
+                        <div className="flex justify-center">
+                          <span className="flex justify-center items-center px-2 w-[79.5px] text-xs font-semibold bg-[#a7d8fd] border-r border-l border-[#aaa]">
+                            Back
+                          </span>
+                          <span className="flex justify-center items-center px-2 w-[79.5px] text-xs font-semibold bg-[#ffd5da] border-r border-[#aaa]">
+                            Lay
+                          </span>
+                        </div>
+                      </div>
+                      {/* Runner 1 */}
+                      {bookmaker?.marketRunners?.length > 0 &&
+                        bookmaker?.marketRunners?.map((item, index) => (
+                          <>
+                            <div
+                              className="flex justify-between border-b border-[#aaa]"
+                              key={index}
+                            >
+                              <div
+                                className={`flex flex-col justify-between items-start w-full`}
+                                data-id={item.selection_id}
+                              >
+                                <input
+                                  type="hidden"
+                                  id="matchodds_id_preserve"
+                                  value={item.market_id}
+                                />
+                                <input
+                                  type="hidden"
+                                  className={`position_${item.market_id.replace(
+                                    ".",
+                                    ""
+                                  )}`}
+                                  data-id={item.selection_id}
+                                  value={Math.round(item.exposure.toFixed(2))}
+                                />
+                                <span className="text-[12px] font-semibold p-1">
+                                  {item.runner_name}
+                                </span>
+                                <div className="flex justify-between items-center w-full">
+                                  <span
+                                    id={`${item.selection_id}_maxprofit_list_loss_runner_prev_${item.market_id}`}
+                                    data-value={item.exposure}
+                                    className={`win market-exposure text-xs font-bold ${item.exposure >= 0
+                                      ? "text-green-700"
+                                      : "text-red-700"
+                                      } p-1 leading-[0.5]`}
+                                  >
+                                    {Math.abs(item.exposure.toFixed(2))}
+                                  </span>
+                                  <span
+                                    id={`${item.selection_id}_maxprofit_Mlist_loss_runner_next_${item.market_id}`}
+                                    className={`to-win market-exposure text-xs font-bold p-1`}
+                                  ></span>
+                                </div>
+                              </div>
+                              <div className="flex justify-center relative ">
+                                <span
+                                  className="flex flex-col justify-center items-center w-[80px] text-[1rem] font-bold leading-[1.2] bg-[#a7d8fd] ml-[1px] px-1 border-r border-l border-[#aaa]"
+                                  onClick={() => {
+                                    if (item.back_1_price > 0) {
+                                      handleOpenBetSlip(
+                                        event_id,
+                                        item.market_id,
+                                        true,
+                                        `bmBack_Size${item.selection_id}`,
+                                        false,
+                                        item.selection_id,
+                                        item.runner_name,
+                                        `bmBack_Price${item.selection_id}`,
+                                        false,
+                                        "Bookmaker"
+                                      );
+                                      setOpenPlaceBet({
+                                        selectionId: item.selection_id,
+                                        type: "back",
+                                        odds: item.back_1_price,
+                                      });
+                                    }
+                                  }}
+                                >
+                                  <span id={`bmBack_Price${item.selection_id}`}>
+                                    {item.back_1_price}
+                                  </span>
+                                  <span
+                                    id={`bmBack_Size${item.selection_id}`}
+                                    className="text-[12px] font-normal"
+                                  >
+                                    {item.back_1_size}
+                                  </span>
+                                </span>
+                                <span
+                                  className="flex flex-col justify-center items-center w-[80px] text-[1rem] font-bold leading-[1.2] bg-[#ffd5da] px-1 border-r border-[#aaa]"
+                                  onClick={() => {
+                                    if (item.lay_1_price > 0) {
+                                      handleOpenBetSlip(
+                                        event_id,
+                                        item.market_id,
+                                        false,
+                                        `bmLay_Size${item.selection_id}`,
+                                        false,
+                                        item.selection_id,
+                                        item.runner_name,
+                                        `bmLay_Price${item.selection_id}`,
+                                        false,
+                                        "Bookmaker"
+                                      );
+                                      setOpenPlaceBet({
+                                        selectionId: item.selection_id,
+                                        type: "lay",
+                                        odds: item.lay_1_price,
+                                      });
+                                    }
+                                  }}
+                                >
+                                  <span id={`bmLay_Price${item.selection_id}`}>
+                                    {item.lay_1_price}
+                                  </span>
+                                  <span
+                                    id={`bmLay_Size${item.selection_id}`}
+                                    className="text-[12px] font-normal"
+                                  >
+                                    {item.lay_1_size}
+                                  </span>
+                                </span>
+                              </div>
+                            </div>
+                            {/* Place Bet Section */}
+                            {openPlaceBet?.selectionId == item.selection_id && (
+                              <div
+                                className={`${openPlaceBet?.type == "back"
+                                  ? "bg-[#a7d8fd]"
+                                  : "bg-[#ffd5da]"
+                                  } p-1 relative block lg:hidden`}
+                              >
+                                <div
+                                  className={`absolute top-0 left-0 w-full h-full flex justify-center items-center ${!isLoading ? "hidden" : ""
+                                    }`}
+                                  style={{
+                                    backgroundColor: "#ffffff2b",
+                                    // opacity: "0.5",
+                                    // marginTop: "",
+                                  }}
+                                >
+                                  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512" className="w-10 fa-spin">
+                                    <path fill="black" d="M304 48a48 48 0 1 0 -96 0 48 48 0 1 0 96 0zm0 416a48 48 0 1 0 -96 0 48 48 0 1 0 96 0zM48 304a48 48 0 1 0 0-96 48 48 0 1 0 0 96zm464-48a48 48 0 1 0 -96 0 48 48 0 1 0 96 0zM142.9 437A48 48 0 1 0 75 369.1 48 48 0 1 0 142.9 437zm0-294.2A48 48 0 1 0 75 75a48 48 0 1 0 67.9 67.9zM369.1 437A48 48 0 1 0 437 369.1 48 48 0 1 0 369.1 437z" />
+                                  </svg>
+                                </div>
+                                <div className="flex justify-between items-center w-full px-2 my-1">
+                                  <div className="flex justify-center items-center">
+                                    <span className="flex justify-center items-center h-[32px] text-[var(--secondary-color)] font-black text-[20px] bg-[#334579] p-2">
+                                      -
+                                    </span>
+                                    <input
+                                      type="text"
+                                      value={openPlaceBet?.odds}
+                                      readOnly
+                                      className="h-[32px] w-[60%] border-none focus:outline-none focus:ring-0 bg-[#e9ecef] text-center font-bold"
+                                    />
+
+                                    <span className="flex justify-center items-center h-[32px] text-[var(--secondary-color)] font-black text-[20px] bg-[#334579] p-2">
+                                      +
+                                    </span>
+                                  </div>
+                                  <input
+                                    type="number"
+                                    className="h-[32px] w-[50%] border-none focus:outline-none focus:ring-0 text-center font-bold"
+                                    value={StakeValue}
+                                    onChange={(e) => placeStakeValue(Number(e.target.value))}
+                                  />
+                                </div>
+                                <div className="grid grid-cols-4 gap-[2px] w-full my-1">
+                                  {chips?.map((chip, i) => (
+                                    <button
+                                      key={chip.id}
+                                      className="p-[2px] bg-white font-medium text-[14px] text-center"
+                                      onClick={(e) => {
+                                        e.preventDefault();
+                                        placeStakeValue(Number(StakeValue) + chip.chip_value);
+                                      }}
+                                    >
+                                      <span className="text-lg font-black text-[#009905]">
+                                        +
+                                      </span>{" "}
+                                      {chip.chip_value}
+                                    </button>
+                                  ))}
+                                </div>
+                                <div className="flex gap-[2px] w-full">
+                                  {/* <button className="p-[6px] bg-[#ffbc00] font-black text-[12px] text-[#000] text-center">
+                                MIN STAKE
+                              </button>
+                              <button className="p-[6px] bg-[#334579] font-black text-[12px] text-[var(--secondary-color)] text-center">
+                                MAX STAKE
+                              </button> */}
+                                  <button className="p-[6px] bg-[#ffbc00] font-black text-[12px] text-[var(--secondary-color)] text-center w-full" onClick={() => setStakeValue(currentBalance)}>
+                                    All IN
+                                  </button>
+                                  <button className="p-[6px] bg-[#008000] font-black text-[12px] text-[var(--secondary-color)] text-center w-full" onClick={() => navigate('/settings')}>
+                                    EDIT STAKE
+                                  </button>
+                                  <button
+                                    className="p-[6px] bg-[#ff0000] font-black text-[12px] text-[var(--secondary-color)] text-center w-full"
+                                    onClick={() => setStakeValue(0)}
+                                  >
+                                    CLEAR
+                                  </button>
+                                </div>
+                                <div className="flex justify-between items-center my-1">
+                                  <button
+                                    className="w-full text-[var(--secondary-color)] font-bold text-[14px] bg-[#fa6a6a] p-2"
+                                    onClick={() => closePlaceBet()}
+                                  >
+                                    CANCEL
+                                  </button>
+                                  <button
+                                    className="w-full text-[var(--secondary-color)] font-bold text-[14px] bg-[#00a105] p-2"
+                                    onClick={() => betPlace()}
+                                  >
+                                    PLACE BET
+                                  </button>
+                                </div>
+                              </div>
+                            )}
+                          </>
+                        ))}
+                    </div>
+                  </div>
+                )}
+                {/* Toss */}
+                {toss != "" && toss?.marketRunners?.length > 0 && (
+                  <div>
+                    <div className="flex justify-start items-center p-1 bg-[var(--theme2-bg85)]">
+                      <span className="text-sm text-[var(--secondary-color)] mr-2">TOSS</span>
+                      <span className="bg-[#fab418] text-[10px] font-extrabold uppercase p-1 rounded ml-3">
+                        {/* Cashout */}
+                      </span>
+                    </div>
+                    <div>
+                      <div className="flex justify-between border border-[#aaa]">
+                        <span className="text-xs font-semibold py-[2px] pl-1">
+                          Min : 100 Max : 100000
+                        </span>
+                        <div className="flex justify-center">
+                          <span className="flex justify-center items-center px-2 w-[79.5px] text-xs font-semibold bg-[#a7d8fd] border-r border-l border-[#aaa]">
+                            Back
+                          </span>
+                          <span className="flex justify-center items-center px-2 w-[79.5px] text-xs font-semibold bg-[#ffd5da] border-r border-[#aaa]">
+                            Lay
+                          </span>
+                        </div>
+                      </div>
+                      {/* Runner 1 */}
+                      {toss?.marketRunners?.length > 0 &&
+                        toss?.marketRunners?.map((item, index) => (
+                          <>
+                            <div
+                              className="flex justify-between border-b border-[#aaa]"
+                              key={index}
+                            >
+                              <div
+                                className={`flex flex-col justify-between items-start w-full`}
+                                data-id={item.selection_id}
+                              >
+                                <input
+                                  type="hidden"
+                                  id="matchodds_id_preserve"
+                                  value={item.market_id}
+                                />
+                                <input
+                                  type="hidden"
+                                  className={`position_${item.market_id.replace(
+                                    ".",
+                                    ""
+                                  )}`}
+                                  data-id={item.selection_id}
+                                  value={Math.round(item.exposure.toFixed(2))}
+                                />
+                                <span className="text-[12px] font-semibold p-1">
+                                  {item.runner_name?.length > 15
+                                    ? `${item.runner_name.slice(0, 15)}...`
+                                    : item.runner_name}
+                                </span>
+                                <div className="flex justify-between items-center w-full">
+                                  <span
+                                    id={`${item.selection_id}_maxprofit_list_loss_runner_prev_${item.market_id}`}
+                                    data-value={item.exposure}
+                                    className={`win market-exposure text-xs font-bold ${item.exposure >= 0
+                                      ? "text-green-700"
+                                      : "text-red-700"
+                                      } p-1 leading-[0.5]`}
+                                  >
+                                    {Math.abs(item.exposure.toFixed(2))}
+                                  </span>
+                                  <span
+                                    id={`${item.selection_id}_maxprofit_Mlist_loss_runner_next_${item.market_id}`}
+                                    className={`to-win market-exposure text-xs font-bold p-1`}
+                                  ></span>
+                                </div>
+                              </div>
+                              <div className="flex justify-center">
+                                <span
+                                  className="flex flex-col justify-center items-center w-[80px] text-[1rem] font-bold leading-[1.2] bg-[#a7d8fd] ml-[1px] px-1 border-r border-l border-[#aaa]"
+                                  onClick={() => {
+                                    if (item.back_1_price > 0) {
+                                      setOpenPlaceBet({
+                                        selectionId: item.selection_id,
+                                        type: "back",
+                                        odds: item.back_1_price,
+                                      });
+                                      handleOpenBetSlip(
+                                        event_id,
+                                        item.market_id,
+                                        true,
+                                        `tossBack_Size${item.selection_id}`,
+                                        false,
+                                        item.selection_id,
+                                        item.runner_name,
+                                        `tossBack_Price${item.selection_id}`,
+                                        false,
+                                        "Toss"
+                                      );
+                                    }
+                                  }}
+                                >
+                                  <span id={`tossBack_Price${item.selection_id}`}>
+                                    {item.back_1_price}
+                                  </span>
+                                  <span
+                                    id={`tossBack_Size${item.selection_id}`}
+                                    className="text-[12px] font-normal"
+                                  >
+                                    {item.back_1_size}
+                                  </span>
+                                </span>
+                                <span
+                                  className="flex flex-col justify-center items-center w-[80px] text-[1rem] font-bold leading-[1.2] bg-[#ffd5da] px-1 border-r border-[#aaa]"
+                                  onClick={() => {
+                                    if (item.lay_1_price > 0) {
+                                      setOpenPlaceBet({
+                                        selectionId: item.selection_id,
+                                        type: "lay",
+                                        odds: item.lay_1_price,
+                                      });
+                                      handleOpenBetSlip(
+                                        event_id,
+                                        item.market_id,
+                                        false,
+                                        `tossLay_Size${item.selection_id}`,
+                                        false,
+                                        item.selection_id,
+                                        item.runner_name,
+                                        `tossLay_Price${item.selection_id}`,
+                                        false,
+                                        "Toss"
+                                      );
+                                    }
+                                  }}
+                                >
+                                  <span id={`tossLay_Price${item.selection_id}`}>
+                                    {item.lay_1_price}
+                                  </span>
+                                  <span
+                                    id={`tossLay_Size${item.selection_id}`}
+                                    className="text-[12px] font-normal"
+                                  >
+                                    {item.lay_1_size}
+                                  </span>
+                                </span>
+                              </div>
+                            </div>
+                            {/* Place Bet Section */}
+                            {openPlaceBet?.selectionId == item.selection_id && (
+                              <div
+                                className={`${openPlaceBet?.type == "back"
+                                  ? "bg-[#a7d8fd]"
+                                  : "bg-[#ffd5da]"
+                                  } p-1 relative block lg:hidden`}
+                              >
+                                <div
+                                  className={`absolute top-0 left-0 w-full h-full flex justify-center items-center ${!isLoading ? "hidden" : ""
+                                    }`}
+                                  style={{
+                                    backgroundColor: "#ffffff2b",
+                                    // opacity: "0.5",
+                                    // marginTop: "",
+                                  }}
+                                >
+                                  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512" className="w-10 fa-spin">
+                                    <path fill="black" d="M304 48a48 48 0 1 0 -96 0 48 48 0 1 0 96 0zm0 416a48 48 0 1 0 -96 0 48 48 0 1 0 96 0zM48 304a48 48 0 1 0 0-96 48 48 0 1 0 0 96zm464-48a48 48 0 1 0 -96 0 48 48 0 1 0 96 0zM142.9 437A48 48 0 1 0 75 369.1 48 48 0 1 0 142.9 437zm0-294.2A48 48 0 1 0 75 75a48 48 0 1 0 67.9 67.9zM369.1 437A48 48 0 1 0 437 369.1 48 48 0 1 0 369.1 437z" />
+                                  </svg>
+                                </div>
+                                <div className="flex justify-between items-center w-full px-2 my-1">
+                                  <div className="flex justify-center items-center">
+                                    <span className="flex justify-center items-center h-[32px] text-[var(--secondary-color)] font-black text-[20px] bg-[#334579] p-2">
+                                      -
+                                    </span>
+                                    <input
+                                      type="text"
+                                      value={openPlaceBet?.odds}
+                                      readOnly
+                                      className="h-[32px] w-[60%] border-none focus:outline-none focus:ring-0 bg-[#e9ecef] text-center font-bold"
+                                    />
+
+                                    <span className="flex justify-center items-center h-[32px] text-[var(--secondary-color)] font-black text-[20px] bg-[#334579] p-2">
+                                      +
+                                    </span>
+                                  </div>
+                                  <input
+                                    type="number"
+                                    className="h-[32px] w-[50%] border-none focus:outline-none focus:ring-0 text-center font-bold"
+                                    value={StakeValue}
+                                    onChange={(e) => placeStakeValue(Number(e.target.value))}
+                                  />
+                                </div>
+                                <div className="grid grid-cols-4 gap-[2px] w-full my-1">
+                                  {chips?.map((chip, i) => (
+                                    <button
+                                      key={chip.id}
+                                      className="p-[2px] bg-white font-medium text-[14px] text-center"
+                                      onClick={(e) => {
+                                        e.preventDefault();
+                                        placeStakeValue(Number(StakeValue) + chip.chip_value);
+                                      }}
+                                    >
+                                      <span className="text-lg font-black text-[#009905]">
+                                        +
+                                      </span>{" "}
+                                      {chip.chip_value}
+                                    </button>
+                                  ))}
+                                </div>
+                                <div className="flex gap-[2px] w-full">
+                                  {/* <button className="p-[6px] bg-[#ffbc00] font-black text-[12px] text-[#000] text-center">
+                                MIN STAKE
+                              </button>
+                              <button className="p-[6px] bg-[#334579] font-black text-[12px] text-[var(--secondary-color)] text-center">
+                                MAX STAKE
+                              </button> */}
+                                  <button className="p-[6px] bg-[#ffbc00] font-black text-[12px] text-[var(--secondary-color)] text-center w-full" onClick={() => setStakeValue(currentBalance)}>
+                                    All IN
+                                  </button>
+                                  <button className="p-[6px] bg-[#008000] font-black text-[12px] text-[var(--secondary-color)] text-center w-full" onClick={() => navigate('/settings')}>
+                                    EDIT STAKE
+                                  </button>
+                                  <button
+                                    className="p-[6px] bg-[#ff0000] font-black text-[12px] text-[var(--secondary-color)] text-center w-full"
+                                    onClick={() => setStakeValue(0)}
+                                  >
+                                    CLEAR
+                                  </button>
+                                </div>
+
+                                <div className="flex justify-between items-center my-1">
+                                  <button
+                                    className="w-full text-[var(--secondary-color)] font-bold text-[14px] bg-[#fa6a6a] p-2"
+                                    onClick={() => closePlaceBet()}
+                                  >
+                                    CANCEL
+                                  </button>
+                                  <button
+                                    className="w-full text-[var(--secondary-color)] font-bold text-[14px] bg-[#00a105] p-2"
+                                    onClick={() => betPlace()}
+                                  >
+                                    PLACE BET
+                                  </button>
+                                </div>
+                              </div>
+                            )}
+                          </>
+                        ))}
+                    </div>
+                  </div>
+                )}
+                {/* Tied_Match */}
+                {tiedMatch != "" && (
+                  <div>
+                    <div className="flex justify-start items-center p-1 bg-[var(--theme2-bg85)]">
+                      <span className="text-sm text-[var(--secondary-color)] mr-2">
+                        TIED_MATCH
+                      </span>
+                      <span className="bg-[#fab418] text-[10px] font-extrabold uppercase p-1 rounded ml-3">
+                        Cashout
+                      </span>
+                    </div>
+                    <div>
+                      <div className="flex justify-between border border-[#aaa]">
+                        <span className="text-xs font-semibold py-[2px] pl-1">
+                          Min : 100 Max : 100000
+                        </span>
+                        <div className="flex justify-center">
+                          <span className="flex justify-center items-center px-2 w-[79.5px] text-xs font-semibold bg-[#a7d8fd] border-r border-l border-[#aaa]">
+                            Back
+                          </span>
+                          <span className="flex justify-center items-center px-2 w-[79.5px] text-xs font-semibold bg-[#ffd5da] border-r border-[#aaa]">
+                            Lay
+                          </span>
+                        </div>
+                      </div>
+                      {/* Runner 1 */}
+                      {tiedMatch?.marketRunners?.length > 0 &&
+                        tiedMatch?.marketRunners?.map((item, index) => (
+                          <>
+                            <div
+                              className="flex justify-between border-b border-[#aaa]"
+                              key={index}
+                            >
+                              <div
+                                className={`flex flex-col justify-between items-start w-full`}
+                                data-id={item.selection_id}
+                              >
+                                <input
+                                  type="hidden"
+                                  id="matchodds_id_preserve"
+                                  value={item.market_id}
+                                />
+                                <input
+                                  type="hidden"
+                                  className={`position_${item.market_id.replace(
+                                    ".",
+                                    ""
+                                  )}`}
+                                  data-id={item.selection_id}
+                                  value={Math.round(item.exposure.toFixed(2))}
+                                />
+                                <span className="text-[12px] font-semibold p-1">
+                                  {item.runner_name?.length > 15
+                                    ? `${item.runner_name.slice(0, 15)}...`
+                                    : item.runner_name}
+                                </span>
+                                <div className="flex justify-between items-center w-full">
+                                  <span
+                                    id={`${item.selection_id}_maxprofit_list_loss_runner_prev_${item.market_id}`}
+                                    data-value={item.exposure}
+                                    className={`win market-exposure text-xs font-bold ${item.exposure >= 0
+                                      ? "text-green-700"
+                                      : "text-red-700"
+                                      } p-1 leading-[0.5]`}
+                                  >
+                                    {Math.abs(item.exposure.toFixed(2))}
+                                  </span>
+                                  <span
+                                    id={`${item.selection_id}_maxprofit_Mlist_loss_runner_next_${item.market_id}`}
+                                    className={`to-win market-exposure text-xs font-bold p-1`}
+                                  ></span>
+                                </div>
+                              </div>
+                              <div className="flex justify-center">
+                                <span
+                                  className="flex flex-col justify-center items-center w-[80px] text-[1rem] font-bold leading-[1.2] bg-[#a7d8fd] ml-[1px] px-1 border-r border-l border-[#aaa]"
+                                  onClick={() => {
+                                    if (item.back_1_price > 0) {
+                                      handleOpenBetSlip(
+                                        event_id,
+                                        item.market_id,
+                                        true,
+                                        `tiedBack_Size${item.selection_id}`,
+                                        false,
+                                        item.selection_id,
+                                        item.runner_name,
+                                        `tiedBack_Price${item.selection_id}`,
+                                        false,
+                                        "TIED_MATCH"
+                                      );
+                                      setOpenPlaceBet({
+                                        selectionId: item.selection_id,
+                                        type: "back",
+                                        odds: item.back_1_price,
+                                      });
+                                    }
+                                  }}
+                                >
+                                  <span id={`tiedBack_Price${item.selection_id}`}>
+                                    {item.back_1_price}
+                                  </span>
+                                  <span
+                                    id={`tiedBack_Size${item.selection_id}`}
+                                    className="text-[12px] font-normal"
+                                  >
+                                    {item.back_1_size}
+                                  </span>
+                                </span>
+                                <span
+                                  className="flex flex-col justify-center items-center w-[80px] text-[1rem] font-bold leading-[1.2] bg-[#ffd5da] px-1 border-r border-[#aaa]"
+                                  onClick={() => {
+                                    if (item.lay_1_price > 0) {
+                                      handleOpenBetSlip(
+                                        event_id,
+                                        item.market_id,
+                                        false,
+                                        `tiedLay_Size${item.selection_id}`,
+                                        false,
+                                        item.selection_id,
+                                        item.runner_name,
+                                        `tiedLay_Price${item.selection_id}`,
+                                        false,
+                                        "TIED_MATCH"
+                                      );
+                                      setOpenPlaceBet({
+                                        selectionId: item.selection_id,
+                                        type: "lay",
+                                        odds: item.lay_1_price,
+                                      });
+                                    }
+                                  }}
+                                >
+                                  <span id={`tiedLay_Price${item.selection_id}`}>
+                                    {item.lay_1_price}
+                                  </span>
+                                  <span
+                                    id={`tiedLay_Size${item.selection_id}`}
+                                    className="text-[12px] font-normal"
+                                  >
+                                    {item.lay_1_size}
+                                  </span>
+                                </span>
+                              </div>
+                            </div>
+                            {/* Place Bet Section */}
+                            {openPlaceBet?.selectionId == item.selection_id && (
+                              <div
+                                className={`${openPlaceBet?.type == "back"
+                                  ? "bg-[#a7d8fd]"
+                                  : "bg-[#ffd5da]"
+                                  } p-1 relative block lg:hidden`}
+                              >
+                                <div
+                                  className={`absolute top-0 left-0 w-full h-full flex justify-center items-center ${!isLoading ? "hidden" : ""
+                                    }`}
+                                  style={{
+                                    backgroundColor: "#ffffff2b",
+                                    // opacity: "0.5",
+                                    // marginTop: "",
+                                  }}
+                                >
+                                  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512" className="w-10 fa-spin">
+                                    <path fill="black" d="M304 48a48 48 0 1 0 -96 0 48 48 0 1 0 96 0zm0 416a48 48 0 1 0 -96 0 48 48 0 1 0 96 0zM48 304a48 48 0 1 0 0-96 48 48 0 1 0 0 96zm464-48a48 48 0 1 0 -96 0 48 48 0 1 0 96 0zM142.9 437A48 48 0 1 0 75 369.1 48 48 0 1 0 142.9 437zm0-294.2A48 48 0 1 0 75 75a48 48 0 1 0 67.9 67.9zM369.1 437A48 48 0 1 0 437 369.1 48 48 0 1 0 369.1 437z" />
+                                  </svg>
+                                </div>
+                                <div className="flex justify-between items-center w-full px-2 my-1">
+                                  <div className="flex justify-center items-center">
+                                    <span className="flex justify-center items-center h-[32px] text-[var(--secondary-color)] font-black text-[20px] bg-[#334579] p-2">
+                                      -
+                                    </span>
+                                    <input
+                                      type="text"
+                                      value={openPlaceBet?.odds}
+                                      readOnly
+                                      className="h-[32px] w-[60%] border-none focus:outline-none focus:ring-0 bg-[#e9ecef] text-center font-bold"
+                                    />
+
+                                    <span className="flex justify-center items-center h-[32px] text-[var(--secondary-color)] font-black text-[20px] bg-[#334579] p-2">
+                                      +
+                                    </span>
+                                  </div>
+                                  <input
+                                    type="number"
+                                    className="h-[32px] w-[50%] border-none focus:outline-none focus:ring-0 text-center font-bold"
+                                    value={StakeValue}
+                                    onChange={(e) => placeStakeValue(Number(e.target.value))}
+                                  />
+                                </div>
+                                <div className="grid grid-cols-4 gap-[2px] w-full my-1">
+                                  {chips?.map((chip, i) => (
+                                    <button
+                                      key={chip.id}
+                                      className="p-[2px] bg-white font-medium text-[14px] text-center"
+                                      onClick={(e) => {
+                                        e.preventDefault();
+                                        placeStakeValue(Number(StakeValue) + chip.chip_value);
+                                      }}
+                                    >
+                                      <span className="text-lg font-black text-[#009905]">
+                                        +
+                                      </span>{" "}
+                                      {chip.chip_value}
+                                    </button>
+                                  ))}
+                                </div>
+                                <div className="flex gap-[2px] w-full">
+                                  {/* <button className="p-[6px] bg-[#ffbc00] font-black text-[12px] text-[#000] text-center">
+                                MIN STAKE
+                              </button>
+                              <button className="p-[6px] bg-[#334579] font-black text-[12px] text-[var(--secondary-color)] text-center">
+                                MAX STAKE
+                              </button> */}
+                                  <button className="p-[6px] bg-[#ffbc00] font-black text-[12px] text-[var(--secondary-color)] text-center w-full" onClick={() => setStakeValue(currentBalance)}>
+                                    All IN
+                                  </button>
+                                  <button className="p-[6px] bg-[#008000] font-black text-[12px] text-[var(--secondary-color)] text-center w-full" onClick={() => navigate('/settings')}>
+                                    EDIT STAKE
+                                  </button>
+                                  <button
+                                    className="p-[6px] bg-[#ff0000] font-black text-[12px] text-[var(--secondary-color)] text-center w-full"
+                                    onClick={() => setStakeValue(0)}
+                                  >
+                                    CLEAR
+                                  </button>
+                                </div>
+
+                                <div className="flex justify-between items-center my-1">
+                                  <button
+                                    className="w-full text-[var(--secondary-color)] font-bold text-[14px] bg-[#fa6a6a] p-2"
+                                    onClick={() => closePlaceBet()}
+                                  >
+                                    CANCEL
+                                  </button>
+                                  <button
+                                    className="w-full text-[var(--secondary-color)] font-bold text-[14px] bg-[#00a105] p-2"
+                                    onClick={() => betPlace()}
+                                  >
+                                    PLACE BET
+                                  </button>
+                                </div>
+                              </div>
+                            )}
+                          </>
+                        ))}
+                    </div>
+                  </div>
+                )}
+              </div>
+              {/* Fancy Section */}
+              {fancyData?.length > 0 && (
+                <>
+                  <div className="flex justify-between items-center bg-[var(--theme1-bg)] my-2">
+                    <span className=" text-center text-xs font-semibold w-full bg-[linear-gradient(180deg,_#ffcc2e,_#ffbd14)] rounded-r p-2 uppercase">
+                      Fancy
+                    </span>
+                    <span className="text-[var(--secondary-color)] font-bold text-center text-xs uppercase w-full relative">
+                      Premium{" "}
+                      <span className="text-[10px] font-bold text-center bg-[var(--theme2-bg85)] rounded-sm ml-1 px-1 py-[1px] absolute bottom-[4px] blink">
+                        NEW
+                      </span>
+                    </span>
+                  </div>
+                  <div className="flex overflow-x-auto scroll-hide whitespace-nowrap text-xs font-semibold text-[var(--secondary-color)] bg-[var(--theme1-bg)]">
+                    <span className="border-r border-white px-4 py-2 text-center text-[#000] bg-[linear-gradient(180deg,_#ffcc2e,_#ffbd14)]">
+                      ALL
+                    </span>
+                    <span className="border-r border-white px-4 py-2 text-center">
                       SESSIONS
                     </span>
-                  </div>
-                  <div className="flex justify-center w-[40%]">
-                    <span className="flex justify-center items-center px-2 w-full text-xs font-semibold bg-[#ffd5da] border-r border-l border-[#aaa]">
-                      No
+                    <span className="border-r border-white px-4 py-2 text-center">
+                      W/P MARKET
                     </span>
-                    <span className="flex justify-center items-center px-2 w-full text-xs font-semibold bg-[#a7d8fd] border-r border-[#aaa]">
-                      Yes
+                    <span className="border-r border-white px-4 py-2 text-center">
+                      ODD/EVEN
+                    </span>
+                    <span className="border-r border-white px-4 py-2 text-center">
+                      XTRA MARKET
                     </span>
                   </div>
-                </div>
-                {/* Runner 1 */}
-                {fancyData?.length > 0 &&
-                  fancyData?.map((item, index) => (
-                    <div key={item.selection_id || index}>
-                      <input
-                        type="hidden"
-                        id="fancy_id_preserve"
-                        value={item.market_id}
-                      />
-                      <div
-                        className="flex justify-between bg-[#f2f2f2] border-b border-[#aaa]"
-                      >
-                        <div className="flex justify-between items-center w-[60%] px-1">
+                  {/* Fancy */}
+                  <div className="mt-[2px]">
+                    <div className="flex w-full text-sm border border-[#aaa]">
+                      <div className="flex justify-between item-center w-[60%] bg-[var(--theme2-bg85)]">
+                        <span className="text-[var(--secondary-color)] pt-[2px] pl-2">
+                          SESSIONS
+                        </span>
+                      </div>
+                      <div className="flex justify-center w-[40%]">
+                        <span className="flex justify-center items-center px-2 w-full text-xs font-semibold bg-[#ffd5da] border-r border-l border-[#aaa]">
+                          No
+                        </span>
+                        <span className="flex justify-center items-center px-2 w-full text-xs font-semibold bg-[#a7d8fd] border-r border-[#aaa]">
+                          Yes
+                        </span>
+                      </div>
+                    </div>
+                    {/* Runner 1 */}
+                    {fancyData?.length > 0 &&
+                      fancyData?.map((item, index) => (
+                        <div key={item.selection_id || index}>
                           <input
                             type="hidden"
                             id="fancy_id_preserve"
                             value={item.market_id}
                           />
-                          <div className="flex">
-                            <span className="text-xs md:text-sm font-semibold p-1 overflow-hidden text-nowrap text-ellipsis w-[45vw] lg:w-full">
-                              {item.runner_name}
-                            </span>
-                            <span id="before" className="text-sm font-semibold text-red-700 p-1" onClick={() => getFancyPosition(item.selection_id)} data-value={getFancyExposure(item.selection_id)}>{checkFancyExposureExists(item.selection_id) ? (
-                              <>
-                                {Math.abs(getFancyExposure(item.selection_id))}
-                              </>
-                            ) : null}</span>
-                          </div>
-                          <span id={`${index}_${item.selection_id}`} className="relative" onClick={() => {
-                            if (openFancyMinMaxStack == `${item.market_id}_${item.selection_id}`) { setOpenFancyMinMaxStack("") } else {
-                              setOpenFancyMinMaxStack(`${item.market_id}_${item.selection_id}`)
-                            }
-                          }}>
-                            <svg
-                              xmlns="http://www.w3.org/2000/svg"
-                              width={14}
-                              height={14}
-                              fill="#8000FF"
-                              className="bi bi-info-circle-fill"
-                              viewBox="0 0 16 16"
-                            >
-                              <path d="M8 16A8 8 0 1 0 8 0a8 8 0 0 0 0 16m.93-9.412-1 4.705c-.07.34.029.533.304.533.194 0 .487-.07.686-.246l-.088.416c-.287.346-.92.598-1.465.598-.703 0-1.002-.422-.808-1.319l.738-3.468c.064-.293.006-.399-.287-.47l-.451-.081.082-.381 2.29-.287zM8 5.5a1 1 0 1 1 0-2 1 1 0 0 1 0 2" />
-                            </svg>
-                            {openFancyMinMaxStack == `${item.market_id}_${item.selection_id}` &&
-                              <div className="absolute right-[1px] top-[18px] z-10 text-xs bg-[#fff] py-2 px-4 rounded-sm" style={{ boxShadow: "0 0 5px #999" }}>
-
-                                {
-                                  generalSetting.length > 0 ?
-                                    generalSetting?.map(gen => {
-                                      if (gen.event_name == "fancy") {
-                                        return (
-                                          <>
-                                            <span className="font-bold">Min:</span>{gen.min_stake}<span className="font-bold">Max:</span>{gen.max_stake}
-                                          </>)
-                                      }
-                                    })
-                                    :
-                                    <>
-                                      <span className="font-bold">Min:</span>100<span className="font-bold">Max:</span>10k
-                                    </>
-                                }
+                          <div
+                            className="flex justify-between bg-[#f2f2f2] border-b border-[#aaa]"
+                          >
+                            <div className="flex justify-between items-center w-[60%] px-1">
+                              <input
+                                type="hidden"
+                                id="fancy_id_preserve"
+                                value={item.market_id}
+                              />
+                              <div className="flex">
+                                <span className="text-xs md:text-sm font-semibold p-1 overflow-hidden text-nowrap text-ellipsis w-[45vw] lg:w-full">
+                                  {item.runner_name}
+                                </span>
+                                <span id="before" className="text-sm font-semibold text-red-700 p-1" onClick={() => getFancyPosition(item.selection_id)} data-value={getFancyExposure(item.selection_id)}>{checkFancyExposureExists(item.selection_id) ? (
+                                  <>
+                                    {Math.abs(getFancyExposure(item.selection_id))}
+                                  </>
+                                ) : null}</span>
                               </div>
-                            }
-                          </span>
-                        </div>
-                        <div className="relative flex justify-center w-[40%]">
-                          {/* LAY Box */}
-                          <span
-                            className="flex flex-col justify-center items-center w-full text-[1rem] font-bold leading-[1.2] bg-[#ffd5da] px-1  border-l border-[#aaa]"
-                            onClick={() => {
-                              if (item.lay_price1) {
-                                handleOpenBetSlip(
-                                  item.match_id,
-                                  "",
-                                  false,
-                                  `fancyLay_Size${item.selection_id}`,
-                                  true,
-                                  item.selection_id,
-                                  item.runner_name,
-                                  `fancyLay_Price${item.selection_id}`,
-                                  false,
-                                  ""
-                                );
-                                setOpenPlaceBet({
-                                  selectionId: item.selection_id,
-                                  type: "lay",
-                                  odds: item.lay_price1,
-                                });
-                              }
-                            }
-                            }
-                          >
-                            <span id={`fancyLay_Price${item.selection_id}`}>
-                              {item.lay_price1}
-                            </span>
-                            <span
-                              id={`fancyLay_Size${item.selection_id}`}
-                              className="text-[12px] font-normal"
-                            >
-                              {item.lay_size1}
-                            </span>
-                          </span>
+                              <span id={`${index}_${item.selection_id}`} className="relative" onClick={() => {
+                                if (openFancyMinMaxStack == `${item.market_id}_${item.selection_id}`) { setOpenFancyMinMaxStack("") } else {
+                                  setOpenFancyMinMaxStack(`${item.market_id}_${item.selection_id}`)
+                                }
+                              }}>
+                                <svg
+                                  xmlns="http://www.w3.org/2000/svg"
+                                  width={14}
+                                  height={14}
+                                  fill="var(--theme2-bg85)"
+                                  className="bi bi-info-circle-fill"
+                                  viewBox="0 0 16 16"
+                                >
+                                  <path d="M8 16A8 8 0 1 0 8 0a8 8 0 0 0 0 16m.93-9.412-1 4.705c-.07.34.029.533.304.533.194 0 .487-.07.686-.246l-.088.416c-.287.346-.92.598-1.465.598-.703 0-1.002-.422-.808-1.319l.738-3.468c.064-.293.006-.399-.287-.47l-.451-.081.082-.381 2.29-.287zM8 5.5a1 1 0 1 1 0-2 1 1 0 0 1 0 2" />
+                                </svg>
+                                {openFancyMinMaxStack == `${item.market_id}_${item.selection_id}` &&
+                                  <div className="absolute right-[1px] top-[18px] z-10 text-xs bg-[#fff] py-2 px-4 rounded-sm" style={{ boxShadow: "0 0 5px #999" }}>
 
-                          {/* BACK Box */}
-                          <span
-                            className="flex flex-col justify-center items-center w-full text-[1rem] font-bold leading-[1.2] bg-[#a7d8fd] px-1 border-r border-[#aaa] py-1"
-                            onClick={() => {
-                              if (item.back_price1) {
-                                handleOpenBetSlip(
-                                  item.match_id,
-                                  "",
-                                  true,
-                                  `fancyBack_Size${item.selection_id}`,
-                                  true,
-                                  item.selection_id,
-                                  item.runner_name,
-                                  `fancyBack_Price${item.selection_id}`,
-                                  false,
-                                  ""
-                                );
-                                setOpenPlaceBet({
-                                  selectionId: item.selection_id,
-                                  type: "back",
-                                  odds: item.back_price1,
-                                });
-                              }
-                            }}
-                          >
-                            <span id={`fancyBack_Price${item.selection_id}`}>
-                              {item.back_price1}
-                            </span>
-                            <span
-                              id={`fancyBack_Size${item.selection_id}`}
-                              className="text-[12px] font-normal"
-                            >
-                              {item.back_size1}
-                            </span>
-                          </span>
+                                    {
+                                      generalSetting.length > 0 ?
+                                        generalSetting?.map(gen => {
+                                          if (gen.event_name == "fancy") {
+                                            return (
+                                              <>
+                                                <span className="font-bold">Min:</span>{gen.min_stake}<span className="font-bold">Max:</span>{gen.max_stake}
+                                              </>)
+                                          }
+                                        })
+                                        :
+                                        <>
+                                          <span className="font-bold">Min:</span>100<span className="font-bold">Max:</span>10k
+                                        </>
+                                    }
+                                  </div>
+                                }
+                              </span>
+                            </div>
+                            <div className="relative flex justify-center w-[40%]">
+                              {/* LAY Box */}
+                              <span
+                                className="flex flex-col justify-center items-center w-full text-[1rem] font-bold leading-[1.2] bg-[#ffd5da] px-1  border-l border-[#aaa]"
+                                onClick={() => {
+                                  if (item.lay_price1) {
+                                    handleOpenBetSlip(
+                                      item.match_id,
+                                      "",
+                                      false,
+                                      `fancyLay_Size${item.selection_id}`,
+                                      true,
+                                      item.selection_id,
+                                      item.runner_name,
+                                      `fancyLay_Price${item.selection_id}`,
+                                      false,
+                                      ""
+                                    );
+                                    setOpenPlaceBet({
+                                      selectionId: item.selection_id,
+                                      type: "lay",
+                                      odds: item.lay_price1,
+                                    });
+                                  }
+                                }
+                                }
+                              >
+                                <span id={`fancyLay_Price${item.selection_id}`}>
+                                  {item.lay_price1}
+                                </span>
+                                <span
+                                  id={`fancyLay_Size${item.selection_id}`}
+                                  className="text-[12px] font-normal"
+                                >
+                                  {item.lay_size1}
+                                </span>
+                              </span>
 
-                          {/* Suspended Overlay */}
-                          {/* {(item.game_status != "") && (
+                              {/* BACK Box */}
+                              <span
+                                className="flex flex-col justify-center items-center w-full text-[1rem] font-bold leading-[1.2] bg-[#a7d8fd] px-1 border-r border-[#aaa] py-1"
+                                onClick={() => {
+                                  if (item.back_price1) {
+                                    handleOpenBetSlip(
+                                      item.match_id,
+                                      "",
+                                      true,
+                                      `fancyBack_Size${item.selection_id}`,
+                                      true,
+                                      item.selection_id,
+                                      item.runner_name,
+                                      `fancyBack_Price${item.selection_id}`,
+                                      false,
+                                      ""
+                                    );
+                                    setOpenPlaceBet({
+                                      selectionId: item.selection_id,
+                                      type: "back",
+                                      odds: item.back_price1,
+                                    });
+                                  }
+                                }}
+                              >
+                                <span id={`fancyBack_Price${item.selection_id}`}>
+                                  {item.back_price1}
+                                </span>
+                                <span
+                                  id={`fancyBack_Size${item.selection_id}`}
+                                  className="text-[12px] font-normal"
+                                >
+                                  {item.back_size1}
+                                </span>
+                              </span>
+
+                              {/* Suspended Overlay */}
+                              {/* {(item.game_status != "") && (
                             <span
                               id={`fancySuspend_${item.selection_id}`}
-                              className="absolute inset-0 flex justify-center items-center bg-black bg-opacity-60 text-red-700 text-sm font-semibold uppercase z-10"
+                              className="absolute inset-0 flex justify-center items-center bg-[var(--theme1-bg)] bg-opacity-60 text-red-700 text-sm font-semibold uppercase z-10"
                             >
                               {item.game_status === "SUSPENDED" ? "Suspended" : "Ball Running"}
                             </span>
                           )} */}
-                        </div>
-                      </div>
-                      {/* Place Bet Section */}
-                      {openPlaceBet?.selectionId == item.selection_id && (
-                        <div
-                          className={`${openPlaceBet?.type == "back"
-                            ? "bg-[#a7d8fd]"
-                            : "bg-[#ffd5da]"
-                            } p-1 relative`}
-                        >
-                          <div
-                            className={`absolute top-0 left-0 w-full h-full flex justify-center items-center ${!isLoading ? "hidden" : ""
-                              }`}
-                            style={{
-                              backgroundColor: "#ffffff2b",
-                              // opacity: "0.5",
-                              // marginTop: "",
-                            }}
-                          >
-                            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512" className="w-10 fa-spin">
-                              <path fill="black" d="M304 48a48 48 0 1 0 -96 0 48 48 0 1 0 96 0zm0 416a48 48 0 1 0 -96 0 48 48 0 1 0 96 0zM48 304a48 48 0 1 0 0-96 48 48 0 1 0 0 96zm464-48a48 48 0 1 0 -96 0 48 48 0 1 0 96 0zM142.9 437A48 48 0 1 0 75 369.1 48 48 0 1 0 142.9 437zm0-294.2A48 48 0 1 0 75 75a48 48 0 1 0 67.9 67.9zM369.1 437A48 48 0 1 0 437 369.1 48 48 0 1 0 369.1 437z" />
-                            </svg>
-                          </div>
-                          <div className="flex justify-between items-center w-full px-2 my-1">
-                            <div className="flex justify-center items-center">
-                              <span className="flex justify-center items-center h-[32px] text-[#fff] font-black text-[20px] bg-[#334579] p-2">
-                                -
-                              </span>
-                              <input
-                                type="text"
-                                value={openPlaceBet?.odds}
-                                readOnly
-                                className="h-[32px] w-[60%] border-none focus:outline-none focus:ring-0 bg-[#e9ecef] text-center font-bold"
-                              />
-
-                              <span className="flex justify-center items-center h-[32px] text-[#fff] font-black text-[20px] bg-[#334579] p-2">
-                                +
-                              </span>
                             </div>
-                            <input
-                              type="number"
-                              className="h-[32px] w-[50%] border-none focus:outline-none focus:ring-0 text-center font-bold"
-                              value={StakeValue}
-                              onChange={(e) => placeStakeValue(Number(e.target.value))}
-                            />
                           </div>
-                          <div className="grid grid-cols-4 gap-[2px] w-full my-1">
-                            {chips?.map((chip, i) => (
-                              <button
-                                key={chip.id}
-                                className="p-[2px] bg-white font-medium text-[14px] text-center"
-                                onClick={(e) => {
-                                  e.preventDefault();
-                                  placeStakeValue(Number(StakeValue) + chip.chip_value);
+                          {/* Place Bet Section */}
+                          {openPlaceBet?.selectionId == item.selection_id && (
+                            <div
+                              className={`${openPlaceBet?.type == "back"
+                                  ? "bg-[#a7d8fd]"
+                                  : "bg-[#ffd5da]"
+                                  } p-1 relative block lg:hidden`}
+                            >
+                              <div
+                                className={`absolute top-0 left-0 w-full h-full flex justify-center items-center ${!isLoading ? "hidden" : ""
+                                  }`}
+                                style={{
+                                  backgroundColor: "#ffffff2b",
+                                  // opacity: "0.5",
+                                  // marginTop: "",
                                 }}
                               >
-                                <span className="text-lg font-black text-[#009905]">
-                                  +
-                                </span>{" "}
-                                {chip.chip_value}
-                              </button>
-                            ))}
-                          </div>
-                          <div className="flex gap-[2px] w-full">
-                            {/* <button className="p-[6px] bg-[#ffbc00] font-black text-[12px] text-[#000] text-center">
+                                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512" className="w-10 fa-spin">
+                                  <path fill="black" d="M304 48a48 48 0 1 0 -96 0 48 48 0 1 0 96 0zm0 416a48 48 0 1 0 -96 0 48 48 0 1 0 96 0zM48 304a48 48 0 1 0 0-96 48 48 0 1 0 0 96zm464-48a48 48 0 1 0 -96 0 48 48 0 1 0 96 0zM142.9 437A48 48 0 1 0 75 369.1 48 48 0 1 0 142.9 437zm0-294.2A48 48 0 1 0 75 75a48 48 0 1 0 67.9 67.9zM369.1 437A48 48 0 1 0 437 369.1 48 48 0 1 0 369.1 437z" />
+                                </svg>
+                              </div>
+                              <div className="flex justify-between items-center w-full px-2 my-1">
+                                <div className="flex justify-center items-center">
+                                  <span className="flex justify-center items-center h-[32px] text-[var(--secondary-color)] font-black text-[20px] bg-[#334579] p-2">
+                                    -
+                                  </span>
+                                  <input
+                                    type="text"
+                                    value={openPlaceBet?.odds}
+                                    readOnly
+                                    className="h-[32px] w-[60%] border-none focus:outline-none focus:ring-0 bg-[#e9ecef] text-center font-bold"
+                                  />
+
+                                  <span className="flex justify-center items-center h-[32px] text-[var(--secondary-color)] font-black text-[20px] bg-[#334579] p-2">
+                                    +
+                                  </span>
+                                </div>
+                                <input
+                                  type="number"
+                                  className="h-[32px] w-[50%] border-none focus:outline-none focus:ring-0 text-center font-bold"
+                                  value={StakeValue}
+                                  onChange={(e) => placeStakeValue(Number(e.target.value))}
+                                />
+                              </div>
+                              <div className="grid grid-cols-4 gap-[2px] w-full my-1">
+                                {chips?.map((chip, i) => (
+                                  <button
+                                    key={chip.id}
+                                    className="p-[2px] bg-white font-medium text-[14px] text-center"
+                                    onClick={(e) => {
+                                      e.preventDefault();
+                                      placeStakeValue(Number(StakeValue) + chip.chip_value);
+                                    }}
+                                  >
+                                    <span className="text-lg font-black text-[#009905]">
+                                      +
+                                    </span>{" "}
+                                    {chip.chip_value}
+                                  </button>
+                                ))}
+                              </div>
+                              <div className="flex gap-[2px] w-full">
+                                {/* <button className="p-[6px] bg-[#ffbc00] font-black text-[12px] text-[#000] text-center">
                                 MIN STAKE
                               </button>
-                              <button className="p-[6px] bg-[#334579] font-black text-[12px] text-[#fff] text-center">
+                              <button className="p-[6px] bg-[#334579] font-black text-[12px] text-[var(--secondary-color)] text-center">
                                 MAX STAKE
                               </button> */}
-                            <button className="p-[6px] bg-[#ffbc00] font-black text-[12px] text-[#fff] text-center w-full" onClick={() => setStakeValue(currentBalance)}>
-                              All IN
-                            </button>
-                            <button className="p-[6px] bg-[#008000] font-black text-[12px] text-[#fff] text-center w-full" onClick={() => navigate('/settings')}>
-                              EDIT STAKE
-                            </button>
-                            <button
-                              className="p-[6px] bg-[#ff0000] font-black text-[12px] text-[#fff] text-center w-full"
-                              onClick={() => setStakeValue(0)}
-                            >
-                              CLEAR
-                            </button>
-                          </div>
+                                <button className="p-[6px] bg-[#ffbc00] font-black text-[12px] text-[var(--secondary-color)] text-center w-full" onClick={() => setStakeValue(currentBalance)}>
+                                  All IN
+                                </button>
+                                <button className="p-[6px] bg-[#008000] font-black text-[12px] text-[var(--secondary-color)] text-center w-full" onClick={() => navigate('/settings')}>
+                                  EDIT STAKE
+                                </button>
+                                <button
+                                  className="p-[6px] bg-[#ff0000] font-black text-[12px] text-[var(--secondary-color)] text-center w-full"
+                                  onClick={() => setStakeValue(0)}
+                                >
+                                  CLEAR
+                                </button>
+                              </div>
 
-                          <div className="flex justify-between items-center my-1">
-                            <button
-                              className="w-full text-[#fff] font-bold text-[14px] bg-[#fa6a6a] p-2"
-                              onClick={() => closePlaceBet()}
-                            >
-                              CANCEL
-                            </button>
-                            <button
-                              className="w-full text-[#fff] font-bold text-[14px] bg-[#00a105] p-2"
-                              onClick={() => betPlace()}
-                            >
-                              PLACE BET
-                            </button>
-                          </div>
+                              <div className="flex justify-between items-center my-1">
+                                <button
+                                  className="w-full text-[var(--secondary-color)] font-bold text-[14px] bg-[#fa6a6a] p-2"
+                                  onClick={() => closePlaceBet()}
+                                >
+                                  CANCEL
+                                </button>
+                                <button
+                                  className="w-full text-[var(--secondary-color)] font-bold text-[14px] bg-[#00a105] p-2"
+                                  onClick={() => betPlace()}
+                                >
+                                  PLACE BET
+                                </button>
+                              </div>
+                            </div>
+                          )}
                         </div>
-                      )}
-                    </div>
-                  ))}
-              </div>
+                      ))}
+                  </div>
+                </>
+              )}
             </>
-          )}
-        </>
-      }
-      {selectedSection == "bets" &&
-        <>
-          <div className="flex flex-col text-sm w-full">
-            {/* Header */}
-            <div className="flex w-full font-bold border-b border-gray-300 py-1 px-1">
-              <div className="flex justify-between items-center w-[70%]">Nation</div>
-              <div className="flex justify-between items-center w-[30%]">
-                <div className="w-full text-center">Odds</div>
-                <div className="w-full text-center">Stake</div>
-              </div>
-            </div>
-
-            {/* Data Rows */}
-            {betsData?.map((item, index) => (
-              <div key={index} className={`flex w-full py-1 border-b border-gray-200 px-1 ${item.is_back ? "bg-[#a7d8fd]" : "bg-[#ffd5da]"}`}>
-                <div className="flex justify-between items-center w-[70%]">{item.runner_name}</div>
-                <div className="flex justify-between items-center w-[30%]">
-                  <div className="w-full text-center">{item.price_val}</div>
-                  <div className="w-full text-center">{item.stake}</div>
+          }
+          {selectedSection == "bets" &&
+            <>
+              <div className="flex flex-col text-sm w-full">
+                {/* Header */}
+                <div className="flex w-full font-bold border-b border-gray-300 py-1 px-1">
+                  <div className="flex justify-between items-center w-[70%]">Nation</div>
+                  <div className="flex justify-between items-center w-[30%]">
+                    <div className="w-full text-center">Odds</div>
+                    <div className="w-full text-center">Stake</div>
+                  </div>
                 </div>
+
+                {/* Data Rows */}
+                {betsData?.map((item, index) => (
+                  <div key={index} className={`flex w-full py-1 border-b border-gray-200 px-1 ${item.is_back ? "bg-[#a7d8fd]" : "bg-[#ffd5da]"}`}>
+                    <div className="flex justify-between items-center w-[70%]">{item.runner_name}</div>
+                    <div className="flex justify-between items-center w-[30%]">
+                      <div className="w-full text-center">{item.price_val}</div>
+                      <div className="w-full text-center">{item.stake}</div>
+                    </div>
+                  </div>
+                ))}
               </div>
-            ))}
+
+            </>}
+        </div>
+        {/* Right Section */}
+        <div className="hidden lg:block w-[30%]">
+          {/* Live Match desktop panel */}
+          <div>
+            <div className="flex justify-between items-center bg-[var(--theme2-bg)] py-1 px-5 text-[var(--secondary-color)] rounded-t">
+              <span>Live Match</span>
+              <span className="flex justify-center item-center gap-1 cursor-pointer" onClick={() => setIsDesktopTvOpen(prev => !prev)}>
+                <DesktopOutlined />
+                <span>
+                  live stream started
+                </span>
+              </span>
+            </div>
+            <div
+              className={`overflow-hidden transition-all duration-500 ease-in-out ${isDesktopTvOpen
+                ? "max-h-[300px] opacity-100 translate-y-0 p-1"
+                : "max-h-0 opacity-0 -translate-y-2"
+                } flex justify-center items-center w-full bg-black`}
+            >
+              {isDesktopTvOpen &&
+                <iframe
+                  src={tvUrl}
+                  className="w-full h-[250px] border-0"
+                  allowFullScreen
+                ></iframe>
+              }
+            </div>
           </div>
 
-        </>}
+          {/* Place bet panel */}
+          <div className='mt-2'>
+            <div className="flex justify-between items-center bg-[var(--theme2-bg)] py-1 px-5 text-[var(--secondary-color)] rounded">
+              <span>Place Bet</span>
+            </div>
+            {openPlaceBet?.selectionId && (
+              <div
+                className={`${openPlaceBet?.type == "back"
+                  ? "bg-[#a7d8fd]"
+                  : "bg-[#ffd5da]"
+                  } p-1 relative`}
+              >
+                <div
+                  className={`absolute top-0 left-0 w-full h-full flex justify-center items-center ${!isLoading ? "hidden" : ""
+                    }`}
+                  style={{
+                    backgroundColor: "#ffffff2b",
+                    // opacity: "0.5",
+                    // marginTop: "",
+                  }}
+                >
+                  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512" className="w-10 fa-spin">
+                    <path fill="black" d="M304 48a48 48 0 1 0 -96 0 48 48 0 1 0 96 0zm0 416a48 48 0 1 0 -96 0 48 48 0 1 0 96 0zM48 304a48 48 0 1 0 0-96 48 48 0 1 0 0 96zm464-48a48 48 0 1 0 -96 0 48 48 0 1 0 96 0zM142.9 437A48 48 0 1 0 75 369.1 48 48 0 1 0 142.9 437zm0-294.2A48 48 0 1 0 75 75a48 48 0 1 0 67.9 67.9zM369.1 437A48 48 0 1 0 437 369.1 48 48 0 1 0 369.1 437z" />
+                  </svg>
+                </div>
+                <div className="flex justify-between items-center w-full px-2 my-1">
+                  <div className="flex justify-center items-center">
+                    <span className="flex justify-center items-center h-[32px] text-[var(--secondary-color)] font-black text-[20px] bg-[#334579] p-2">
+                      -
+                    </span>
+                    <input
+                      type="text"
+                      value={openPlaceBet?.odds}
+                      readOnly
+                      className="h-[32px] w-[60%] border-none focus:outline-none focus:ring-0 bg-[#e9ecef] text-center font-bold"
+                    />
+
+                    <span className="flex justify-center items-center h-[32px] text-[var(--secondary-color)] font-black text-[20px] bg-[#334579] p-2">
+                      +
+                    </span>
+                  </div>
+                  <input
+                    type="number"
+                    className="h-[32px] w-[50%] border-none focus:outline-none focus:ring-0 text-center font-bold"
+                    value={StakeValue}
+                    onChange={(e) => placeStakeValue(Number(e.target.value))}
+                  />
+                </div>
+                <div className="grid grid-cols-4 gap-[2px] w-full my-1">
+                  {chips?.map((chip, i) => (
+                    <button
+                      key={chip.id}
+                      className="p-[2px] bg-white font-medium text-[14px] text-center"
+                      onClick={(e) => {
+                        e.preventDefault();
+                        placeStakeValue(Number(StakeValue) + chip.chip_value);
+                      }}
+                    >
+                      <span className="text-lg font-black text-[#009905]">
+                        +
+                      </span>{" "}
+                      {chip.chip_value}
+                    </button>
+                  ))}
+                </div>
+                <div className="flex gap-[2px] w-full">
+                  {/* <button className="p-[6px] bg-[#ffbc00] font-black text-[12px] text-[#000] text-center">
+                                MIN STAKE
+                              </button>
+                              <button className="p-[6px] bg-[#334579] font-black text-[12px] text-[var(--secondary-color)] text-center">
+                                MAX STAKE
+                              </button> */}
+                  <button className="p-[6px] bg-[#ffbc00] font-black text-[12px] text-[var(--secondary-color)] text-center w-full" onClick={() => setStakeValue(currentBalance)}>
+                    All IN
+                  </button>
+                  <button className="p-[6px] bg-[#008000] font-black text-[12px] text-[var(--secondary-color)] text-center w-full" onClick={() => navigate('/settings')}>
+                    EDIT STAKE
+                  </button>
+                  <button
+                    className="p-[6px] bg-[#ff0000] font-black text-[12px] text-[var(--secondary-color)] text-center w-full"
+                    onClick={() => setStakeValue(0)}
+                  >
+                    CLEAR
+                  </button>
+                </div>
+
+                <div className="flex justify-between items-center my-1">
+                  <button
+                    className="w-full text-[var(--secondary-color)] font-bold text-[14px] bg-[#fa6a6a] p-2"
+                    onClick={() => closePlaceBet()}
+                  >
+                    CANCEL
+                  </button>
+                  <button
+                    className="w-full text-[var(--secondary-color)] font-bold text-[14px] bg-[#00a105] p-2"
+                    onClick={() => betPlace()}
+                  >
+                    PLACE BET
+                  </button>
+                </div>
+              </div>
+            )}
+          </div>
+
+          {/* My Bet panel */}
+          <div className='mt-2'>
+            <div className="flex justify-between items-center bg-[var(--theme2-bg)] py-1 px-5 text-[var(--secondary-color)] rounded-t">
+              <span>My Bet</span>
+            </div>
+            <table className="w-full border border-[#ccc] text-sm text-[#303030]">
+              <thead>
+                <tr className="bg-[#ccc] font-bold border-b-[2px] border-[#dee2e6]">
+                  <th className="text-left py-1 px-2 w-[60%]">Nation</th>
+                  <th className="text-center py-1 px-2 w-[20%]">Odds</th>
+                  <th className="text-center py-1 px-2 w-[20%]">Stake</th>
+                </tr>
+              </thead>
+              <tbody>
+                {betsData?.length == 0 &&
+                  <tr className="text-center">
+                    <td colSpan={3} className="py-2">No records Found</td>
+                  </tr>
+                }
+                {betsData && betsData?.map((item, index) => (
+                  <tr key={item.id} className={`${item.is_back ? "bg-[#a7d8fd]" : "bg-[#ffd5da]"} border-b border-[#ccc]`}>
+                    <td className="text-left px-2 w-[60%]">{item.place_name}</td>
+                    <td className="text-center px-2 w-[20%]">{item.price_val}</td>
+                    <td className="text-center px-2 w-[20%]">{item.stake}</td>
+                  </tr>
+                ))
+                }
+              </tbody>
+            </table>
+
+          </div>
+        </div>
+      </div>
+
     </>
   );
 }

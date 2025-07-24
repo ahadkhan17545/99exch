@@ -10,7 +10,8 @@ export default {
     //     'admin': 'Admin', 'super_admin': 'Super Admin', 'sub_admin': 'Sub Admin', 'super_master': 'Super Master', 'sub_master': 'Sub Master', 'master': 'Master', 'user': 'User'
     // },
     userTypes: ['Super Admin', 'Admin', 'Super Master', 'Master', 'Agent', 'User'],
-    superAdmin: '68401dfd10124d3f5ae715b5',
+    superAdmin: '68788668b1aff3375d24d551', //superadmin id
+    childAdmin: '6878960576d11bb9bcf5e478', //admin id
     userTypesAlias: {
         'super_admin': 'Super Admin', 'admin': 'Admin', 'super_master': 'Super Master', 'master': 'Master', 'agent': 'Agent', 'user': 'User'
     },

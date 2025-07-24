@@ -495,7 +495,7 @@ const Deposit = () => {
       <div className="bg-[#f1f5f8] p-[10px]">
         <div className="deposit-withdraw text-[#000]">
           <div className="">
-            <p className="uppercase font-bold rounded-[5px] bg-[#343435] p-[5px] shadow-[1px_1px_4px_gray] text-white text-[15px]">
+            <p className="uppercase font-bold rounded-[5px] bg-[#343435] p-[5px] shadow-[1px_1px_4px_gray] text-[var(--secondary-color)] text-[15px]">
               <span className="p-1">Deposit</span>
             </p>
           </div>
@@ -553,7 +553,7 @@ const Deposit = () => {
                       <button
                         key={index}
                         type="button"
-                        className="relative overflow-hidden bg-bg_text_brand_primary transition-all ease-in-out duration-300 active:scale-95 text-text_color_primary2 min-h-9 text-base rounded-md font-[600] leading-4 hover:bg-[#343435] hover:text-white border border-gray-600"
+                        className="relative overflow-hidden bg-bg_text_brand_primary transition-all ease-in-out duration-300 active:scale-95 text-text_color_primary2 min-h-9 text-base rounded-md font-[600] leading-4 hover:bg-[#343435] hover:text-[var(--secondary-color)] border border-gray-600"
                         onClick={() => handleButtonClick(value)}
                       >
                         <span>+{value}</span>
@@ -566,7 +566,7 @@ const Deposit = () => {
                   <button
                     type="button"
                     onClick={handleEditToggle}
-                    className="px-4 py-2 bg-[#8000ff] text-white rounded-md font-lato font-semibold"
+                    className="px-4 py-2 bg-[var(--theme2-bg)] text-[var(--secondary-color)] rounded-md font-lato font-semibold"
                   >
                     {isEditing ? "Save" : "Edit"}
                   </button>
@@ -631,7 +631,7 @@ const Deposit = () => {
                             setSelectedOption(item.type);
                             handleClick(item.type, item);
                           }}
-                          className={`relative flex flex-col items-center justify-center gap-1 min-w-[120px] px-3 py-2 rounded-[10px] border ${isActive && 'border-[#8000ff]'} text-center bg-bg_color_primary cursor-pointer overflow-hidden`}
+                          className={`relative flex flex-col items-center justify-center gap-1 min-w-[120px] px-3 py-2 rounded-[10px] border ${isActive && 'border-[var(--theme2-bg)]'} text-center bg-bg_color_primary cursor-pointer overflow-hidden`}
                         >
                           {isActive && (
                             <svg
@@ -900,7 +900,7 @@ const Deposit = () => {
                   id="btn"
                   type="submit"
                   disabled={isSubmitted}
-                  className={`bg-bg_text_brand_primary flex items-center justify-center gap-x-2 w-full h-10 text-base text-white rounded-md font-[500] leading-4 disabled:opacity-70 bg-black hover:bg-[#8000ff] relative ${isSubmitted ? "activated" : ""}`}
+                  className={`bg-bg_text_brand_primary flex items-center justify-center gap-x-2 w-full h-10 text-base text-[var(--secondary-color)] rounded-md font-[500] leading-4 disabled:opacity-70 bg-[var(--theme1-bg)] hover:bg-[var(--theme2-bg)] relative ${isSubmitted ? "activated" : ""}`}
                 >
                   <span>{buttonText}</span>
                   <div className="checked">
@@ -922,14 +922,14 @@ const Deposit = () => {
         <div className="w-full flex flex-row items-center justify-center gap-3 mt-2 flex-wrap">
           <button
             onClick={handleToggleNotes}
-            className="px-4 py-2 text-white bg-[#8000ff] rounded font-semibold"
+            className="px-4 py-2 text-[var(--secondary-color)] bg-[var(--theme2-bg)] rounded font-semibold"
           >
             {showNotes ? "Hide" : "See How To Deposit"}
           </button>
 
           <button
             onClick={handleToggleHistory}
-            className="px-4 py-2 bg-[#8000ff] text-white rounded font-semibold"
+            className="px-4 py-2 bg-[var(--theme2-bg)] text-[var(--secondary-color)] rounded font-semibold"
           >
             {showDepositHistory ? "Hide Deposit History" : "Show Deposit History"}
           </button>
@@ -940,7 +940,7 @@ const Deposit = () => {
         <div className="w-full h-max flex flex-col items-center justify-start mb-2 mt-10">
           {/* <button
              onClick={() => setShowNotes(!showNotes)}
-             className="px-4 py-2 text-white bg-[#0c9971] rounded font-semibold"
+             className="px-4 py-2 text-[var(--secondary-color)] bg-[#0c9971] rounded font-semibold"
            >
              {showNotes ? "Hide" : "See How TO Deposit"}
            </button> */}
@@ -1058,7 +1058,7 @@ const Deposit = () => {
         <div className="mt-8 mb-8">
           {/* <button
              onClick={() => setShowDepositHistory(!showDepositHistory)}
-             className="px-4 py-2 bg-[#0c9971] text-white rounded font-semibold"
+             className="px-4 py-2 bg-[#0c9971] text-[var(--secondary-color)] rounded font-semibold"
            >
              {showDepositHistory ? "Hide Deposit History" : "Show Deposit History"}
            </button> */}

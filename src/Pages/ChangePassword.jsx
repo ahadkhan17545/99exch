@@ -111,7 +111,7 @@ const ChangePassword = () => {
 
   return (
     <div className="p-4">
-      <p className="rounded bg-[#343435] p-1 shadow text-white text-sm font-bold uppercase mb-4">
+      <p className="rounded bg-[#343435] p-1 shadow text-[var(--secondary-color)] text-sm font-bold uppercase mb-4">
         <span className="px-2">Change Password</span>
       </p>
       <div className="w-full mx-auto">
@@ -156,7 +156,7 @@ const ChangePassword = () => {
           </div>
 
           <button
-            className="w-full py-2 border-2 border-gray-300 rounded bg-[#151c20] text-white shadow-md text-xs"
+            className="w-full py-2 border-2 border-gray-300 rounded bg-[#151c20] text-[var(--secondary-color)] shadow-md text-xs"
             type="submit"
             disabled={button}
           >

@@ -26,9 +26,6 @@ const openBetSlice = createSlice({
     setOpenBets(state, action) {
       state.bets = action.payload;
     },
-    emptyOpenBets(state) {
-      state.bets = null;
-    },
   },
   extraReducers: (builder) => {
     builder
@@ -36,15 +33,15 @@ const openBetSlice = createSlice({
         state.bets = [];
       })
       .addCase(getAllBets.fulfilled, (state, action) => {
-        let exposureBets = action.payload.resultData;
+        // let exposureBets = action.payload.resultData;
         let eventData = action.payload.resultData;
-        let backBets = eventData.filter((data) => data.is_back);
-        let layBets = eventData.filter((data) => !data.is_back);
-        eventData = {
-          backBets: backBets,
-          layBets: layBets,
-          exposureBets: exposureBets,
-        };
+        // let backBets = eventData.filter(data => data.is_back);
+        // let layBets = eventData.filter(data => !data.is_back);
+        // eventData = {
+        //     'backBets': backBets,
+        //     'layBets': layBets,
+        //     'exposureBets': exposureBets
+        // }
 
         state.bets = eventData;
       })

@@ -2,6 +2,16 @@
 @tailwind components;
 @tailwind utilities;
 
+:root {
+  --theme1-bg: #1a3da6;
+  --theme1-bg90: #1a3da6e6;
+  --theme2-bg: #0f2462;
+  --theme2-bg70: #0f2462b3;
+  --theme2-bg85: #0f2462d9;
+  --primary-color: #fff;
+  --secondary-color: #fff;
+}
+
 * {
   margin: 0;
   padding: 0;
@@ -27,6 +37,23 @@ body {
   font-family: source-code-pro, Menlo, Monaco, Consolas, "Courier New",
     monospace;
 } */
+.header-bottom li::before {
+  content: "";
+  position: absolute;
+  z-index: 1;
+  left: 50%;
+  right: 50%;
+  bottom: 0;
+  background: var(--primary-color);
+  height: 2px;
+  transition: left 0.3s ease-out, right 0.3s ease-out;
+}
+
+.header-bottom li:hover::before,
+.header-bottom li:focus::before {
+  left: 0;
+  right: 0;
+}
 
 .in__play {
   animation: in__play 1s linear infinite;
@@ -81,6 +108,15 @@ body {
   }
 }
 
+@keyframes simple-scale {
+  100% {
+    transform: scale(1.2);
+  }
+}
+
+.whatsapp_animate {
+  animation: simple-scale 1s linear 1s infinite alternate;
+}
 .animate-fadeIn {
   animation: fadeIn 0.5s ease;
 }
@@ -157,4 +193,3 @@ body {
   color: red !important;
   fill: red;
 }
-

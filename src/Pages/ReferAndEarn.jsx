@@ -11,7 +11,7 @@ const ReferAndEarn = () => {
 
       <div className="max-w-[400px] md:max-w-[600px] lg:max-w-[800px] mx-auto mt-8 p-6 bg-white shadow-[0_0_30px_rgba(0,0,0,0.2)] overflow-hidden rounded-lg referAndEarn">
         {/* Header */}
-        <div className="text-center text-white mb-6">
+        <div className="text-center text-[var(--secondary-color)] mb-6">
           <h1 className="text-2xl md:text-3xl font-bold">
             Refer your friends <br /> and Earn
           </h1>
@@ -24,12 +24,12 @@ const ReferAndEarn = () => {
             alt="Gift Icon"
             className="w-20 mb-4"
           />
-          <div className="flex items-center text-white">
+          <div className="flex items-center text-[var(--secondary-color)]">
             <GiCrownCoin size={30} color="#ff4d00" className="mx-2" />
             <h2 className="text-2xl md:text-3xl font-bold">100</h2>
           </div>
-          <span className="text-white text-base">LoyaltyPoints</span>
-          <p className="text-white text-center mt-2 text-base leading-relaxed">
+          <span className="text-[var(--secondary-color)] text-base">LoyaltyPoints</span>
+          <p className="text-[var(--secondary-color)] text-center mt-2 text-base leading-relaxed">
             Your friend gets 100 TimesPoints on sign up and you get 100
             TimesPoints too every time!
           </p>
@@ -37,27 +37,27 @@ const ReferAndEarn = () => {
 
         {/* Referral Code Section */}
         <div className="mb-6">
-          <p className="text-white text-base">Your referral code</p>
+          <p className="text-[var(--secondary-color)] text-base">Your referral code</p>
           <div className="flex items-center justify-center bg-white text-purple-800 font-bold text-xl md:text-2xl px-4 py-3 rounded-xl my-3">
             <span>ABCDG123</span>
-            <button className="ml-4 bg-purple-700 text-white text-sm px-3 py-1 rounded-md">
+            <button className="ml-4 bg-[var(--theme2-bg)] text-[var(--secondary-color)] text-sm px-3 py-1 rounded-md">
               Copy Code
             </button>
           </div>
-          <p className="text-white text-sm mt-3 text-center">
+          <p className="text-[var(--secondary-color)] text-sm mt-3 text-center">
             Share your Referral Code via
           </p>
         </div>
 
         {/* Social Share Buttons */}
         <div className="flex justify-center gap-4 mb-6 flex-wrap">
-          <button className="bg-[#00bfff] text-white text-sm px-4 py-2 rounded-full w-[30%] min-w-[100px] text-center">
+          <button className="bg-[#00bfff] text-[var(--secondary-color)] text-sm px-4 py-2 rounded-full w-[30%] min-w-[100px] text-center">
             Telegram
           </button>
-          <button className="bg-[#3b5998] text-white text-sm px-4 py-2 rounded-full w-[30%] min-w-[100px] text-center">
+          <button className="bg-[#3b5998] text-[var(--secondary-color)] text-sm px-4 py-2 rounded-full w-[30%] min-w-[100px] text-center">
             Facebook
           </button>
-          <button className="bg-[#25d366] text-white text-sm px-4 py-2 rounded-full w-[30%] min-w-[100px] text-center">
+          <button className="bg-[#25d366] text-[var(--secondary-color)] text-sm px-4 py-2 rounded-full w-[30%] min-w-[100px] text-center">
             WhatsApp
           </button>
         </div>

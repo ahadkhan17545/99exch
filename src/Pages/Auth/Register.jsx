@@ -114,7 +114,7 @@ const Register = ({ setIsOpen, setIsRegisterOpen }) => {
             <div className=" text-end p-2">
               <button
                 type="button"
-                className=" text-xl w-8 h-8 text-white bg-black rounded-2xl hover:bg-purple-700 transition"
+                className=" text-xl w-8 h-8 text-[var(--secondary-color)] bg-[var(--theme1-bg)] rounded-2xl hover:bg-[var(--theme2-bg)] transition"
                 onClick={() => {
                   setIsOpen(false);
                   setIsRegisterOpen(false);
@@ -166,7 +166,7 @@ const Register = ({ setIsOpen, setIsRegisterOpen }) => {
                       required
                       value={formData.user_name}
                       onChange={(e) => handleInputChange(e)}
-                      className="phnumber login-input w-full px-4 py-2 border border-gray-300 rounded user_input focus:outline-none focus:ring-2 focus:ring-purple-500"
+                      className="phnumber login-input w-full px-4 py-2 border border-gray-300 rounded user_input focus:outline-none focus:ring-2 focus:ring-[var(--theme2-bg)]"
                     />
                   </div>
 
@@ -179,13 +179,13 @@ const Register = ({ setIsOpen, setIsRegisterOpen }) => {
                       required
                       value={formData.otp}
                       onChange={(e) => handleInputChange(e)}
-                      className="otp-input w-full px-4 py-2 border border-gray-300 rounded pass_input focus:outline-none focus:ring-2 focus:ring-purple-500"
+                      className="otp-input w-full px-4 py-2 border border-gray-300 rounded pass_input focus:outline-none focus:ring-2 focus:ring-[var(--theme2-bg)]"
                     />
                   </div>
 
                   <div className="flex justify-center items-center w-full ">
                     <button
-                      className="bg-[#000] text-[#fff] rounded p-2 mt-2 w-[50%]"
+                      className="bg-[var(--theme1-bg)] text-[var(--secondary-color)] rounded p-2 mt-2 w-[50%]"
                       disabled={otpBtn}
                       onClick={(e) => getOtp(e)}
                     >
@@ -203,7 +203,7 @@ const Register = ({ setIsOpen, setIsRegisterOpen }) => {
                       required
                       value={formData.password}
                       onChange={(e) => handleInputChange(e)}
-                      className="w-full px-4 py-2 border border-gray-300 rounded pass_input focus:outline-none focus:ring-2 focus:ring-purple-500"
+                      className="w-full px-4 py-2 border border-gray-300 rounded pass_input focus:outline-none focus:ring-2 focus:ring-[var(--theme2-bg)]"
                     />
                   </div>
 
@@ -215,7 +215,7 @@ const Register = ({ setIsOpen, setIsRegisterOpen }) => {
                       placeholder="Referral Code (if any)"
                       value={formData.refercode}
                       onChange={(e) => handleInputChange(e)}
-                      className="otp-input w-full px-4 py-2 border border-gray-300 rounded pass_input focus:outline-none focus:ring-2 focus:ring-purple-500"
+                      className="otp-input w-full px-4 py-2 border border-gray-300 rounded pass_input focus:outline-none focus:ring-2 focus:ring-[var(--theme2-bg)]"
                     />
                   </div>
 
@@ -223,7 +223,7 @@ const Register = ({ setIsOpen, setIsRegisterOpen }) => {
                   <div className="text-center">
                     <button
                       type="submit"
-                      className="bg-[#000] text-white px-6 py-2 mt-3 rounded w-full hover:bg-purple-700 transition"
+                      className="bg-[var(--theme1-bg)] text-[var(--secondary-color)] px-6 py-2 mt-3 rounded w-full hover:bg-[var(--theme2-bg)] transition"
                     >
                       Register
                     </button>
@@ -233,10 +233,10 @@ const Register = ({ setIsOpen, setIsRegisterOpen }) => {
                     {/* Download APK */}
                     <div className="flex justify-center items-center text-center gap-3">
                       <img src="/Images/2201767.png" alt="" className="loginHandAnimation w-8 -ml-12" />
-                      <Link className="flex justify-center items-center gap-1 mx-4 cursor-pointer" to={'https://wa.me'}>
+                      <Link className="flex justify-center items-center gap-1 mx-4 cursor-pointer" to={'https://api.whatsapp.com/send?phone='}>
                         <button
                           type="button"
-                          className="flex justify-center item-center bg-[#008000] text-white text-base p-2  rounded-2xl hover:bg-purple-700 transition"
+                          className="flex justify-center item-center bg-[#008000] text-[var(--secondary-color)] text-base p-2  rounded-2xl hover:bg-[var(--theme2-bg)] transition"
                         >
                           <img
                             src="/Images/fair-wt-1.webp"
@@ -244,7 +244,7 @@ const Register = ({ setIsOpen, setIsRegisterOpen }) => {
                             className="w-4 h-4"
                           />
                         </button>
-                        <span className="text-sm font-semibold text-[#000] hover:text-purple-700 transition">WHATSAPP</span>
+                        <span className="text-sm font-semibold text-[#000] hover:text-[var(--theme2-bg)] transition">WHATSAPP</span>
                       </Link>
                       <div>
                         <div className="flex justify-center items-center gap-1 cursor-pointer"
@@ -254,7 +254,7 @@ const Register = ({ setIsOpen, setIsRegisterOpen }) => {
                           }}>
 
                           <button
-                            className="flex justify-center item-center bg-[#007bff] text-white text-base p-2  rounded-2xl hover:bg-purple-700 transition"
+                            className="flex justify-center item-center bg-[#007bff] text-[var(--secondary-color)] text-base p-2  rounded-2xl hover:bg-[var(--theme2-bg)] transition"
                           >
                             <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 640 512" className="h-4 w-4 invert">
                               <path d="M96 128a128 128 0 1 1 256 0A128 128 0 1 1 96 128zM0 482.3C0 383.8 79.8 304 178.3 304l91.4 0C368.2 304 448 383.8 448 482.3c0 16.4-13.3 29.7-29.7 29.7L29.7 512C13.3 512 0 498.7 0 482.3zM504 312l0-64-64 0c-13.3 0-24-10.7-24-24s10.7-24 24-24l64 0 0-64c0-13.3 10.7-24 24-24s24 10.7 24 24l0 64 64 0c13.3 0 24 10.7 24 24s-10.7 24-24 24l-64 0 0 64c0 13.3-10.7 24-24 24s-24-10.7-24-24z" />
@@ -262,7 +262,7 @@ const Register = ({ setIsOpen, setIsRegisterOpen }) => {
 
                           </button>
                           <span
-                            className="text-sm font-semibold text-[#000] hover:text-purple-700 transition"
+                            className="text-sm font-semibold text-[#000] hover:text-[var(--theme2-bg)] transition"
                           >
                             LOGIN
                           </span>
@@ -278,7 +278,7 @@ const Register = ({ setIsOpen, setIsRegisterOpen }) => {
                         setIsOpen(true);
                       }}
                     >
-                      Already have an account? <span className="font-bold hover:text-purple-700 transition cursor-pointer">Login</span>
+                      Already have an account? <span className="font-bold hover:text-[var(--theme2-bg)] transition cursor-pointer">Login</span>
                     </span>
                   </div> */}
                 </div>

@@ -70,7 +70,7 @@ function Settings() {
 
   return (
     <div className="p-3">
-      <p className="rounded bg-[#343435] p-1 shadow text-white text-[15px] font-bold uppercase">
+      <p className="rounded bg-[#343435] p-1 shadow text-[var(--secondary-color)] text-[15px] font-bold uppercase">
         <span className="px-2">Settings</span>
       </p>
 
@@ -98,7 +98,7 @@ function Settings() {
         <div className="flex justify-center mt-4">
           <button
             onClick={() => updateChips(chipList)}
-            className="px-4 py-2 text-white text-[16px] w-[110px] bg-[#1e262d] rounded"
+            className="px-4 py-2 text-[var(--secondary-color)] text-[16px] w-[110px] bg-[#1e262d] rounded"
           >
             Save
           </button>

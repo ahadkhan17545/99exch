@@ -9,15 +9,17 @@ function MainLayout() {
   return (
     <>
       <Loader />
-      <Header />
-      <div className="flex">
-        <div className="hidden lg:flex w-[15%] bg-[#ccc]">
-          <MenuSideBar />
+      <div className="flex flex-col min-h-screen">
+        <Header />
+        <div className="flex flex-1">
+          <div className="hidden lg:flex w-[15%] bg-[#ccc]">
+            <MenuSideBar />
+          </div>
+          <div className="w-full lg:w-[85%] bg-[#f1f5f8]">
+            <Outlet />
+          </div>
         </div>
-        <div className="w-full h-screen lg:w-[85%] bg-[#f1f5f8]">
-          <Outlet />
-          <Footer />
-        </div>
+        <Footer />
       </div>
     </>
   );

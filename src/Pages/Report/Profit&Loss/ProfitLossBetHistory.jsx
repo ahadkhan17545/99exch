@@ -196,7 +196,7 @@ function ProfitLossBetHistory() {
 
   return (
     <div className="p-3">
-      <p className="rounded bg-[#343435] p-1 shadow text-white text-[15px] font-bold uppercase">
+      <p className="rounded bg-[#343435] p-1 shadow text-[var(--secondary-color)] text-[15px] font-bold uppercase">
         <span className="px-2">Bet History</span>
       </p>
 

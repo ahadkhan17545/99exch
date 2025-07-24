@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import MenuSideBar from "./MenuSideBar";
 import UpcomingEvents from "./UpcomingEvents";
 import Helper from "../helper";
@@ -7,11 +7,13 @@ import gsap from "gsap";
 import { useAuth } from "../AuthContext";
 import axios from "axios";
 import Appconfig from "../config/config";
-import { Link, useNavigate } from "react-router-dom";
+import { Link, useLocation, useNavigate } from "react-router-dom";
 import DiamondLobby from "../Pages/Lobby/DiamondLobby";
 
 function Home() {
   const userInfo = Helper();
+  const location = useLocation();
+  const locationState = location.state;
   const navigate = useNavigate();
   const { setShowLoginModel } = useAuth();
   const [selectedSubSport, setSelectedSubSport] = useState("4");
@@ -82,7 +84,7 @@ function Home() {
       code: "ADL-rockpaperscissorsdraw",
       type: "",
     },
-     {
+    {
       img: "/Images/Casino_providers/duckrace.webp",
       name: "DUCK RACING",
       alt: "DUCK RACING",
@@ -90,7 +92,7 @@ function Home() {
       code: "400086",
       type: "",
     },
-     {
+    {
       img: "/Images/Casino_providers/xroulette.webp",
       name: "XROULETTE",
       alt: "XROULETTE",
@@ -98,7 +100,7 @@ function Home() {
       code: "BTL-autoroulette",
       type: "",
     },
-     {
+    {
       img: "/Images/Casino_providers/marblerace.webp",
       name: "MARBLE RACE",
       alt: "MARBLE RACE",
@@ -106,7 +108,7 @@ function Home() {
       code: "400091",
       type: "",
     },
-     {
+    {
       img: "/Images/Casino_providers/teenpatti-joker2020.webp",
       name: "TEENPATTI JOKER 2020",
       alt: "TEENPATTI JOKER 2020",
@@ -599,8 +601,8 @@ function Home() {
     { id: "4", name: "CRICKET", icon: "/Images/cricket-white-ball.png" },
     { id: "1", name: "FOOTBALL", icon: "/Images/football-white-ball.png" },
     { id: "2", name: "TENNIS", icon: "/Images/tennis-white-ball.png" },
-    { id: "12", name: "HORSE RACING", icon: "/Images/horse-white.png" },
-    { id: "13", name: "GREYHOUND RACING", icon: "/Images/grayhond-white.png" },
+    // { id: "12", name: "HORSE RACING", icon: "/Images/horse-white.png" },
+    // { id: "13", name: "GREYHOUND RACING", icon: "/Images/grayhond-white.png" },
     { id: "15", name: "BINARY", icon: "/Images/binary-white.png" },
     { id: "14", name: "KABADDI", icon: "/Images/kabbadi-white.png" },
     { id: "11", name: "POLITICS", icon: "/Images/politics-white.png" },
@@ -696,37 +698,62 @@ function Home() {
     setSelectedSportType("casino")
   }
 
+  useEffect(() => {
+    console.log('locationstate : ', locationState)
+    if (locationState) {
+
+      setSelectedSportType(locationState?.sportType)
+      setSelectedSubSport(locationState?.subSport)
+      // if (locationState?.subSport == '4') {
+      //   setSelectedSportType("inplay")
+      // }
+      // if (locationState == "casino") {
+      //   setSelectedSportType("casino")
+      // }
+    }
+  }, [location, locationState])
+
   return (
     <>
-      <div className="flex bg-white">
+      <div className="flex bg-white px-0 lg:px-1">
+        <a
+          href={`https://api.whatsapp.com/send?phone=`}
+          target="_blank"
+          rel="noopener noreferrer"
+          className="whatsapp_animate fixed bottom-5 left-[77%] lg:left-[92%] w-[75px]"
+        >
+          <img src="/Images/wp_support.png" alt="" />
+        </a>
         {/* Center Home page section */}
         <div className="w-full h-screen overflow-y-scroll scroll-hide">
 
           {/* Blink events */}
-          <div className="overflow-x-auto scroll-hide w-full bg-black">
-            <ul className="flex flex-nowrap w-full space-x-1 py-1">
-              {blinkEvents?.map((item, index) => (
-                <li key={index} className="bg-[#8000ff] rounded pl-2 pr-4 py-1">
+          {blinkEvents?.length > 0 &&
+            <div className="px-1 lg:px-0 overflow-x-auto scroll-hide w-full bg-[var(--theme1-bg)] lg:bg-[var(--primary-color)]">
+              <ul className="flex flex-nowrap w-full space-x-1 py-1">
+                {blinkEvents?.map((item, index) => (
+                  <li key={index} className="bg-[var(--theme2-bg)] rounded pl-2 pr-4 py-1">
 
 
-                  <Link to={`/matchupdates/${item.event_id}/${item.is_inplay === "True" ? "Inplay" : "Going Inplay"}`} className="flex-shrink-0 flex items-center blink">
-                    <img
-                      src="/Images/cricket-white-ball.png"
-                      className="w-3 h-3 mr-1"
-                      alt=""
-                    />
-                    <span className="text-white font-bold text-[11px] uppercase whitespace-nowrap">
-                      {item.event_name}
-                    </span>
-                  </Link>
-                </li>
-              ))}
-            </ul>
-          </div>
+                    <Link to={`/matchupdates/${item.event_id}/${item.is_inplay === "True" ? "Inplay" : "Going Inplay"}`} className="flex-shrink-0 flex items-center blink">
+                      <img
+                        src="/Images/cricket-white-ball.png"
+                        className="w-3 h-3 mr-1"
+                        alt=""
+                      />
+                      <span className="text-[var(--secondary-color)] font-bold text-[11px] uppercase whitespace-nowrap">
+                        {item.event_name}
+                      </span>
+                    </Link>
+                  </li>
+                ))}
+              </ul>
+            </div>
+          }
 
           {/* Horizontal menu scroll bar */}
-          <div className="bg-[#000] whitespace-nowrap overflow-x-scroll scroll-hide">
-            <ul className="flex justify-between items-center text-[#fff] font-bold text-xs">
+          <div className="block lg:hidden bg-[var(--theme1-bg)] whitespace-nowrap overflow-x-scroll scroll-hide">
+            <ul className="flex justify-between items-center text-[var(--secondary-color)] font-bold text-xs">
               <li className={`border-[2px] border-transparent ${selectedSportType == "inplay" ? "border-t-white" : ""} py-3`} onClick={() => setSelectedSportType("inplay")}>
                 <span className="border border-transparent border-r-white px-4">INPLAY</span>
               </li>
@@ -749,14 +776,14 @@ function Home() {
           {(selectedSportType == "inplay" || selectedSportType == "sports") &&
             <>
               {/* All Sports horizontal mobile scrollbar */}
-              <div className="bg-[#8000ff] whitespace-nowrap overflow-x-scroll scroll-hide">
-                <ul className="flex justify-between items-center text-[#fff] font-bold text-xs">
+              <div className="bg-[var(--theme2-bg)] whitespace-nowrap overflow-x-scroll scroll-hide" style={{ boxShadow: "0px -5px 5px -5px rgba(0, 0, 0, 0.5)" }}>
+                <ul className="flex justify-between items-center text-[var(--secondary-color)] font-bold text-xs">
                   {sports.map((sport, index) => (
                     <li
                       key={index}
-                      className={`flex flex-col justify-between items-center py-1 cursor-pointer ${selectedSubSport == sport.id ? "bg-black" : ""
+                      className={`flex flex-col justify-between items-center py-1 cursor-pointer ${selectedSubSport == sport.id ? "bg-[var(--theme1-bg)]" : ""
                         } transition-colors`}
-                      onClick={() => setSelectedSubSport(sport.id)}
+                      onClick={() => navigate('/', { state: { sportType: selectedSportType, subSport: sport.id } })}
                     >
                       <img src={sport.icon} alt="" className=" h-[20px] mb-[5px]" />
                       <span className="px-2">{sport.name}</span>
@@ -788,13 +815,13 @@ function Home() {
                     ))}
                   </div>
 
-                  {/* Mac888 images */}
-                  <div className="mac88-casino">
-                    <div className="flex justify-start items-center w-full bg-[#8000ff] p-1">
-                      <span className="animateHeading text-[#fff] font-bold mx-1">NEW LAUNCH</span>
+                  {/* New Launch images */}
+                  <div className="mac88-casino mt-1">
+                    <div className="flex justify-start items-center w-full bg-[var(--theme2-bg)] p-1">
+                      <span className="animateHeading text-[var(--secondary-color)] font-bold mx-1">NEW LAUNCH</span>
                     </div>
                     <div className="">
-                      <ul className="grid grid-cols-4 lg:grid-cols-7 gap-[2px] p-[2px] lg:p-0">
+                      <ul className="grid grid-cols-4 lg:grid-cols-4 gap-[2px] p-[2px]">
                         {" "}
                         {/* 4 columns with small gap */}
                         {NewLaunch?.map((item, index) => (
@@ -807,7 +834,7 @@ function Home() {
                               CreateAndLaunchWCOCasino(item.provider, item.code)
                             }
                           >
-                            <div className="w-full h-[4.5rem] lg:h-[8rem]">
+                            <div className="w-full h-[70px] lg:h-[9.5rem]">
                               <img
                                 src={item.img}
                                 className="w-full h-full object-fill"
@@ -816,10 +843,10 @@ function Home() {
                               />
                             </div>
                             <p
-                              className="flex justify-center items-center text-[8px] lg:text-xs font-semibold text-[#fff] uppercase h-[34px]"
+                              className="flex justify-center items-center text-[8px] lg:text-[11px] font-semibold text-[var(--secondary-color)] uppercase h-[34px] lg:h-0 p-0 lg:p-3 "
                               style={{
                                 background:
-                                  "linear-gradient(0deg, rgba(128, 0, 255, 1) 0%, rgba(0, 0, 0, 1) 100%)",
+                                  "linear-gradient(var(--theme1-bg), var(--theme2-bg))",
                               }}
                             >
                               {item.name}
@@ -832,11 +859,11 @@ function Home() {
 
                   {/* My favrouites images */}
                   <div className="mac88-casino">
-                    <div className="flex justify-start items-center w-full bg-[#8000ff] p-1">
-                      <span className="animateHeading text-[#fff] font-bold mx-1">MY FAVOURITES</span>
+                    <div className="flex justify-start items-center w-full bg-[var(--theme2-bg)] p-1">
+                      <span className="animateHeading text-[var(--secondary-color)] font-bold mx-1">MY FAVOURITES</span>
                     </div>
                     <div className="">
-                      <ul className="grid grid-cols-4 lg:grid-cols-7 gap-[2px] p-[2px] lg:p-0">
+                      <ul className="grid grid-cols-4 lg:grid-cols-7 gap-[2px] p-[2px]">
                         {" "}
                         {/* 4 columns with small gap */}
                         {casinoList?.map((item, index) => (
@@ -849,7 +876,7 @@ function Home() {
                               CreateAndLaunchWCOCasino(item.provider, item.code)
                             }
                           >
-                            <div className="w-full h-[4rem] lg:h-[8rem]">
+                            <div className="w-full h-[70px] lg:h-[7rem]">
                               <img
                                 src={item.img}
                                 className="w-full h-full object-fill"
@@ -858,10 +885,10 @@ function Home() {
                               />
                             </div>
                             <p
-                              className="flex justify-center items-center text-[8px] lg:text-xs font-semibold text-[#fff] uppercase h-[34px]"
+                              className="flex justify-center items-center text-[8px] lg:text-[11px] font-semibold text-[var(--secondary-color)] uppercase h-[34px] lg:h-0 p-0 lg:p-3"
                               style={{
                                 background:
-                                  "linear-gradient(0deg, rgba(128, 0, 255, 1) 0%, rgba(0, 0, 0, 1) 100%)",
+                                  "linear-gradient(var(--theme1-bg), var(--theme2-bg))",
                               }}
                             >
                               {item.name}
@@ -873,12 +900,12 @@ function Home() {
                   </div>
 
                   {/* Casino Providers */}
-                  <div className="casino-providers my-1">
-                    <div className="flex justify-start items-center w-full bg-[#8000ff] p-1">
-                      <span className="animateHeading text-[#fff] font-bold mx-1">OUR PROVIDERS</span>
+                  <div className="casino-providers">
+                    <div className="flex justify-start items-center w-full bg-[var(--theme2-bg)] p-1">
+                      <span className="animateHeading text-[var(--secondary-color)] font-bold mx-1">OUR PROVIDERS</span>
                     </div>
                     <div className="">
-                      <ul className="grid grid-cols-3 lg:grid-cols-4 gap-[2px] p-[2px] lg:p-0">
+                      <ul className="grid grid-cols-3 lg:grid-cols-4 gap-[2px] p-[2px]">
                         {" "}
                         {/* 4 columns with small gap */}
                         {casinoProviders?.map((item, index) => (
@@ -891,7 +918,7 @@ function Home() {
                               OpenEzugiLobby(item.code)
                             }
                           >
-                            <div className="w-full h-[5rem] lg:h-[8rem]">
+                            <div className="w-full">
                               <img
                                 src={item.img}
                                 className="w-full h-full object-fill"

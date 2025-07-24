@@ -174,7 +174,7 @@ function AccountStatement() {
   return (
     <>
       <div className="p-3">
-        <p className="rounded bg-[#343435] p-1 shadow text-white text-[15px] font-bold uppercase">
+        <p className="rounded bg-[#343435] p-1 shadow text-[var(--secondary-color)] text-[15px] font-bold uppercase">
           <span className="px-2">Account Statement</span>
         </p>
 
@@ -201,12 +201,12 @@ function AccountStatement() {
                 type="button"
                 value="submit"
                 onClick={getAccountStatement}
-                className="bg-[#343435] text-white px-4 py-2 rounded cursor-pointer"
+                className="bg-[#343435] text-[var(--secondary-color)] px-4 py-2 rounded cursor-pointer"
               />
               <input
                 type="button"
                 value="reset"
-                className="bg-[#C10930] text-white px-4 py-2 rounded cursor-pointer"
+                className="bg-[var(--theme2-bg)] text-[var(--secondary-color)] px-4 py-2 rounded cursor-pointer"
               />
             </div>
           </form>
