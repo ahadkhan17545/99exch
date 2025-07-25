@@ -289,7 +289,7 @@ function Header() {
 
         {/* Login Signup Button */}
         {!userInfo && (
-          <div className="flex justify-end items-center">
+          <div className="flex lg:hidden justify-end items-center">
             <button
               className=" text-[var(--secondary-color)] uppercase font-bold rounded-md bg-[var(--theme2-bg)] p-1 w-20 mr-1"
               onClick={() => {
@@ -312,6 +312,28 @@ function Header() {
         )}
         <>
           <div className="hidden lg:block">
+            {!userInfo && (
+              <div className="flex justify-end items-center">
+                <button
+                  className=" text-[var(--secondary-color)] uppercase font-bold rounded-md bg-[var(--theme2-bg)] p-1 w-20 mr-1"
+                  onClick={() => {
+                    setLoginClicked(true);
+                    setRegisterClicked(false);
+                  }}
+                >
+                  Login
+                </button>
+                <button
+                  className=" text-[var(--theme1-bg)] uppercase font-bold rounded-md bg-[#fff] p-1 w-20 mr-1"
+                  onClick={() => {
+                    setLoginClicked(false);
+                    setRegisterClicked(true);
+                  }}
+                >
+                  Register
+                </button>
+              </div>
+            )}
             <div className="flex justify-center items-center">
               {/* deposit withdraw section */}
               {userInfo && (
